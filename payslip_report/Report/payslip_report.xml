@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_payslip_layout_id">
+        <t t-call="web.html_container">
+            <xpath expr="//div[@class='page']" position="attributes">
+                <attribute name="style">font-family: 'Roboto', sans-serif;</attribute>
+            </xpath>
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+
+                    <style>
+                        table td{
+                        padding: 0px 5px !important;
+                        }
+                    </style>
+                    <p class="text-center" style="background-color:gray; color:white; font-size:18px;">
+                        Salary Slip
+                    </p>
+                    <div style="margin-top:10px 0px">
+                        <table>
+                            <tr>
+                                <td style="width:40%">
+                                    <span style="border:1px solid; padding:5px; ">
+                                        <strong>Employee ID:</strong>
+                                        <span t-field="o.badge_id"/>
+                                    </span>
+                                </td>
+                                <td style="width:40%">
+                                    <p></p>
+                                </td>
+                                <td class="text-right" style="width:20%">
+                                    <span style="border:1px solid; padding:5px; ">
+                                        <strong>Reference:</strong>
+                                        <span t-field="o.number"/>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+ <div>
+     <p></p>
+                    </div>
+                    <table class="table table-borderless">
+                        <tr>
+                            <td>
+                                <strong>Name:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.employee_id.name"/>
+                            </td>
+                            <td>
+                                <strong>Department:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.employee_id.department_id"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Job Description:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.employee_id.job_title"/>
+                            </td>
+                            <td>
+                                <strong>Pay Period:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.date_from"/>
+                                <span>-</span>
+                                <span t-field="o.date_to"/>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td>
+                                <strong>Manager:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.employee_id.parent_id"/>
+                            </td>
+                            <td>
+                                <strong>Computed On:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.compute_date"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Total Days:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.no_of_days"/>
+                            </td>
+                            <td>
+                                <strong>Presents:</strong>
+                            </td>
+                            <td>
+                                <t t-foreach="o.worked_days_line_ids" t-as="loop">
+                                    <t t-if="loop.work_entry_type_id.name == 'Attendance'">
+                                        <span t-field="loop.total_present"
+                                              t-options='{"widget": "float", "precision": 0}'/>
+                                    </t>
+                                </t>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>On Leave:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.compute_date"/>
+                            </td>
+                            <td>
+                                <strong>Absents:</strong>
+                            </td>
+                            <td>
+                                <t t-foreach="o.worked_days_line_ids" t-as="loop">
+                                    <t t-if="loop.work_entry_type_id.name == 'Attendance'">
+                                        <span t-field="loop.total_absent"
+                                              t-options='{"widget": "float", "precision": 0}'/>
+                                    </t>
+                                </t>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td>
+                               <strong>Total OverTime:</strong>
+                            </td>
+                            <td>
+                             <span t-esc="'%.1f'% o.total_overtime"/>
+                            </td>
+                            <td>
+                                <strong>Late Check-in Days:</strong>
+                            </td>
+                            <td>
+                                                            <span t-field="o.late_checkin_days_2"/>
+                            
+                            </td>
+                            
+                            </tr>
+                         <tr>
+                            <td>
+                               <strong>Basic Salary:</strong>
+                            </td>
+                            <td>
+                             <span t-esc="'%.1f'% o.wage"/>
+                            </td>
+                            <td>
+                            </td>
+                            <td>                            
+                            </td>
+                            
+                            </tr>
+
+                    </table>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <td style="background-color:gray !important; color:white !important;">Name</td>
+                                <td style="background-color:gray !important; color:white !important;">Code</td>
+                                <td style="background-color:gray !important; color:white !important;">Total Amount</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="line">
+                                <t t-if="line.total>0">
+                                    <td>
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.code"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="line.total"
+                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                    </td>
+                                </t>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-sm">
+                        <t t-set="foo" t-value="False"/>
+                        <t t-foreach="o.worked_days_line_ids" t-as="loop">
+                            <t t-if="loop.work_entry_type_id.name != 'Attendance'">
+                                <t t-if="foo == False">
+                                    <tr>
+                                        <td style="background-color:gray !important; color:white !important;">
+                                            Leave Description
+                                        </td>
+                                        <td style="background-color:gray !important; color:white !important;">Number Of
+                                            Days
+                                        </td>
+                                    </tr>
+                                </t>
+                                <t t-set="foo" t-value="True"/>
+
+                                <tr>
+
+                                    <td style="width:50%; text-decoration:bold;">
+                                        <span t-field="loop.work_entry_type_id"/>
+                                    </td>
+                                    <td style="width:50%">
+                                        <span t-field="loop.number_of_days"
+                                              t-options='{"widget": "float", "precision": 0}'/>
+                                        <t t-if="loop.number_of_days>1">
+                                            Days
+                                        </t>
+                                        <t t-else="loop.number_of_days = 1 or 1>loop.number_of_days">
+                                            Day
+                                        </t>
+
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </table>
+
+                    <p class="text-center" style="background-color:gray; color:white; font-size:18px;">
+                        Loan Description
+                    </p>
+                    <table class="table table-sm table-borderless">
+                        <tr>
+                            <td style="width:25%">
+                                <strong>Total Loan Amount:</strong>
+                            </td>
+                            <td style="=width:75%">
+                                <span>Rs</span>
+
+                                <span t-field="o.total_loan" t-options='{"widget": "float", "precision": 0}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:25%">
+                                <strong>Recovered Amount:</strong>
+                            </td>
+                            <td style="=width:75%">
+                                <span>Rs</span>
+
+                                <span t-field="o.recovered_amount" t-options='{"widget": "float", "precision": 0}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:25%">
+                                <strong>Remaining Loan Amount:</strong>
+                            </td>
+                            <td style="=width:75%">
+                                <span>Rs</span>
+
+                                <span t-field="o.balance_amount" t-options='{"widget": "float", "precision": 0}'/>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table table-sm">
+
+                        <tr>
+                            <td>
+                                <strong>Total Amount:</strong>
+                            </td>
+                            <td>
+                                <span>Rs</span>
+                                <span t-field="o.remain_amount" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p style="font-weight: 900 !important;">Total Amount in words:</p>
+                            </td>
+                            <td>
+                                <span t-field="o.int_to_word"/>
+                                <span>Rupees Only</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <div style=" margin-right:50px;margin-top:50;">
+                        <p class="text-right">
+                            <strong>Authorized signature</strong>
+                        </p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

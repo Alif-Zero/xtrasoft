@@ -1,0 +1,57 @@
+<odoo>
+    <data>
+
+
+        <record model="ir.ui.view" id="xtrasoft_report_advance_salary_form_tree">
+            <field name="name">Advance Salary Month</field>
+            <field name="model">adv.salary.form</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="department_name"/>
+                    <field name="adv_salary"/>
+
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="xtrasoft_report_advance_salary_form" model="ir.ui.view">
+            <field name="name">Advance Salary Month</field>
+            <field name="model">adv.salary.form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="All">
+                    <sheet>
+                        <group>
+                            <h1 style="text-align:center;">Loan Request Form</h1>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="department_name"/>
+
+                            </group>
+
+                            <field name="adv_salary"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="xtrasoft_report_advance_salary_action_window">
+            <field name="name">Advance Salary Form</field>
+            <field name="res_model">adv.salary.form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Advance Salary Form" id="xtrasoft_report_advance_salary_menu"
+                  parent="xtrasoft_report.menu_root"
+                  action="xtrasoft_report_advance_salary_action_window"/>
+
+    </data>
+</odoo>

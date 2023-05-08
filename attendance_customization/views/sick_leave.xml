@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sick_leave_form_view" model="ir.ui.view">
+            <field name="name">Sick leave</field>
+            <field name="model">hr.sick.leave</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="applied" invisible="1"/>
+                        <button name="approve_leave" string="Approve" type="object" attrs="{'invisible':[('applied','!=',False)]}"
+                                class="oe_highlight" />
+                        <button name="reject_leave" string="Reject" type="object" attrs="{'invisible':[('applied','!=',True)]}"
+                                class="oe_highlight" confirm="Are You sure you want to Reject"/>
+                            <button name="reset_draft" string="Reset draft" type="object" attrs="{'invisible':[('state','=','draft')]}"
+                                class="oe_highlight" confirm="Are You sure you want to Reset"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="employee_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="holiday_status_id" required="1"/>
+                        </group>
+                        <group>
+                            <field name="date_from" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="date_to" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </group>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="sickleave_window_act" model="ir.actions.act_window">
+            <field name="name">Sick Leave</field>
+            <field name="res_model">hr.sick.leave</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Sick leave(S)" id="ums_attendence_sickleaeves"
+                  parent="attendance_customization.menu_attendence"
+                  sequence="9" action="sickleave_window_act"/>
+    </data>
+</odoo>

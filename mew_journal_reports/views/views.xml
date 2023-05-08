@@ -1,0 +1,15 @@
+<odoo>
+    <record model="ir.ui.view" id="voucher_type_selection_form">
+        <field name="name">voucher_type_selection_form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+<!--        <field name="type">tree</field>-->
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="voucher_type"/>
+                <field name="cheque_bank"  attrs="{'invisible': ['|','|',('voucher_type', '=', 'cash_receive'),('voucher_type', '=', 'cash_send'),('voucher_type', '=', 'journal_voucher')]}"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

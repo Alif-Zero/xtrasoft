@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.module.category" id="module_category_material_request">
+        <field name="name">Material Request</field>
+        <!--<field name="parent_id" ref="base.module_category_material_management" />-->
+        <field name="sequence">10</field>
+    </record>
+    <record id="group_material_request_department_approver" model="res.groups">
+        <field name="name">Department Approver</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        <field name="category_id" ref="module_category_material_request" />
+    </record>
+    <record id="group_material_request_manager" model="res.groups">
+        <field name="name">Material Request Manager</field>
+        <field name="category_id" ref="module_category_material_request" />
+    </record>
+</odoo>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    	<record id="po_initial_approval_email_template" model="mail.template">
+        	<field name="name">Purchase order: RFQ Approval Alert</field>
+            <field name="email_from">${ctx['email_from']}</field>
+            <field name="email_to">${ctx['notification_to_approvers']}</field>
+            <field name="subject">RFQ Approval Alert</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="auto_delete" eval="False"/>
+	  		<field name="body_html">
+             <![CDATA[
+                <header>
+                <strong>Purchase Order Approval Alert</strong>
+                </header>
+                <p> An RFQ with number RFQ-${object.name} has been initiated by ${object.user_id.name} please validate.</p>
+                <br /><br /><br /><br />
+                <p>Sent Using Odoo</p>
+            ]]>
+
+	  		</field>
+       	</record>
+		
+		<record id="po_next_approval_email_template" model="mail.template">
+        	<field name="name">Purchase order: RFQ Approval Alert</field>
+            <field name="email_from">${ctx['email_from']}</field>
+            <field name="email_to">${ctx['notification_to_approvers']}</field>
+            <field name="subject">RFQ Approval Alert</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="auto_delete" eval="False"/>
+	  		<field name="body_html">
+             <![CDATA[
+                <header>
+                <strong>Purchase Order Approval Alert</strong>
+                </header>
+                <p> A RFQ with number RFQ-${object.name} has been validated by ${ctx['approver_name']} please validate.</p>
+                <br /><br /><br /><br />
+                <p>Sent Using Odoo</p>
+            ]]>
+
+	  		</field>
+       	</record>
+		
+		<record id="po_approval_email_to_initiator_template" model="mail.template">
+        	<field name="name">Purchase order: RFQ Approval Alert</field>
+            <field name="email_from">${ctx['email_from']}</field>
+            <field name="email_to">${ctx['notification_to_initiator']}</field>
+            <field name="subject">RFQ Approval Alert</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="auto_delete" eval="False"/>
+	  		<field name="body_html">
+             <![CDATA[
+                <header>
+                <strong>RFQ Approval Alert</strong>
+                </header>
+                <p>Your RFQ with number RFQ-${object.name} has been validated by ${ctx['approver_name']}.</p>
+                <br /><br /><br /><br />
+                <p>Sent Using Odoo</p>
+            ]]>
+
+	  		</field>
+       	</record>
+		<record id="po_approval_reject_email_template" model="mail.template">
+        	<field name="name">Purchase order: RFQ Rejection Alert</field>
+            <field name="email_from">${ctx['email_from']}</field>
+            <field name="email_to">${ctx['notification_to_approvers']}</field>
+            <field name="subject">RFQ Rejection Alert</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="auto_delete" eval="False"/>
+	  		<field name="body_html">
+             <![CDATA[
+                <header>
+                <strong>RFQ Rejection Alert</strong>
+                </header>
+                <p>Your RFQ with number RFQ-${object.name} has been rejected by ${ctx['rejected_by']} with reason ${ctx['rejection_reason']}.</p>
+                <br /><br /><br /><br />
+                <p>Sent Using Odoo</p>
+            ]]>
+
+	  		</field>
+       	</record>
+		
+		
+    </data>
+</odoo>

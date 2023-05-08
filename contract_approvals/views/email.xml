@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="first_contract_approval_email_template" model="mail.template">
+        <field name="name">Approval Alert</field>
+        <field name="email_from">${ctx['email_from']}</field>
+        <field name="email_to">${ctx['notification_to_approvers']}</field>
+        <field name="subject">First Approval Alert</field>
+        <field name="model_id" ref="contract_approvals.model_hr_contract"/>
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html">
+            <![CDATA[
+                <header>
+                <strong>Approval Alert</strong>
+                </header>
+                <p> Purchase Request with number ${object.name} has been initiated by ${object.requested_by.name} please approve.</p>
+                <br /><br /><br /><br />
+                <p>
+
+                    <a href="/web#accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}"&id=${object.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Approve</a>
+
+                </p>
+            ]]>
+
+        </field>
+    </record>
+
+    <record id="second_contract_approval_email_template" model="mail.template">
+        <field name="name">Approval Alert</field>
+        <field name="email_from">${ctx['email_from']}</field>
+        <field name="email_to">${ctx['notification_to_approvers']}</field>
+        <field name="subject">Second Approval Alert</field>
+        <field name="model_id" ref="contract_approvals.model_hr_contract"/>
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html">
+            <![CDATA[
+                <header>
+                <strong> Approval Alert</strong>
+                </header>
+                <p> Purchase Request with number ${object.name} has been approved by ${ctx['approver_name']} please approve.</p>
+                <br /><br /><br /><br />
+                 <p>
+
+                    <a href="/web#accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}"&id=${object.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Approve</a>
+
+                </p>
+            ]]>
+
+        </field>
+    </record>
+<!--    <record id="third_approval_pr_email_template" model="mail.template">-->
+<!--        <field name="name">Approval Alert</field>-->
+<!--        <field name="email_from">${ctx['email_from']}</field>-->
+<!--        <field name="email_to">${ctx['notification_to_approvers']}</field>-->
+<!--        <field name="subject">Third Approval Alert</field>-->
+<!--        <field name="model_id" ref="purchase_request_approvals.model_purchase_request"/>-->
+<!--        <field name="auto_delete" eval="False"/>-->
+<!--        <field name="body_html">-->
+<!--            <![CDATA[-->
+<!--                <header>-->
+<!--                <strong> Approval Alert</strong>-->
+<!--                </header>-->
+<!--                <p> Purchase Request with number ${object.name} has been approved by ${ctx['approver_name']} please approve.</p>-->
+<!--                <br /><br /><br /><br />-->
+<!--                 <p>-->
+
+<!--                    <a href="/web#accept?db=${'dbname' in ctx and ctx['dbname'] or ''}&token=${object.access_token}&action=${'action_id' in ctx and ctx['action_id'] or ''}"&id=${object.id}" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Approve</a>-->
+
+<!--                </p>-->
+<!--            ]]>-->
+
+<!--        </field>-->
+<!--    </record>-->
+
+    <record id="contract_approval_reject_email_template" model="mail.template">
+        <field name="name">PR: PR Rejection Alert</field>
+        <field name="email_from">${ctx['email_from']}</field>
+        <field name="email_to">${ctx['notification_to_initiator']}</field>
+        <field name="subject">Invoice Rejection Alert</field>
+        <field name="model_id" ref="contract_approvals.model_hr_contract"/>
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html">
+            <![CDATA[
+                <header>
+                <strong>Purchase Request Rejection Alert</strong>
+                </header>
+                <p>Your Purchase Request with number ${object.name} has been rejected by ${ctx['rejected_by']}.</p>
+                <br /><br /><br /><br />
+                <p>Sent Using Odoo</p>
+            ]]>
+
+        </field>
+    </record>
+</odoo>

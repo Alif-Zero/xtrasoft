@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="attendance_Modifier" model="res.groups">
+            <field name="name">Attendance Modifier</field>
+            <field name="users" eval="[(4, ref('base.group_system'))]"/>
+        </record>
+
+    </data>
+
+
+</odoo>

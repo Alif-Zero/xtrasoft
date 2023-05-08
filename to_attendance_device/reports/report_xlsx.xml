@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="attendance_report_xlsx_id" model="ir.actions.report">
+            <field name="name">Attendance Report</field>
+            <field name="model">report.to_attendance_device.attendance_reports</field>
+            <field name="report_type">xlsx</field>
+            <field name="report_name">to_attendance_device.attendance_reports</field>
+            <field name="report_file">Attendance Report</field>
+        </record>
+
+
+    </data>
+</odoo>

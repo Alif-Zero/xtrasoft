@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="0">
+        <record id="email_template_edi_draft_to_submit_rrr" model="mail.template">
+            <field name="name">Requisition: draft to waiting approve</field>
+            <field name="model_id" ref="model_purchase_order"/>
+            <field name="subject">Payment request (Ref ${object.name or 'n/a' } is in Awaiting for Approve)</field>
+            <!--field name="email_from">${object.create_uid.email_formatted | safe}</field-->
+            <field name="email_from">${ctx['from_email']|safe}</field>
+            <!--field name="partner_to">${object.partner_id.id}</field-->
+            <!--field name="partner_to">ctx.get('send_partner_id')</field-->
+            <field name="email_to">${ctx['to_email']|safe}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear ${ctx.get('next_approver_name')},
+                        <br/><br/>
+                        You have payment request request of <strong><a href="${ctx['url']|safe}" target="_blank">
+                        (${object.name})</a>
+                    </strong>
+                        Kindly approve it.
+                        <br/><br/>
+                        Thank you!
+                        <br/><br/>
+                        Best regards,
+                    </p>
+                </div></field>
+            <!--field name="report_template" ref="report_purchase_quotation"/-->
+            <!--field name="report_name">RFQ_${(object.name or '').replace('/','_')}</field-->
+            <field name="lang">${object.user_id.partner_id.lang}</field>
+            <field name="user_signature" eval="False"/>
+            <field name="auto_delete" eval="False"/>
+        </record>
+    </data>
+
+</odoo>

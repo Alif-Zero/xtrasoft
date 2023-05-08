@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="view_department_salary_costing_pivot" model="ir.ui.view">
+         <field name="name">department.salary.costing.pivot</field>
+         <field name="model">department.salary.costing</field>
+         <field name="arch" type="xml">
+             <pivot string="Department Salary Costing" disable_linking="True">
+				 <field name="department_id" type="row"/>
+				 <field name="employee_id" type="row"/>
+				 <field name="month" type="row"/>
+				 <field name="category" type="row"/>
+                 <field name="category_total" type="measure"/>
+				 <field name="total_amount" type="measure"/>
+             </pivot>
+         </field>
+    </record>
+
+    <record id="view_department_salary_costing_graph" model="ir.ui.view">
+         <field name="name">department.salary.costing.graph</field>
+         <field name="model">department.salary.costing</field>
+         <field name="arch" type="xml">
+             <graph string="Department Salary Costing" type="bar">
+				  <field name="department_id" type="col"/>
+				 <field name="employee_id" type="col"/>
+				 <field name="month" type="col"/>
+				 <field name="category" type="col"/>
+                 <field name="category_total" type="measure"/>
+				 <field name="total_amount" type="measure"/>
+             </graph>
+         </field>
+    </record>
+	
+	<record id="view_department_salary_costing_tree" model="ir.ui.view">
+         <field name="name">department.salary.costing.tree</field>
+         <field name="model">department.salary.costing</field>
+         <field name="arch" type="xml">
+             <tree string="Department Salary Costing">
+				<field name="date_from" invisible="1"/>
+				<field name="date_to" invisible="1"/>
+				<field name="department_id"/>
+				<field name="employee_id"/>
+				<field name="month"/>
+				<field name="category" />
+                <field name="category_total" sum="Category Total"/>
+				<field name="total_amount" sum="Total Amount"/>
+             </tree>
+         </field>
+    </record>
+	
+	
+	
+	<record id="view_department_salary_costing_search" model="ir.ui.view">
+        <field name="name">department.salary.costing.search</field>
+        <field name="model">department.salary.costing</field>
+        <field name="arch" type="xml">
+            <search string="Department Salary Costing">
+				 <field name="department_id"/>
+				 <field name="employee_id"/>
+				 <field name="month"/>
+				 <field name="category" />
+                 <field name="category_total" sum="Category Total"/>
+				 <field name="total_amount" sum="Total Amount"/>
+                <group expand="1" string="Group By">
+					<filter string="Department" name="department_id" context="{'group_by':'department_id'}"/>
+					<filter string="Employee" name="employee_id" context="{'group_by':'employee_id'}"/>
+					<filter string="Month" name="month" context="{'group_by':'month'}"/>
+					<filter string="Category" name="category" context="{'group_by':'category'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+	
+	
+
+	<record id="department_salary_costing_action" model="ir.actions.act_window">
+		<field name="name">Department Salary Costing</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">department.salary.costing</field>
+		<field name="view_mode">pivot,graph,tree</field>
+	</record>
+	
+	<menuitem name="Department Salary Costing" id="menu_department_salary_costing" parent='hr_payroll.menu_hr_payroll_report' action="department_salary_costing_action" sequence="55" groups="base.group_erp_manager,base.group_user"/>
+
+</odoo>

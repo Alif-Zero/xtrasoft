@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="summeryatend_format" model="report.paperformat">
+            <field name="name">attendeance</field>
+            <field name="format">custom</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">10</field>
+            <field name="orientation">Landscape</field>
+        </record>
+
+
+        <report
+                id="action_report_summ_attendance"
+                model="attend.summery.details"
+                string="Attendance Summery"
+                report_type="qweb-pdf"
+                name="design_creative_custom.summery_attendance_staff"
+                file="design_creative_custom.summery_attendance_staff"
+                paperformat="summeryatend_format"
+
+
+        />
+
+
+        <template id="summery_attendance_staff">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="col-auto mw-100 mb-2">
+                        <strong>Design Creative W.L.L</strong>
+                    </div>
+                    <div class="col-auto mw-100 mb-2">
+                        <h1>Attendance Sheet</h1>
+                    </div>
+
+                    <div class="page">
+
+                        <table class="table table-sm" style="page-break-inside: avoid;">
+                            <thead>
+                                <tr>
+                                    <!--                                    <td>-->
+                                    <!--                                        <div class="col-auto mw-100 mb-2"-->
+                                    <!--                                             color="#17a2b8">-->
+                                    <!--                                            <strong>SN</strong>-->
+                                    <!--                                        </div>-->
+                                    <!--                                    </td>-->
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>ID</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2" width="30%"
+                                             color="#17a2b8">
+                                            <strong>Name</strong>
+                                        </div>
+                                    </td>
+                                    <t t-foreach="dayl" t-as="line">
+                                              <td>
+                                        <div class="col-auto mw-100 mb-2" width="5%"
+                                             color="#17a2b8">
+                                            <strong><span t-esc="line"></span></strong>
+                                        </div>
+                                    </td>
+
+                                    </t>
+
+
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Attended</strong>
+                                        </div>
+                                    </td>
+                                    <!--                                    <td>-->
+                                    <!--                                        <div class="col-auto mw-100 mb-2"-->
+                                    <!--                                             color="#17a2b8">-->
+                                    <!--                                            <strong>Missing</strong>-->
+                                    <!--                                        </div>-->
+                                    <!--                                    </td>-->
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Absent</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Leave</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Sick Lv</strong>
+                                        </div>
+                                    </td>
+                                    <!--                                    <td>-->
+                                    <!--                                        <div class="col-auto mw-100 mb-2"-->
+                                    <!--                                             color="#17a2b8">-->
+                                    <!--                                            <strong>Day off</strong>-->
+                                    <!--                                        </div>-->
+                                    <!--                                    </td>-->
+                                    <!--                                    <td>-->
+                                    <!--                                        <div class="col-auto mw-100 mb-2"-->
+                                    <!--                                             color="#17a2b8">-->
+                                    <!--                                            <strong>Conflict</strong>-->
+                                    <!--                                        </div>-->
+                                    <!--                                    </td>-->
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Emerg</strong>
+                                        </div>
+                                    </td>
+                                    <!--                                    <td>-->
+                                    <!--                                        <div class="col-auto mw-100 mb-2"-->
+                                    <!--                                             color="#17a2b8">-->
+                                    <!--                                            <strong>Death</strong>-->
+                                    <!--                                        </div>-->
+                                    <!--                                    </td>-->
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Unpaid</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Mater</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Busi</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Total</strong>
+                                        </div>
+                                    </td>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="dtax" t-as="line">
+
+
+                                    <tr>
+                                        <td>
+                                            <span align="center" t-esc="line.get('roll')"/>
+                                        </td>
+                                        <td align="center" width="30%">
+                                            <span t-esc="line.get('emp')"/>
+                                        </td>
+                                        <td align="center">
+                                            <span t-esc="line.get('atend')"/>
+                                        </td>
+                                        <!--                                        <td align="center">-->
+                                        <!--                                            <span  t-esc="line.get('Missing')"/>-->
+
+                                        <!--                                        </td>-->
+                                        <td align="center">
+                                            <span t-esc="line.get('Absent')"/>
+
+                                        </td>
+
+                                        <td align="center">
+                                            <span t-esc="line.get('leave')"/>
+
+                                        </td>
+                                        <td align="center">
+                                            <span t-esc="line.get('leave_sick')"/>
+
+                                        </td>
+
+                                        <td align="center">
+                                            <span t-esc="line.get('leave_Emerg')"/>
+
+                                        </td>
+                                        <td>
+                                            <span align="center" t-esc="line.get('leave_Unpaid')"/>
+
+                                        </td>
+
+                                        <td align="center">
+                                            <span t-esc="line.get('leave_Mater')"/>
+
+                                        </td>
+                                        <td align="center">
+                                            <span t-esc="line.get('leave_Busi')"/>
+
+                                        </td>
+
+                                        <td align="center">
+                                            <span t-esc="line.get('total')"/>
+
+                                        </td>
+
+
+                                    </tr>
+
+
+                                </t>
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

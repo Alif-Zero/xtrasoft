@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+    <record model="ir.ui.view" id="heemployee_custom_view_form">
+        <field name="name">res.employees.hr.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+			
+			<xpath expr="//field[@name='identification_id']" position="attributes">
+                <attribute name="string">Employee Code</attribute>
+            </xpath>
+			
+			<!--<xpath expr="//field[@name='study_field']" position="attributes">
+                <attribute name="string">Degree Name</attribute>
+            </xpath>-->
+			
+			<!--<xpath expr="//field[@name='study_school']" position="attributes">
+                <attribute name="string">Institute</attribute>
+            </xpath>-->
+
+            <xpath expr="//field[@name='job_title']" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+
+            </xpath>
+
+            <xpath expr="//field[@name='department_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='job_id']" position="attributes">
+                <attribute name="invisible">0</attribute>
+                <attribute name="readonly">1</attribute>
+
+            </xpath>
+
+            <xpath expr="//field[@name='passport_id']" position="after">
+                <field name="passport_exp_date" groups="hr.group_hr_user"></field>
+
+            </xpath>
+
+            <!--<xpath expr="//field[@name='country_id']" position="after">
+                <field name="bahrain_expact"></field>
+            </xpath>-->
+
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="muslim"></field>
+            </xpath>
+
+            <xpath expr="//field[@name='birthday']" position="after">
+                <field name="age"></field>
+            </xpath>
+
+
+            <xpath expr="//notebook/page[@name='personal_information']//group/group[4]" position="after">
+                <group string="Other Info">
+                    <field name="cpr_no"></field>
+                    <field name="cpr_exp_date"></field>
+<!--                    <field name="rp_exp_date"></field>
+-->                    <field name="veh_alloted"></field>
+                    <field name="veh_number" attrs="{'invisible': [('veh_alloted', '=', 'No')]}"></field>
+
+
+                    <field name="accomodation"></field>
+                    <field name="iban"></field>
+                </group>
+                <group string="Work schedule Config">
+                    <field name="ot_eligible"></field>
+
+                    <field name="ot_weekday"
+                           attrs="{'invisible': [('ot_eligible', '=', False)]}"
+                    ></field>
+
+                    <field name="ot_weekend" attrs="{'invisible': [('ot_eligible', '=', False)]}"></field>
+
+                    <field name="ot_ramzan"></field>
+                    <field name="ot_ramzan_muslims" attrs="{'invisible': [('ot_ramzan', '=', False)]}"/>
+
+                    <field name="sat_work"
+                           attrs="{'invisible': [('sat_offic', '=', True)],'required':[('sat_offic','=',False)]}"></field>
+
+                    <field name="sat_offic"
+                           attrs="{'invisible': [('sat_work', '=', True)],'required':[('sat_work','=',False)]}"></field>
+
+
+                    <field name="manual_schedule" attrs="{'invisible': [('ot_ramzan', '=', True)]}"></field>
+
+                    <field name="workschedule"
+                           attrs="{'invisible': [('manual_schedule', '=', True)]}"></field>
+
+
+                </group>
+                <group string="Enter Manual shift"
+                       attrs="{'invisible':['|',('manual_schedule','=',False),('ot_ramzan','=',True)]}" col="4"
+                       colspan="12">
+
+                    <field name="man_works_fhour" placeholder="e.g. 08:30"
+                           attrs="{'invisible': [('manual_schedule', '=', False)],'required':[('manual_schedule','=',True)]}"></field>
+                    <field name="man_works_fmins" placeholder="e.g. 10:30"
+                           attrs="{'invisible': [('manual_schedule', '=', False)],'required':[('manual_schedule','=',True)]}"></field>
+                    <field name="man_works_shour" placeholder="e.g. 02:10"
+                           attrs="{'invisible': [('manual_schedule', '=', False)],'required':[('manual_schedule','=',True)]}"></field>
+                    <field name="man_works_smins" placeholder="e.g. 05:30"
+                           attrs="{'invisible': [('manual_schedule', '=', False)],'required':[('manual_schedule','=',True)]}"></field>
+
+
+                </group>
+
+            </xpath>
+
+
+        </field>
+    </record>
+
+    <record id="hr.view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="arch" type="xml">
+            <form string="Employee" js_class="hr_employee_form">
+                <field name="active" invisible="1"/>
+                <field name="user_partner_id" invisible="1"/>
+                <field name="hr_presence_state" invisible="1"/>
+                <header>
+                    <button string="Chat" class="btn btn-primary o_employee_chat_btn"
+                            attrs="{'invisible': [('user_id','=', False)]}"/>
+                    <button name="%(hr.plan_wizard_action)d" string="Launch Plan" type="action"
+                            groups="hr.group_hr_manager"/>
+                </header>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button
+                                id="hr_presence_button"
+                                class="oe_stat_button"
+                                disabled="1"
+                                attrs="{'invisible': ['|', ('last_activity', '=', False), ('user_id', '=', False)]}">
+                            <div role="img" class="fa fa-fw fa-circle text-success o_button_icon"
+                                 attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available"
+                                 title="Available"/>
+                            <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon"
+                                 attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away"
+                                 title="Away"/>
+                            <div role="img" class="fa fa-fw fa-circle text-danger o_button_icon"
+                                 attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}"
+                                 aria-label="Not available" title="Not available"/>
+
+                            <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '=', 'present')]}">
+                                <span class="o_stat_text">
+                                    Not Connected
+                                </span>
+                            </div>
+                            <div class="o_stat_info" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}">
+                                <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '=', False)]}">
+                                    <field name="last_activity_time"/>
+                                </span>
+                                <span class="o_stat_value" attrs="{'invisible': [('last_activity_time', '!=', False)]}">
+                                    <field name="last_activity"/>
+                                </span>
+                                <span class="o_stat_text">Present Since</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="image_1920" widget='image' class="oe_avatar"
+                           options='{"zoom": true, "preview_image":"image_128"}'/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Employee's Name" required="True"/>
+                        </h1>
+                        <h2>
+                            <field name="job_title" placeholder="Job Position"/>
+                        </h2>
+                        <field name="category_ids" widget="many2many_tags"
+                               options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"
+                               groups="hr.group_hr_manager"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="mobile_phone" widget="phone"/>
+                            <field name="work_phone" widget="phone"/>
+                            <field name="work_email" widget="email"/>
+                            <field name="work_location"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="department_id"/>
+                            <field name="job_id"/>
+                            <field name="parent_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="personal_information" string="Private Information" groups="hr.group_hr_user">
+                            <group>
+                                <group string="Private Contact">
+                                    <field name="address_home_id"
+                                           context="{
+                                                'show_address': 1,
+                                                'default_type': 'private',
+                                                'form_view_ref': 'base.res_partner_view_form_private'}"
+                                           options='{"always_reload": True, "highlight_first_line": True}'/>
+                                    <field name="private_email" string="Email"/>
+                                    <field name="phone" groups="hr.group_hr_user" string="Phone"/>
+                                    <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
+                                    <field name="km_home_work" groups="hr.group_hr_user"/>
+                                </group>
+                                <group string="Citizenship">
+                                    <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                    <field name="identification_id" groups="hr.group_hr_user"/>
+                                    <field name="passport_id" groups="hr.group_hr_user"/>
+                                    <field name="gender"/>
+                                    <field name="birthday"/>
+                                    <field name="place_of_birth" groups="hr.group_hr_user"/>
+                                    <field name="country_of_birth" groups="hr.group_hr_user"/>
+                                </group>
+                                <group string="Marital Status">
+                                    <field name="marital"/>
+                                    <field name="spouse_complete_name"
+                                           attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"
+                                           groups="hr.group_hr_user"/>
+                                    <field name="spouse_birthdate"
+                                           attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"
+                                           groups="hr.group_hr_user"/>
+                                </group>
+                                <group string="Dependant">
+                                    <field name="no_depend"/>
+                                    <field name="children"/>
+                                </group>
+                                <group string="Emergency">
+                                    <field name="emergency_contact"/>
+									<field name="emergency_person_relation"/>
+                                    <field name="emergency_phone"/>
+                                </group>
+                                <!--                                <group string="Work Permit" name="work_permit">-->
+                                <!--                                    <field name="visa_no"/>-->
+                                <!--                                    <field name="permit_no"/>-->
+                                <!--                                    <field name="visa_expire"/>-->
+                                <!--                                </group>-->
+                                <group string="Education">
+									<field name="education_details" nolabel="1">
+										<tree editable="bottom">
+											<field name="degree_level"/>
+											<field name="name"/>
+											<field name="type"/>
+											<field name="institute_id"/>
+										</tree>
+									</field>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="public" string="Work Information">
+                            <div id="o_work_employee_container"> <!-- These two div are used to position org_chart -->
+                                <div id="o_work_employee_main">
+                                    <group string="Location">
+                                        <field name="address_id"
+                                               context="{'show_address': 1}"
+                                               options='{"always_reload": True, "highlight_first_line": True}'/>
+                                    </group>
+                                    <group name="managers" string="Responsibles">
+                                        <field name="coach_id"/>
+                                    </group>
+                                    <group name="departure" string="Departure"
+                                           attrs="{'invisible': [('active', '=', True)]}">
+                                        <field name="departure_reason"/>
+                                        <field name="departure_description"/>
+                                    </group>
+                                    <group string="Schedule" groups="base.group_no_one">
+                                        <field name="resource_calendar_id" required="1"/>
+                                        <field name="tz"/>
+                                    </group>
+									<group string="Employement History">
+										<field name="experience_history" nolabel="1">
+											<tree editable="bottom">
+												<field name="institute_id"/>
+												<field name="designation_id"/>
+												<field name="department"/>
+												<field name="from_date"/>
+												<field name="to_date"/>
+												<field name="leaving_reason"/>
+											</tree>
+										</field>
+									</group>
+                                </div>
+                            </div>
+                        </page>
+
+                        <page name="hr_settings" string="HR Settings" groups="hr.group_hr_user">
+                            <group>
+                                <group string='Status' name="active_group">
+                                    <field name="user_id" string="Related User"/>
+                                </group>
+                                <group string="Attendance" name="identification_group">
+                                    <field name="pin" string="PIN Code"/>
+                                    <label for="barcode"/>
+                                    <div class="o_row">
+                                        <field name="barcode"/>
+                                        <button string="Generate" class="btn btn-link" type="object"
+                                                name="generate_random_barcode"
+                                                attrs="{'invisible': [('barcode', '!=', False)]}"/>
+                                        <button name="%(hr.hr_employee_print_badge)d" string="Print Badge"
+                                                class="btn btn-link" type="action"
+                                                attrs="{'invisible': [('barcode', '=', False)]}"/>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+</odoo>

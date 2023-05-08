@@ -1,0 +1,82 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_employee_form_inherits">
+        <field name="name">view.employee.form</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
+        <field name="arch" type="xml">
+        <div name="button_box" position="inside">
+            <button name="action_to_open_late_check_in_records"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-clock-o">
+                <field name="late_check_in_count" widget="statinfo" string="Late Check-In"/>
+            </button>
+        </div>
+        </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_employee_form_inherits_late">
+        <field name="name">view.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+        <div name="button_box" position="inside">
+            <button name="action_to_open_late_check_in_records"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-clock-o">
+                <field name="late_check_in_count" widget="statinfo" string="Late Check-In"/>
+            </button>
+        </div>
+        </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_hr_attendance_exemption_tree">
+			<field name="name">hr.attendance.exemption.tree</field>
+			<field name="model">hr.attendance.exemption</field>
+			<field name="arch" type="xml">
+				<tree string='Attendance Exemption' editable="bottom">
+					<field name='employee_id'/>
+					<field name='job_id'/>
+					<field name='department_id'/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_hr_attendance_exemption_search">
+			<field name="name">hr.attendance.exemption.search</field>
+			<field name="model">hr.attendance.exemption</field>
+			<field name="arch" type="xml">
+				<search string='Attendance Exemption'>
+					<field name='employee_id'/>
+					<field name='job_id'/>
+					<field name='department_id'/>
+					<separator />
+                <group expand='1' string='Group By'>
+                    <filter string="Employee" name="employee" domain="[]" context="{'group_by':'employee_id'}" />
+                    <filter string="Designation" name="job" domain="[]" context="{'group_by':'job_id'}" />
+                    <filter string="Department" name="department" domain="[]" context="{'group_by':'department_id'}" />
+                  </group>
+				</search>
+			</field>
+			</record>
+			<record model="ir.actions.act_window" id="action_hr_attendance_exemption">
+		        <field name="name">Attendance Exemption</field>
+		        <field name="res_model">hr.attendance.exemption</field>
+		        <field name="view_mode">tree</field>
+		        <field name="help" type="html">
+		            <p class="oe_view_nocontent_create">Create the first record</p>
+		        </field>
+		    </record>
+		
+		
+		<menuitem
+        name="Attendance Exemption"
+        id="menu_hr_attendance_exemption"
+        sequence="2"
+        groups="base.group_user"
+        action="action_hr_attendance_exemption"
+		parent="hr.menu_hr_root"/>
+    </data>
+</odoo>

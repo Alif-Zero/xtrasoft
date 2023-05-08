@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <report
+            id="quotation_order_prints"
+            model="sale.order"
+            string="Quotation with payment"
+            report_type="qweb-pdf"
+            name="design_creative_custom.quotation_order_print_template"
+            file="design_creative_custom.quotation_order_print_template"
+
+    />
+
+    <report
+            id="quotation_orderwp_prints"
+            model="sale.order"
+            string="Quotation without payment"
+            report_type="qweb-pdf"
+            name="design_creative_custom.quotation_order_print_template_wp"
+            file="design_creative_custom.quotation_order_print_template_wp"
+
+    />
+
+
+    <template id="repair_order_print_main">
+        <t t-call="web.external_layout">
+            <!--        <t t-call="report.basic_layout">-->
+
+            <div class="page">
+
+                <style>
+                    table {
+                    border: 1px solid black;
+                    border-collapse: collapse;
+                    border-radius:16px;
+                    -moz-border-radius:6px;
+                    }
+                </style>
+
+
+                <!--                <div class="row">-->
+                <!--                    <table width="100%">-->
+                <!--                        <tr style="background-color:#D9DBE9">-->
+                <!--                            &lt;!&ndash;						<td width="15%" align="center" style="font-size:14px"> <b><span t-field="o.x_ro_no" /></b> </td>&ndash;&gt;-->
+                <!--                            <td colspan="6" align="center" style="font-size:16px">-->
+                <!--                                <b>Cost Sheet</b>-->
+                <!--                            </td>-->
+
+                <!--                            &lt;!&ndash;							<td width="15%" align="center" style="font-size:14px"><b><span t-field="o.name" /></b></td>&ndash;&gt;-->
+                <!--                        </tr>-->
+
+                <!--                    </table>-->
+                <!--                </div>-->
+
+                <div class="row">
+
+
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+                        <tr style="line-height: 23px;font-size:15px" width="100%">
+                            <td width="20%">
+                                <b>Company Name</b>
+                            </td>
+                            <td width="30%">
+
+                            </td>
+
+                            <td width="20%">
+                                <b>Reference no#</b>
+                            </td>
+                            <td width="30%">
+                            </td>
+
+                        </tr>
+
+                        <tr style="line-height: 23px;font-size:15px" width="100%">
+                            <td width="20%">
+                                <b>Address:</b>
+                            </td>
+                            <td width="30%">
+                            </td>
+                            <td width="20%">
+                                <b>Date:</b>
+                            </td>
+                            <td width="30%">
+
+                            </td>
+
+                        </tr>
+
+                        <tr style="line-height: 23px;font-size:15px" width="100%">
+
+                            <td width="20%">
+                                <b>attn:</b>
+                            </td>
+                            <td width="30%">
+                            </td>
+                            <td width="20%">
+                                <b>Saleman</b>
+                            </td>
+                            <td width="30%">
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr style="line-height: 23px;font-size:15px" width="100%">
+
+                            <td width="20%">
+                                <b>Contact Details:</b>
+                            </td>
+                            <td width="30%">
+                            </td>
+                            <td width="20%">
+                                <b>Saleman Contact</b>
+                            </td>
+                            <td align="center" width="30%">
+
+                            </td>
+
+                        </tr>
+
+
+                    </table>
+                </div>
+
+
+                <!--                <div class="row">-->
+                <!--                    <table border="0" cellpadding="0" cellspacing="0" class="table-bordered" width="100%">-->
+                <!--                        <tbody>-->
+                <!--                            <tr style="font-size:13px" col="4" colspan="12">-->
+                <!--                                <td align="center" width="20%">-->
+                <!--                                    <b>Qtn No</b>-->
+                <!--                                </td>-->
+                <!--                                <td align="center" width="30%">-->
+
+                <!--                                </td>-->
+
+                <!--                                <td align="center" width="20%">-->
+                <!--                                    <b>Qtn Date</b>-->
+                <!--                                </td>-->
+                <!--                                <td align="center" width="30%">-->
+                <!--                                    <b></b>-->
+                <!--                                </td>-->
+
+                <!--                            </tr>-->
+
+                <!--                            <tr style="font-size:13px" col="4" colspan="12">-->
+                <!--                                <td align="center" width="20%">-->
+                <!--                                    <b>Project No</b>-->
+                <!--                                </td>-->
+                <!--                                <td align="center" width="30%">-->
+                <!--                                    <b></b>-->
+                <!--                                </td>-->
+
+                <!--                                <td width="20%">-->
+
+                <!--                                </td>-->
+                <!--                                <td width="30%">-->
+
+                <!--                                </td>-->
+
+                <!--                                &lt;!&ndash;                <td align="center">&ndash;&gt;-->
+                <!--                                &lt;!&ndash;                    <b>Contact</b>&ndash;&gt;-->
+                <!--                                &lt;!&ndash;                </td>&ndash;&gt;-->
+                <!--                                &lt;!&ndash;                <td align="center">&ndash;&gt;-->
+                <!--                                &lt;!&ndash;                    <b></b>&ndash;&gt;-->
+                <!--                                &lt;!&ndash;                </td>&ndash;&gt;-->
+
+                <!--                            </tr>-->
+
+                <!--                            <tr style="font-size:13px" col="4" colspan="12">-->
+
+                <!--                                <td align="center" width="20%">-->
+                <!--                                    <b>Start Date:</b>-->
+                <!--                                </td>-->
+                <!--                                <td align="center" width="30%">-->
+                <!--                                    <b></b>-->
+                <!--                                </td>-->
+                <!--                                <td align="center" width="20%">-->
+                <!--                                    <b>Est.Comp Date</b>-->
+                <!--                                </td>-->
+                <!--                                <td align="center" width="30%">-->
+                <!--                                    <span t-esc="o.closing_estimation_target"/>-->
+                <!--                                </td>-->
+
+                <!--                            </tr>-->
+                <!--                        </tbody>-->
+                <!--                    </table>-->
+                <!--                </div>-->
+
+
+                <div class="row">
+
+                    <p aligin="center">
+                        <b>Sub: FERRARI CHALLENGE 2020 PODIUM BACKROP SCREENS; Event - 4th to7th March 2020</b>
+                    </p>
+                </div>
+                <div class="row">
+                    <p aligin="left">Dear Sir/Madam</p>
+                    <br/>
+                    <p aligin="left">
+                        Please fnd below the quote for the mentoned item:
+                    </p>
+
+                </div>
+
+                <div class="row">
+                    <table class="table-bordered" width="100%" height="60%" style="border-color:black">
+                        <tr style="height:60px;vertical-align:top; border-color:white">
+                            <td style="border-color:white">
+                                <table class="table-bordered" width="100%" style="border-color:black">
+                                    <tr style=" line-height: 71px; font-size:13px;background-color:#D5DBDB; border-color:black">
+
+                                        <td style="border-color:black" width="5%" align="center">
+                                            <b>S.No</b>
+                                        </td>
+
+                                        <td style="border-color:black" width="35%" align="center">
+                                            <b>Description</b>
+                                        </td>
+
+                                        <td style="border-color:black" width="10%" align="center">
+                                            <b>Quantity</b>
+                                        </td>
+                                        <td style="border-color:black" width="10%" align="center">
+                                            <b>UOM</b>
+                                        </td>
+                                        <td style="border-color:black" width="20%" align="center">
+                                            <b>Rate</b>
+                                        </td>
+                                        <td style="border-color:black" width="20%" align="center">
+                                            <b>Amount</b>
+                                        </td>
+                                    </tr>
+
+
+                                    <!--                                    <t t-foreach="o.material_ids" t-as="l">-->
+                                    <!--                                        &lt;!&ndash;                                            <t t-if="'Parts' in l.product_id.categ_id.display_name">&ndash;&gt;-->
+                                    <!--                                        <tr style="line-height: 15px;border-top-color:white; border-bottom-color:white">-->
+                                    <!--                                            &lt;!&ndash;                                                    <td style="border-color:black;border-top-color:white; border-bottom-color:white"&ndash;&gt;-->
+                                    <!--                                            &lt;!&ndash;                                                        width="20%">&#160;&#160;&#160;<span&ndash;&gt;-->
+                                    <!--                                            &lt;!&ndash;                                                            t-field="l.product_id.default_code"/>&ndash;&gt;-->
+                                    <!--                                            &lt;!&ndash;                                                    </td>&ndash;&gt;-->
+                                    <!--                                            <td style="border-color:black;font-size:13px;"-->
+                                    <!--                                                width="5%">-->
+                                    <!--                                                <span-->
+                                    <!--                                                        t-esc="l_index+1"/>-->
+                                    <!--                                            </td>-->
+
+                                    <!--                                            <td style="border-color:black;font-size:13px;" align="center"-->
+                                    <!--                                                width="20%">-->
+                                    <!--                                                <span-->
+                                    <!--                                                        t-field="l.product_id.name"/>-->
+                                    <!--                                            </td>-->
+
+                                    <!--                                            <td style="border-color:black;font-size:13px;"-->
+                                    <!--                                                width="10%" align="center">-->
+                                    <!--                                                <span t-esc="round(l.qty,2)"/>-->
+                                    <!--                                            </td>-->
+
+                                    <!--                                            <td style="border-color:black;font-size:13px;" align="center"-->
+                                    <!--                                                width="30%">-->
+                                    <!--                                                <span-->
+                                    <!--                                                        t-field="l.uom"/>-->
+                                    <!--                                            </td>-->
+
+
+                                    <!--                                            <td style="border-color:black;font-size:13px;" align="center"-->
+                                    <!--                                                width="10%">-->
+                                    <!--                                                &lt;!&ndash;                                                        <span t-field="l.price_unit"/>&#160;&#160;&ndash;&gt;-->
+                                    <!--                                                <span t-esc="'{0:,.0f}'.format(int(l.rate))"/>-->
+                                    <!--                                            </td>-->
+
+                                    <!--                                            <td style="border-color:black;font-size:13px;"-->
+                                    <!--                                                width="10%" align="center">-->
+                                    <!--                                                &lt;!&ndash;                                                        <span t-field="l.price_unit"/>&#160;&#160;&ndash;&gt;-->
+                                    <!--                                                <span t-esc="'{0:,.0f}'.format(int(l.subtotal))"/>-->
+                                    <!--                                            </td>-->
+                                    <!--                                        </tr>-->
+                                    <!--                                    </t>-->
+
+
+                                </table>
+                            </td>
+                        </tr>
+                        <br/>
+                    </table>
+                </div>
+
+                <br/>
+                <!--                CAlculations-->
+                <div class="row">
+
+                    <table class="table-bordered" width="100%" style="border-color:black">
+                        <tr style=" line-height: 20px; font-size:13px; border-color:black">
+
+                            <td style="border-color:black" width="70%" align="left">
+                                <div class="row">
+                                    <p style="margin-left:20px">payment terms:</p>
+                                    <span></span>
+
+                                </div>
+                                <div class="row">
+                                    <p style="margin-left:30px">Validty:</p>
+                                    <span></span>
+
+                                </div>
+                                <div class="row">
+                                    <p style="margin-left:30px">Delivery:</p>
+                                    <span></span>
+
+                                </div>
+                            </td>
+
+                            <td style="border-color:black" width="30%">
+                                <div>
+                                    <div class="row" style="margin-left:30px;">
+
+                                        <span>Total</span>
+                                    </div>
+                                    <div class="row" style="margin-left:30px;">
+                                        <span>Client Approval</span>
+                                    </div>
+                                    <div class="row" style="margin-left:30px;">
+                                        <p>___________________</p>
+                                    </div>
+
+                                    <div class="row" style="margin-left:30px;">
+                                        <span>Date:</span>
+                                        <!--                                            <p>___________________</p>-->
+                                    </div>
+                                    <div class="row" style="margin-left:30px;">
+                                        <p>___________________</p>
+                                    </div>
+
+
+                                </div>
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+
+            </div>
+        </t>
+
+    </template>
+
+
+    <template id="quotation_order_print_template_wp">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="pmnt" t-value="True"/>
+                <t t-call="design_creative_custom.repair_order_print_main"/>
+            </t>
+        </t>
+    </template>
+
+
+    <template id="quotation_order_print_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="pmnt" t-value="False"/>
+                <t t-call="design_creative_custom.repair_order_print_main"/>
+            </t>
+        </t>
+    </template>
+
+
+</odoo>
+

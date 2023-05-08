@@ -1,0 +1,26 @@
+<odoo>
+    <data noupdate="1">
+    
+        <record id="labour_attendance_allowance" model="hr.salary.rule">
+            <field name="name">Attendance Allowance (Labour)</field>
+            <field name="sequence" eval="6"/>
+            <field name="code">AAL</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+			<field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result=contract.cal_labour_allowance('AAL',contract,payslip)</field>
+        </record>
+		
+		<record id="management_attendance_allowance" model="hr.salary.rule">
+            <field name="name">Attendance Allowance (Management)</field>
+            <field name="sequence" eval="6"/>
+            <field name="code">AAM</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+			<field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result=contract.cal_management_allowance('AAM',contract,payslip)</field>
+        </record>
+
+ 
+    </data>
+</odoo>

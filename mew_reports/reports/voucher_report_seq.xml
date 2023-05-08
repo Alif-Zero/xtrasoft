@@ -1,0 +1,114 @@
+<odoo>
+    <record model="ir.ui.view" id="account_move_voucher_report_seq_no_tree">
+        <field name="name">account_move_voucher_report_seq_no_tree</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree//field[@name='name']" position='after'>
+                <field name="voucher_seq"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_move_voucher_report_seq_no_form">
+        <field name="name">account_move_voucher_report_seq_no_form</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form//sheet//group[1]//group[1]//field[@name='payment_type']" position='inside'>
+                <field name="voucher_seq"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="voucher_report_seq_no" model="ir.sequence">
+        <field name="name">voucher_report_seq_no</field>
+        <field name="code">self.voucher.seq</field>
+        <field name="active">TRUE</field>
+        <field name="number_next">1</field>
+        <field name="prefix"></field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+       <record model="ir.ui.view" id="account_move_journal_voucher_report">
+        <field name="name">account_move_journal_voucher_report</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ref']" position='after'>
+                <field name="journal_voucher_seq"  invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_move_journal_voucher_report_tree">
+        <field name="name">account_move_journal_voucher_report_tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree"/>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree//field[@name='name']" position='after'>
+                <field name="journal_voucher_seq"/>
+            </xpath>
+
+        </field>
+    </record>
+
+<!--    for PV-->
+    <record model="ir.ui.view" id="account_move_purchase_voucher_seq_no_tree">
+        <field name="name">"account_move_purchase_voucher_seq_no_tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_in_invoice_tree"/>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree//field[@name='name']" position='after'>
+                <field name="purchase_voucher_seq"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_move_purchase_voucher_seq_no_form">
+        <field name="name">account_move_purchase_voucher_seq_no_form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form//sheet//group[1]//group[1]//field[@name='invoice_vendor_bill_id']" position='after'>
+                <field name="purchase_voucher_seq" required="0" invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+ <record id="purchase_voucher_seq_no_record" model="ir.sequence">
+        <field name="name">purchase_voucher_seq_no_record</field>
+        <field name="code">self.service.ref</field>
+        <field name="active">TRUE</field>
+        <field name="number_next">1</field>
+        <field name="prefix">PV-</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="journal_voucher_seq_no_new" model="ir.sequence">
+        <field name="name">journal_voucher_seq_no_new</field>
+        <field name="code">self.journal.ref.no</field>
+        <field name="active">TRUE</field>
+        <field name="number_next">1</field>
+        <field name="prefix"></field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+
+
+
+</odoo>

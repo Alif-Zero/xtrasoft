@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <data>
+        <record id="logrepo_format" model="report.paperformat">
+            <field name="name">attendeance</field>
+            <field name="format">custom</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">0</field>
+            <field name="orientation">Landscape</field>
+        </record>
+
+        <report id="emplogs_log_report_action" model="emplog.details"
+                string="Employee Log Report" report_type="qweb-pdf"
+                name="design_creative_custom.logs_emp_templates"
+                menu="False"
+                paperformat="logrepo_format"
+
+        />
+
+        <template id="logs_emp_templates">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+
+                    <div class="page">
+                        <table class="table table-sm" style="page-break-inside: avoid;">
+                            <tr>
+                                <!--                                    <td>-->
+                                <!--                                        <div class="col-auto mw-100 mb-2" t-if="o.service" name="Service Type"-->
+                                <!--                                             color="#17a2b8">-->
+                                <!--                                            <strong>Employee Name:</strong>-->
+                                <!--&lt;!&ndash;                                            <span t-field="o.service"/>&ndash;&gt;-->
+                                <!--                                        </div>-->
+                                <!--                                    </td>-->
+                                <td>
+
+                                    <div class="col-auto mw-100 mb-2" name="Part No">
+
+                                        <strong>Date From:</strong>
+                                        <span t-raw="df"/>
+                                    </div>
+                                </td>
+                                <td>
+
+                                    <div class="col-auto mw-100 mb-2" name="Customer Name"
+                                         color="#17a2b8">
+                                        <strong>Date To:</strong>
+                                        <span t-raw="df"/>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+
+
+                        <table class="table table-sm" style="page-break-inside: avoid;">
+                            <thead>
+                                <tr>
+                                    <!-- TODO: remove in master -->
+                                    <th name="th_part_no" class="center">
+                                        <span>S.NO. :</span>
+                                    </th>
+                                    <!-- TODO: remove in master -->
+                                    <th name="th_customer_name" class="center">
+                                        <span>Employee</span>
+                                    </th>
+                                    <th name="th_customer_name" class="center">
+                                        <span>Employer</span>
+                                    </th>
+                                    <th name="th_mileage" class="center">
+                                        <span>Reason:</span>
+                                    </th>
+                                    <th name="th_mileage" class="center">
+                                        <span>Log Date:</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="sno" t-value="0"/>
+
+                                <tr t-foreach="dtax" t-as="a">
+                                    <t t-set="sno" t-value="sno+1"/>
+
+                                    <td>
+                                        <span t-esc="sno"/>
+                                    </td>
+                                    <td style="white-space: text-nowrap;">
+                                        <span t-esc="a.get('emp')"/>
+                                    </td>
+                                    <td style="white-space: text-nowrap;">
+                                        <span t-esc="a.get('manager')"/>
+                                    </td>
+                                    <td style="white-space: text-nowrap;">
+                                        <span t-esc="a.get('reason')"/>
+                                    </td>
+                                    <td style="white-space: text-nowrap;">
+                                        <span t-esc="a.get('date')"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+
+
+                    </div>
+                </t>
+
+            </t>
+
+        </template>
+
+    </data>
+
+
+</odoo>

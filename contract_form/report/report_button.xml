@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+
+    <report
+            id="contract_form_button_id"
+            string="Contract Form"
+            model="hr.contract"
+            report_type="qweb-pdf"
+            name="contract_form.xtrasoft_contract_form_pdf"
+            file="contract_form.xtrasoft_contract_form_pdf"/>
+
+    <report
+            id="employee_form_button_id"
+            string="Employee Form"
+            model="hr.employee"
+            report_type="qweb-pdf"
+            name="contract_form.xtrasoft_employee_form_pdf"
+            file="contract_form.xtrasoft_employee_form_pdf"/>
+
+
+</odoo>

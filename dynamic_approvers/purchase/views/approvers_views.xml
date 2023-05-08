@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data> 
+  	<record id="view_erp360_document_approver_tree" model="ir.ui.view">
+            <field name="name">document.approver.tree</field>
+            <field name="model">document.approver</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Approver's" editable="bottom">
+                    <field name="sequence" />
+<!--					<field name="system_user" />
+-->                    <field name="user_id" attrs="{'required':True}"/>
+<!--                    <field name="name" attrs="{'required':[('system_user','=',False)],'invisible':[('system_user','=',True)]}"/>
+-->                    <field name="authority" required="1"/>
+                    <!--<field name="user2_id" />-->
+                    <!--<field name="authority2" attrs="{'required':[('user2_id','!=',False)]}"/>-->
+                    <field name="action_taken_as"/>
+                    <field name="document_type" invisible="1"/>
+                </tree>
+            </field>
+        </record>	
+  	          
+	    <record model="ir.ui.view" id="view_erp360_document_approver_kanban">
+            <field name="name">document.approver.kanban</field>
+            <field name="model">document.approver</field>
+            <field name="arch" type="xml">
+                <kanban class="o_account_book_kanban">
+                    <field name="sequence" />
+<!--                    <field name="system_user" />
+-->                    <field name="user_id"/>
+                    <field name="authority"/>
+                   <!-- <field name="user2_id" />
+                    <field name="authority2"/>-->
+                    <field name="document_type" invisible="1"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                                <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title oe_account_heading"><field name="sequence"/>: <field name="user_id"/> (<field name="authority"/>)</strong>
+                                    <div class="o_kanban_tags_section oe_kanban_account_categories"/>
+                                    <!--<t t-if="user2_id">
+	                                    <div>
+	                                    	Deligated: <field name="user2_id"/> (<field name="authority2"/>)
+	                                	</div>
+	                                </t>-->
+	                             </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        
+        <record id="action_purchase_order_approver_form" model="ir.actions.act_window">
+            <field name="name">Approvers for Post the Journal Entries</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">document.approver</field>
+            <field name="view_mode">tree,kanban</field>
+            <field name="context">{'default_document_type':'Purchase Order'}</field>
+            <field name="domain">[('document_type','=','Purchase Order')]</field>
+            <field name="groups_id" eval="[(4,ref('base.group_erp_manager')),(4,ref('group_approver_manager'))]"></field>
+        </record>
+        
+        <record id="action_purchase_requests_approver_form" model="ir.actions.act_window">
+            <field name="name">Approvers for Purchase Requests</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">document.approver</field>
+            <field name="view_mode">tree,kanban</field>
+            <field name="context">{'default_document_type':'Purchase Request'}</field>
+            <field name="domain">[('document_type','=','Purchase Request')]</field>
+            <field name="groups_id" eval="[(4,ref('base.group_erp_manager')),(4,ref('group_approver_manager'))]"></field>
+        </record>
+		
+		<record id="action_hr_loan_approver_form" model="ir.actions.act_window">
+            <field name="name">Approvers for HR Loan</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">document.approver</field>
+            <field name="view_mode">tree,kanban</field>
+            <field name="context">{'default_document_type':'HR Loan'}</field>
+            <field name="domain">[('document_type','=','HR Loan')]</field>
+            <field name="groups_id" eval="[(4,ref('base.group_erp_manager')),(4,ref('group_approver_manager'))]"></field>
+        </record>
+        
+        <menuitem id="approver_menu_main" name="Approvers" parent = 'purchase.menu_purchase_config'
+                  groups="base.group_erp_manager,group_approver_manager" sequence="2"/>
+                  
+        <menuitem id="approver_menu_purchase_order" name="Purchase Approvers" parent = 'approver_menu_main' action="action_purchase_order_approver_form"
+                  groups="base.group_erp_manager,group_approver_manager"
+                  sequence="10"/>
+
+        <menuitem id="document_approver_menu_purchase_requests" name="Purchase Requests Approvers" parent = 'approver_menu_main' action="action_purchase_requests_approver_form"
+                  groups="base.group_erp_manager,group_approver_manager"
+                  sequence="20"/>
+		
+		<menuitem id="hr_loan_approver_menu" name="HR Loan Approvers" parent = 'hr_payroll.menu_hr_salary_configuration' action="action_hr_loan_approver_form"
+                  groups="base.group_erp_manager,group_approver_manager"
+                  sequence="20"/>
+        
+  </data>
+</odoo>

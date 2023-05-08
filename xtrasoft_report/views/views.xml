@@ -1,0 +1,214 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="quality_checklist_category_form">
+            <field name="name">quality.checklist.category.form</field>
+            <field name="model">quality.checklist.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="quality_checklist_category_tree">
+            <field name="name">quality.checklist.category.tree</field>
+            <field name="model">quality.checklist.category</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_quality_checklist_category">
+            <field name="name">Quality Checklist Category</field>
+            <field name="res_model">quality.checklist.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.ui.view" id="quality_checklist_criteria_form">
+            <field name="name">quality.checklist.criteria.form</field>
+            <field name="model">quality.checklist.criteria</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="section"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="quality_checklist_criteria_tree">
+            <field name="name">quality.checklist.criteria.tree</field>
+            <field name="model">quality.checklist.criteria</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="section"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_quality_checklist_criteria">
+            <field name="name">Quality Checklist Criteria</field>
+            <field name="res_model">quality.checklist.criteria</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.ui.view" id="xtrasoft_report.list">
+            <field name="name">Employee Performance Review</field>
+            <field name="model">employee.performance.review</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="job_title"/>
+                    <field name="department"/>
+                    <field name="month_selection"/>
+                    <field name="review_period"/>
+                    <field name="date_today"/>
+                    <field name="progress" avg="Total Progress" widget="progressbar"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="exit_interview_form_view" model="ir.ui.view">
+            <field name="name">exit_interview_form_view</field>
+            <field name="model">employee.performance.review</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="All">
+                    <sheet>
+                        <group>
+                            <h1 style="text-align:center;">Employee Performance Review</h1>
+                        </group>
+                        <h4>Employee Information</h4>
+                        <group>
+                            <group>
+                                <field name="name" required="True"/>
+                                <field name="job_title" required="True"/>
+                                <field name="department" required="True"/>
+                            </group>
+                            <group>
+                                <field name="date_today" required="True"/>
+                                <field name="review_period" required="True"/>
+                                <field name="month_selection" required="True"/>
+                            </group>
+                        </group>
+                        <h4>Rating</h4>
+                        <field name="progress" widget="progressbar"/>
+                        <hr/>
+                        <separator colspan="4"/>
+                        <h4>Department Incharge (%)</h4>
+                        <field name="department_progress" widget="progressbar"
+                               context="{'default_section':'Department Incharge'}"/>
+                        <group string="Department Incharge" name="department_incharge">
+                            <field name="department_checklist_ids" nolabel="1" readonly="0">
+                                <tree editable="bottom">
+                                    <field name="section" style="width:25%;"/>
+                                    <field name="criteria_id" style="width:25%;"/>
+                                    <field name="decision" style="width:25%;"/>
+                                    <field name="comments" style="width:25%;"/>
+
+                                </tree>
+                            </field>
+                        </group>
+                        <h4>HR Section (%)</h4>
+                        <field name="hr_progress" widget="progressbar"/>
+                        <group string="HR Section" name="hr_section">
+
+                            <field name="hr_checklist_ids" nolabel="1" readonly="0"
+                                   context="{'default_section':'HR Section'}">
+                                <tree editable="bottom">
+                                    <field name="section" style="width:25%;"/>
+                                    <field name="criteria_id" style="width:25%;"/>
+                                    <field name="decision" required="1" style="width:25%;"/>
+                                    <field name="comments" style="width:25%;"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <h4>Other Options (%)</h4>
+                        <field name="misc_progress" widget="progressbar"/>
+                        <group string="Other Options" name="other">
+
+                            <field name="misc_checklist_ids" nolabel="1" readonly="0"
+                                   context="{'default_section':'Other Options'}">
+                                <tree editable="bottom">
+                                    <field name="section" style="width:25%;"/>
+                                    <field name="criteria_id" style="width:25%;"/>
+                                    <field name="decision" required="1" style="width:25%;"/>
+                                    <field name="comments" style="width:25%;"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <!--<group>
+                            <field name="job_knowledge" widget="radio" class="oe_edit_only"
+                                   options="{'horizontal': true}"/>
+                            <field name="job_knowledge_comment" placeholder="Comments:"/>
+
+                            <field name="work_quality" widget="radio" class="oe_edit_only"
+                                   options="{'horizontal': true}"/>
+                            <field name="work_quality_comment" placeholder="Comments:"/>
+
+                            <field name="attendance" widget="radio" class="oe_edit_only"
+                                   options="{'horizontal': true}"/>
+                            <field name="attendance_comment" placeholder="Comments:"/>
+
+                            <field name="reporting" widget="radio" class="oe_edit_only"
+                                   options="{'horizontal': true}"/>
+                            <field name="reporting_comment" placeholder="Comments:"/>
+
+                            <field name="communication" widget="radio" class="oe_edit_only"
+                                   options="{'horizontal': true}"/>
+                            <field name="communication_comment" placeholder="Comments:"/>
+
+                            <field name="response" widget="radio" class="oe_edit_only"
+                                   options="{'horizontal': true}"/>
+                            <field name="response_comment" placeholder="Comments:"/>
+
+                            <field name="overall_rating" widget="radio" class="oe_edit_only"
+                                   options="{'horizontal': true}"/>
+                            <field name="response_comment" placeholder="Comments:"/>
+
+                        </group>-->
+                        <h4>Evaluation</h4>
+                        <group>
+                            <field name="additional_comment" placeholder="Additional Comments:"/>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="xtrasoft_report.action_window">
+            <field name="name">Employee Performance Review</field>
+            <field name="res_model">employee.performance.review</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem name="XtraSoft" id="xtrasoft_report.menu_root"/>
+
+        <menuitem name="Configuration" id="xtrasoft_configuration_menu" parent="xtrasoft_report.menu_root"/>
+
+        <menuitem name="Employee Performance Review" id="xtrasoft_report.employee_performance_review"
+                  parent="xtrasoft_report.menu_root"
+                  action="xtrasoft_report.action_window"/>
+
+        <!--		<menuitem name="Checklist Category" id="menu_checklist_category" parent='xtrasoft_report.xtrasoft_configuration_menu' action="action_quality_checklist_category" sequence="45" groups="base.group_erp_manager,base.group_user"/>
+        -->
+        <menuitem name="Checklist Criteria" id="menu_checklist_criteria"
+                  parent='xtrasoft_report.xtrasoft_configuration_menu' action="action_quality_checklist_criteria"
+                  sequence="50" groups="base.group_erp_manager,base.group_user"/>
+
+
+    </data>
+</odoo>

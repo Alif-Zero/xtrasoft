@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+    <template id="xtrasoft_contract_form_pdf">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="hr">
+                <t t-call="web.external_layout">
+                    <style>
+                        table td{
+                        padding: 0px 5px !important;
+                        }
+                    </style>
+                    <div class="page">
+                        <h1 style="text-align:center;">OFFER LETTER</h1>
+                    </div>
+                    <div class="row">
+
+                        <p>
+                            <strong>Dear
+                                <t if="hr.employee_id.gender == male">
+                                    Mr
+                                </t>
+                                <t if="hr.employee_id.gender == female">
+                                    Miss
+                                </t>
+                                <t if="hr.employee_id.name" t-esc="hr.employee_id.name"/>
+                            </strong>
+                            <br/>
+                            Congratulations! We are pleased to offer you employment with
+
+                            <strong t-esc="hr.company_id.name"/>
+
+
+                            for the Position of
+                            <strong>
+                                <t if="hr.job_id.name" t-esc="hr.job_id.name"/>
+                            </strong>
+                            in the department of
+                            <t if="hr.department_id.name" t-esc="hr.department_id.name"/>
+                            with effect from
+                            <t if="hr.first_contract_date" t-esc="hr.first_contract_date"/>
+
+                            Your Basic Salary will be
+                            <t if="hr.wage" t-esc="hr.wage"/>
+
+                        </p>
+                    </div>
+                    <div>
+                        <!--                        <p>-->
+                        <!--                            <t if="hr.contract_form_details" t-esc="hr.contract_form_details"/>-->
+                        <!--                        </p>-->
+                    </div>
+                    <div>
+                        <p class="text-center" style="background-color:gray; color:white; font-size:18px padding:5px;">
+                            The break-up of your salary is given below:
+                        </p>
+                    </div>
+                    <div class="row" style="padding-top:20px;padding-bottom:20px;">
+                        <table class=" col-sm-12 table">
+
+                            <tr>
+                                <td style="width:50%">
+                                    <strong>Basic Salary</strong>
+                                </td>
+                                <td style="width:25%">
+                                    <strong>70%</strong>
+                                </td>
+                                <td style="width:25%">
+                                    <t if="hr.wage"
+                                       t-esc="hr.wage * 0.7"/>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Food Allowance</strong>
+                                </td>
+                                <td>
+                                    <strong>5%</strong>
+                                </td>
+                                <td>
+                                    <t if="hr.wage"
+                                       t-esc="hr.wage * 0.05"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Fuel Allowance</strong>
+                                </td>
+                                <td>
+                                    <strong>5%</strong>
+                                </td>
+                                <td>
+                                    <t if="hr.wage"
+                                       t-esc="hr.wage * 0.05"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Entertainment Allowance</strong>
+                                </td>
+                                <td>
+                                    <strong>5%</strong>
+                                </td>
+                                <td>
+                                    <t if="hr.wage"
+                                       t-esc="hr.wage * 0.05"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>House Rent Allowance</strong>
+                                </td>
+                                <td>
+                                    <strong>10%</strong>
+                                </td>
+                                <td>
+                                    <t if="hr.wage"
+                                       t-esc="hr.wage * 0.1"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Communication Allowance</strong>
+                                </td>
+
+                                <td>
+                                    <strong>5%</strong>
+                                </td>
+                                <td>
+                                    <t if="hr.wage"
+                                       t-esc="hr.wage * 0.05"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <h1 class="text-center" style="background-color:gray; color:white; ">
+                            Job Description:
+                        </h1>
+                        <span class="row" style="padding-left:20px;">
+                            <t if="hr.job_description"
+                               t-raw="hr.job_description"/>
+                        </span>
+                    </div>
+                    <div class="">
+
+                        <h1 class="text-center" style="background-color:gray; color:white; font-size:18px; padding:5px;">
+                            Note
+                        </h1>
+                        <p>
+                            <t if="hr.notes"
+                               t-esc="hr.notes"/>
+                        </p>
+                    </div>
+
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

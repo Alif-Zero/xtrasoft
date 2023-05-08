@@ -1,0 +1,75 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="bom_qty_float.list">
+      <field name="name">bom_qty_float list</field>
+      <field name="model">bom_qty_float.bom_qty_float</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="bom_qty_float.action_window">
+      <field name="name">bom_qty_float window</field>
+      <field name="res_model">bom_qty_float.bom_qty_float</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="bom_qty_float.action_server">
+      <field name="name">bom_qty_float server</field>
+      <field name="model_id" ref="model_bom_qty_float_bom_qty_float"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="bom_qty_float" id="bom_qty_float.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="bom_qty_float.menu_1" parent="bom_qty_float.menu_root"/>
+    <menuitem name="Menu 2" id="bom_qty_float.menu_2" parent="bom_qty_float.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="bom_qty_float.menu_1_list" parent="bom_qty_float.menu_1"
+              action="bom_qty_float.action_window"/>
+    <menuitem name="Server to list" id="bom_qty_float" parent="bom_qty_float.menu_2"
+              action="bom_qty_float.action_server"/>
+-->
+
+      <record id="mrp_bom_qty_form_view" model="ir.ui.view">
+        <field name="name">mrp.bom.form.view</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
+        <field name="arch" type="xml">
+             <xpath expr="//tree//field[@name='product_qty']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree//field[@name='product_id']" position="after">
+                <field name="product_qty" digits="[16,4]"/>
+            </xpath>
+        </field>
+    </record>
+
+  </data>
+</odoo>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="sickleave_format" model="report.paperformat">
+            <field name="name">attendeance</field>
+            <field name="format">custom</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">10</field>
+            <field name="orientation">Landscape</field>
+        </record>
+
+        <report
+                id="action_report_sick_attendance"
+                model="absent.details"
+                string="Sick Leave"
+                report_type="qweb-pdf"
+                name="design_creative_custom.sick_attendance"
+                file="design_creative_custom.sick_attendance"
+                paperformat="sickleave_format"
+
+
+        />
+
+        <template id="sick_attendance">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+
+                    <div class="page">
+                        <div class="col-auto mw-100 mb-2">
+                            <strong>Design Creative W.L.L</strong>
+                        </div>
+                        <div class="col-auto mw-100 mb-2">
+                            <h1>Sick Leave and Absences Analysis Report</h1>
+                            <h2> Date Between <span t-esc="df"></span> and <span t-esc="dt"></span> Exclude Temporary=
+                                Yes</h2>
+                        </div>
+
+                        <table class="table table-sm" style="page-break-inside: avoid;">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Roll #</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Employee Name</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Nationality</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Div</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Total</strong>
+                                        </div>
+                                    </td>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="dtax" t-as="line">
+
+
+                                    <t t-if="line.get('data') == 'd'">
+                                        <tr>
+
+                                            <td align="left">
+                                                <strong><span t-esc="line.get('div')"/></strong>
+                                            </td>
+
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td align="center">
+                                                <strong><span t-esc="line.get('tot')"/></strong>
+
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="line.get('data') == 'nd'">
+
+
+                                        <tr>
+                                            <td>
+                                                <span t-esc="line.get('roll')"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('emp')"/>
+                                            </td>
+                                            <td align="center">
+                                                <span t-esc="line.get('nat')"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('div')"/>
+
+                                            </td>
+                                            <td align="center">
+                                                <span t-esc="line.get('total')"/>
+
+                                            </td>
+
+                                        </tr>
+
+                                    </t>
+                                </t>
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

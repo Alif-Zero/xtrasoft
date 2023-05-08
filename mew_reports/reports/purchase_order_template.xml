@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    
+
+
+    <template id="report_purchaseorder_document_new" inherit_id="purchase.report_purchaseorder_document">
+
+        <xpath expr="//t[@t-call='web.external_layout']" position="replace">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="s">
+                    <div class="container">
+                        <style>
+                            .hed1{
+
+                            border-collapse:separate;
+                            border:solid black 2px;
+                            border-radius:10px;
+                            -moz-border-radius:6px;
+
+                            }
+                            .hed2
+                            {
+
+                            font-size:18px;
+                            font-weight:bold;
+                            }
+                            .hed3
+                            {
+
+                            font-size:18px;
+                            font-weight:bold;
+                            }
+                            .hed4
+                            {
+
+                            font-size:14px;
+
+                            }
+                            .h5
+                            {
+
+
+                            border-collapse:separate;
+                            border:solid black 2px;
+                            border-radius:10px;
+                            -moz-border-radius:6px;
+                            margin-top:3px;
+                            color:black;
+
+                            }
+                            #main_table
+                            {
+                            border-collapse: collapse;
+                            border-radius: 30px;
+                            border-style: hidden; /* hide standard table (collapsed) border */
+                            box-shadow: 0 0 0 2px black; /* this draws the table border  */
+
+
+                            }
+                            #main_tds
+                            {
+
+
+
+                            padding-left:5px;
+                            padding-right:5px;
+                            padding-top:15px;
+                            font-size:24px;
+                            font-weight:bold;
+
+
+
+                            }
+                            #main_tds_1
+                            {
+
+                            border:1px solid black;
+
+                            }
+
+                            #main_table_2
+                            {
+
+                            border-bottom:1px solid black;
+
+                            }
+                            #main_table_22
+                            {
+                            border-right:1px solid black;
+                            border-left:1px solid black;
+                            border-bottom:1px solid black;
+
+
+
+
+                            }
+                            #main_table_3
+                            {
+                            border-right:1px solid black;
+                            font-weight:bold;
+
+
+                            }
+                            #main_table_4
+                            {
+                            border:1px solid black;
+
+                            }
+
+
+
+
+
+
+                        </style>
+
+                        <!--                        <table  width="100%">-->
+                        <!--                            <tr >-->
+
+                        <!--                                <td  align="center" width="20%">-->
+
+                        <!--                                    <table   width="100%">-->
+                        <!--                                        <tr>-->
+                        <!--                                            <td   align="center"  colspan="3"  width="60%">-->
+                        <!--                                                <img t-if="s.company_id.logo" t-att-src="image_data_uri(s.company_id.logo)" height="150" width="140"  class="float-left" alt="Logo"/>-->
+
+
+                        <!--                                            </td>-->
+                        <!--                                        </tr>-->
+                        <!--                                        <tr>-->
+                        <!--                                        </tr>-->
+                        <!--                                        <tr>-->
+                        <!--                                        </tr>-->
+                        <!--                                    </table>-->
+
+
+                        <!--                                </td>-->
+
+                        <!--                                <td rowspan="3"  width="50%"  align="center">-->
+                        <!--                                    <table  width="100%">-->
+                        <!--                                        <tr>-->
+                        <!--                                            <td  style="border-right:1px solid black;"  align="center"   width="60%">-->
+                        <!--                                                <br></br>-->
+                        <!--                                            </td>-->
+                        <!--                                        </tr>-->
+                        <!--                                        <tr>-->
+                        <!--                                            <td  style="border-right:1px solid black;"  align="center"   width="60%">-->
+                        <!--                                                <span style="font-size:24px; font-weight:bold;">Purchase Order</span>-->
+                        <!--                                            </td>-->
+                        <!--                                        </tr>-->
+
+                        <!--                                    </table>-->
+                        <!--                                </td>-->
+                        <!--                                <td rowspan="3" style="padding-top:30px;"  align="center" width="30%">-->
+
+                        <!--                                    <table style="border:1px solid black;" width="100%">-->
+                        <!--                                        <tr>-->
+                        <!--                                            <td style="border-right:1px solid black;  padding:3px;  background-color:#d1d1d1; "  align="center"  colspan="3"  width="60%">-->
+                        <!--                                                <span style="font-size:18px; font-weight:bold;" >P.O. Number</span>-->
+                        <!--                                            </td>-->
+                        <!--                                        </tr>-->
+                        <!--                                        <tr>-->
+                        <!--                                            <td style="border-top:1px solid black;border-right:1px solid black; padding:3px;" align="center"  width="20%">-->
+                        <!--                                                <span t-field="s.name" />-->
+                        <!--                                            </td>-->
+                        <!--                                        </tr>-->
+                        <!--                                    </table>-->
+                        <!--                                    <table style="border-right:1px solid black;border-left:1px solid black;border-bottom:1px solid black;"  width="100%">-->
+                        <!--                                        <tr>-->
+                        <!--                                            <td style="border-right:1px solid black; padding:3px;  background-color:#d1d1d1; border-bottom:1px solid black;"  align="center"    width="60%">-->
+                        <!--                                                <span style="font-size:18px; font-weight:bold;" >Date</span>-->
+                        <!--                                            </td>-->
+                        <!--                                        </tr>-->
+                        <!--                                        <tr>-->
+                        <!--                                            <td style="border-right:1px solid black; padding:3px;  background-color:#d1d1d1;"  align="center"    width="60%">-->
+                        <!--                                                <span t-field="s.date_order" />-->
+                        <!--                                            </td>-->
+                        <!--                                        </tr>-->
+
+
+                        <!--                                    </table>-->
+
+
+
+
+                        <!--                                </td>-->
+
+                        <!--                            </tr>-->
+                        <!--                            <tr></tr>-->
+                        <!--                            <tr></tr>-->
+                        <!--                        </table>-->
+
+                        <div class="container" style="margin-top:20px;">
+                            <table  width="100%">
+                                <tr>
+                                    <td  align="center" width="40%">
+                                        <table style="border:1px solid black;"  width="100%">
+                                             <tr>
+                                                <td style="border:1px solid black; text-align:center;font-weight:bold;font-size:18px; "  align="left"    width="50%">
+                                                    <table width="100%">
+                                                        <tr>
+                                                            <td with="40%" style="border-right:1px solid black; background-color:#d1d1d1;">Vendor Name</td>
+                                                            <td width="60%"> <span t-field="s.partner_id.name" /></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+
+                                             <tr>
+                                                <td style="border:1px solid black; text-align:center;font-weight:bold;font-size:18px; "  align="left"    width="50%">
+                                                    <table width="100%">
+                                                        <tr>
+<!--                                                            <td with="40%" style="border-right:1px solid black; background-color:#d1d1d1;">Address:</td>-->
+                                                            <td width="60%"> <span t-field="s.from_street" /></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                <td style="border:1px solid black; text-align:center;font-weight:bold;font-size:18px; "  align="left"    width="50%">
+                                                    <table width="100%">
+                                                        <tr>
+<!--                                                            <td with="40%" style="border-right:1px solid black; background-color:#d1d1d1;">Address:</td>-->
+                                                            <td width="60%"> <span t-field="s.contact_from" /></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td   width="20%"  align="right">
+                                    </td>
+
+                                    <td   width="40%"  align="right">
+                                        <table style="border:1px solid black;"  width="100%">
+                                            <tr>
+                                                <td style="border:1px solid black; text-align:center;font-weight:bold;font-size:18px; "  align="left"    width="50%">
+                                                    <table width="100%">
+                                                        <tr>
+                                                            <td with="50%" style="border-right:1px solid black; background-color:#d1d1d1;">Purchase Date #</td>
+                                                            <td width="50%"><span t-field="s.date_approve" /></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border:1px solid black; text-align:center;font-weight:bold;font-size:18px; "  align="left"    width="50%">
+                                                    <table width="100%">
+                                                        <tr>
+                                                            <td with="50%" style="border-right:1px solid black; background-color:#d1d1d1;">Purchase Request #</td>
+                                                            <td width="50%"><span t-field="s.name" /></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border:1px solid black; text-align:center;font-weight:bold;font-size:18px; "  align="left"    width="50%">
+                                                    <table width="100%">
+                                                        <tr>
+                                                            <td with="50%" style="border-right:1px solid black; background-color:#d1d1d1;">Purchase #</td>
+                                                            <td width="50%"><span t-field="s.name" /></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+
+
+                                        </table>
+
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <table  width="100%" style="margin-top:20px;">
+                                <tr>
+                                    <td   width="60%"  align="right">
+                                    </td>
+
+                                    <td   width="40%"  align="right">
+                                        <table style="border:1px solid black;"  width="100%">
+                                            <tr>
+                                                <td style="border:1px solid black; text-align:center;font-weight:bold;font-size:18px; "  align="left"    width="50%">
+                                                    <table width="100%">
+                                                        <tr>
+<!--                                                            <td with="40%" style="border-right:1px solid black; background-color:#d1d1d1;">SHIP TO</td>-->
+                                                            <td width="60%"><span t-field="s.ship_to" /></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border:1px solid black; text-align:center;font-weight:bold;font-size:18px; "  align="left"    width="50%">
+                                                    <table width="100%">
+                                                        <tr>
+<!--                                                            <td with="40%" style="border-right:1px solid black; background-color:#d1d1d1;">Address</td>-->
+                                                            <td width="60%"><span t-field="s.to_street" /></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border:1px solid black; text-align:center;font-weight:bold;font-size:18px; "  align="left"    width="50%">
+                                                    <table width="100%">
+                                                        <tr>
+<!--                                                            <td with="40%" style="border-right:1px solid black; background-color:#d1d1d1;">Contact Person:</td>-->
+                                                            <td width="60%"><span t-field="s.partner_id.name" /></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border:1px solid black; text-align:center;font-weight:bold;font-size:18px; "  align="left"    width="50%">
+                                                    <table width="100%">
+                                                        <tr>
+<!--                                                            <td with="40%" style="border-right:1px solid black; background-color:#d1d1d1;">Contact #</td>-->
+                                                            <td width="60%"><span t-field="s.contact_to" /></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+
+                                        </table>
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+
+                        <div class="container" style="margin-top:20px;">
+                            <table  width="100%" style="border:1px solid black;">
+                                <tr>
+                                    <thead>
+                                        <td style="border-bottom:1px solid black; padding:3px; border-right:1px solid black; padding:3px;  background-color:#d1d1d1; " align="center" width="40%">
+                                            <span style="font-size:18px; font-weight:bold;">Description</span>
+                                        </td>
+                                        <td style="border-bottom:1px solid black; padding:3px; border-right:1px solid black; padding:3px;  background-color:#d1d1d1; "   width="20%"  align="center">
+                                            <span style="font-size:18px; font-weight:bold;">Delivery Date</span>
+                                        </td>
+                                        <td  style="border-bottom:1px solid black; padding:3px; border-right:1px solid black; padding:3px;  background-color:#d1d1d1; "  align="center" width="5%">
+                                            <span style="font-size:18px; font-weight:bold;">Item Qty</span>
+                                        </td>
+                                        <td  style="border-bottom:1px solid black; padding:3px; border-right:1px solid black; padding:3px;  background-color:#d1d1d1; "  align="center" width="15%">
+                                            <span style="font-size:18px; font-weight:bold;">Unit Price</span>
+                                        </td>
+                                        <td  style="border-bottom:1px solid black; padding:3px; border-right:1px solid black; padding:3px;  background-color:#d1d1d1; "  align="center" width="10%">
+                                            <span style="font-size:18px; font-weight:bold;">Taxes</span>
+                                        </td>
+                                        <td  style="border-bottom:1px solid black; padding:3px; border-right:1px solid black; padding:3px;  background-color:#d1d1d1; "  align="center" width="10%">
+                                            <span style="font-size:18px; font-weight:bold;">Amount</span>
+                                        </td>
+                                    </thead>
+                                </tr>
+                                <tr>
+                                    <tbody>
+                                        <tr t-foreach="s.order_line" t-as="line">
+                                            <td style="border-right:1px solid black; padding:3px; border-bottom:1px solid black;" align="center" width="40%">
+                                                <span t-esc="line.product_id.name"/>
+                                            </td>
+                                            <td style="border-right:1px solid black; padding:3px; border-bottom:1px solid black;" align="center" width="20%">
+
+                                            </td>
+                                            <td style="border-right:1px solid black; padding:3px;  border-bottom:1px solid black;" align="center" width="5%">
+                                                <span t-esc="line.product_qty"/>
+                                            </td>
+                                            <td style="border-right:1px solid black; padding:3px; border-bottom:1px solid black;" align="center" width="15%">
+                                                <span t-esc="line.price_unit"/>
+                                            </td>
+                                            <td style="border-right:1px solid black; padding:3px;  border-bottom:1px solid black;" align="center" width="10%">
+                                                <span t-esc="line.taxes_id.name"/>
+                                            </td>
+                                            <td style="border-right:1px solid black; padding:3px;  border-bottom:1px solid black;" align="center" width="10%">
+                                                <span t-esc="line.price_subtotal"/>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="container">
+                            <table  width="100%">
+                                <tr>
+                                    <td  align="center" width="50%">
+                                    </td>
+                                    <td   width="50%"  align="center">
+                                        <table style="border-right:1px solid black;border-left:1px solid black;border-bottom:1px solid black;"  width="100%">
+                                            <tr>
+                                                <td style="border-right:1px solid black;  border-bottom:1px solid black; padding:5px;  background-color:#d1d1d1;"  align="center"    width="60%">
+                                                    <span style="font-size:18px; font-weight:bold;" >Sub Total</span>
+                                                </td>
+                                                <td style="border-right:1px solid black; border-bottom:1px solid black; padding:3px;"  align="center"    width="40%">
+                                                    <span t-field="s.amount_untaxed" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-right:1px solid black; border-bottom:1px solid black; padding:5px; background-color:#d1d1d1;"  align="center"    width="60%">
+                                                    <span style="font-size:18px; font-weight:bold;" >Taxes</span>
+                                                </td>
+                                                <td style="border-right:1px solid black; border-bottom:1px solid black; padding:3px;"  align="center"    width="40%">
+                                                    <span t-field="s.amount_tax" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="border-right:1px solid black; border-bottom:1px solid black; padding:5px; background-color:#d1d1d1;"  align="center"    width="60%">
+                                                    <span style="font-size:18px; font-weight:bold;" >Total</span>
+                                                </td>
+                                                <td style="border-right:1px solid black; border-bottom:1px solid black; padding:3px;"  align="center"    width="40%">
+                                                    <span t-field="s.amount_total" />
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="container" style="margin-top:20px;">
+                            <table  width="100%">
+                                <tr>
+                                    <td  align="center" width="40%">
+                                        <table style="border:1px solid black;"  width="100%">
+                                            <tr>
+                                                <td style="border:1px solid black; text-align:center;font-weight:bold;font-size:18px; "  align="left"    width="50%">
+                                                    <table width="100%">
+                                                        <tr>
+                                                            <td with="100%" style="background-color:#d1d1d1;">Payment Terms:</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td with="100%">Payment Terms:</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td   width="20%"  align="right"></td>
+                                    <td   width="40%"  align="right"></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <table  width="100%" style="margin-top:300px;">
+                            <tr>
+                                <td   width="60%">
+                                </td>
+
+                                <td   width="40%">
+                                    <table width="100%">
+                                         <tr>
+                                            <td width="100%" style="border-top:1px solid black; text-align:center">  <span>Authorize By Manager and Finance</span></td>
+                                        </tr>
+                                    </table>
+
+
+
+                                </td>
+                            </tr>
+                        </table>
+
+
+                    </div>
+                </t>
+            </t>
+        </xpath>
+
+
+    </template>
+
+
+
+
+
+
+
+</odoo>

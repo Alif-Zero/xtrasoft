@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_hr_employee" model="ir.actions.act_window">
+        <field name="name">Expiry alert</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.expiry.alert</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="view_hr_employee" model="ir.ui.view">
+        <field name="name">custom.hr.tree</field>
+        <field name="model">hr.expiry.alert</field>
+        <field name="arch" type="xml">
+            <tree string="HR Employee">
+                <field name="name"/>
+                <!--                <field name="alert"/>-->
+
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="action_hr_employee_form">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.expiry.alert</field>
+        <field name="arch" type="xml">
+            <form class="o_lead_opportunity_form">
+
+                <header>
+                    <button name="update_recors" string="Update" type="object" class="btn-primary"></button>
+                </header>
+
+                <sheet>
+                    <separator style="color:black;font-weight:bold;font-size:28px;" string="Expiry info"
+                               colspan="4"/>
+                    <group col="4" colspan="12">
+
+
+                        <field name="name" invisible="1"/>
+                        <!--                        <field name="alert"/>-->
+
+
+                    </group>
+                    <notebook>
+                        <page string="hr_expiry">
+                            <field name="alert" readonly="1">
+                                <tree >
+                                    <field name="employee_id"/>
+                                    <field name="reason"/>
+                                    <field name="date"/>
+                                    <field name="no_of_days"/>
+
+                                </tree>
+                            </field>
+
+
+                        </page>
+                    </notebook>
+
+                </sheet>
+
+
+            </form>
+        </field>
+    </record>
+
+    <menuitem name="Expiry alert" id="ums_hremployee"
+              parent="hr.menu_human_resources_configuration"
+              sequence="2" action="action_hr_employee"/>
+
+</odoo>

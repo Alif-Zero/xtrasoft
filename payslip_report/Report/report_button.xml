@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+
+    <report
+            id="payslip_report_button_id"
+            string="PaySlip New"
+            model="hr.payslip"
+            report_type="qweb-pdf"
+            name="payslip_report.report_payslip_layout_id"
+            file="payslip_report.report_payslip_layout_id"/>
+</odoo>

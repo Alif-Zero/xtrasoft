@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="action_attendance_custom_logss" model="ir.actions.act_window">
+        <field name="name">Attendance Logs</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">attendance.logs.changes</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('manager.name', '=', 'Raouf Nasser')]</field>
+    </record>
+
+    <record id="view_attendance_logx_tree_modif" model="ir.ui.view">
+        <field name="name">custom.attendance.tree</field>
+        <field name="model">attendance.logs.changes</field>
+        <field name="arch" type="xml">
+            <tree string="Modified list">
+                <field name="responsible"/>
+                <field name="timestamp"/>
+                <field name="note"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="action_form_atten_logsx">
+        <field name="name">attendance.custom.form</field>
+        <field name="model">attendance.logs.changes</field>
+        <field name="arch" type="xml">
+            <form class="o_lead_opportunity_form">
+
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="button_open_record"
+                                string="Attendance Record" type="object"
+                                attrs="{'invisible':[('att_cus','=', False)]}" icon="fa-bars"/>
+
+                    </div>
+                    <separator style="color:black;font-weight:bold;font-size:28px;" string="Attendance Information"
+                               colspan="4"/>
+                    <group col="4" colspan="12">
+                        <field name="responsible"/>
+                        <field name="timestamp"/>
+                        <field name="date" string="Attendance Date"/>
+                        <field name="note"/>
+                        <field name="att_cus" invisible="1"/>
+                    </group>
+
+                </sheet>
+
+            </form>
+        </field>
+    </record>
+
+
+    <menuitem name="Attendance Logs" id="ums_attendence_logs_menu"
+              parent="menu_attendence"
+              sequence="10" action="action_attendance_custom_logss"/>
+
+
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <report id="pyslipxc_payslip_report_xlsx_id"
+                model="payslip.summery.details"
+                string="Payslip"
+                report_type="qweb-pdf"
+                name="design_creative_custom.report_xlsx_ciew"
+                file="design_creative_custom.report_xlsx_ciew"
+                attachment_use="True"/>
+
+
+        <!-- project task wizard -->
+        <record model="ir.ui.view" id="payslipx_summery_wizard_view">
+            <field name="name">Attendance.Summery</field>
+            <field name="model">payslip.summery.details</field>
+            <field name="arch" type="xml">
+                <form string="Select">
+                    <group colspan="2" string="Select Month and year">
+                        <group>
+                            <field name="month"/>
+                            <field name="year"/>
+
+                        </group>
+                        <!--                        <group>-->
+                        <!--                            <field name="user_id"/>-->
+                        <!--                            <field name="stage_id"/>-->
+                        <!--                        </group>-->
+
+                    </group>
+                    <footer>
+                        <button name="generate_excel_report" string="Print Report"
+                                type="object" default_focus="1" class="oe_highlight" icon="fa-print"/>
+                        <button string="Cancel" class="btn-default" special="cancel" icon="fa-times"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="payslip_acyion_report_action_nw" model="ir.actions.act_window">
+            <field name="name">Paylisp report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">payslip.summery.details</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem name="Payslip Summery"
+                  id="menu_report_payhslip_menu_details"
+                  action="payslip_acyion_report_action_nw"
+                  parent="hr.hr_menu_hr_reports"
+                  sequence="6"
+        />
+
+    </data>
+</odoo>

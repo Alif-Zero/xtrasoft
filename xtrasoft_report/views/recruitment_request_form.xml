@@ -1,0 +1,144 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="xtrasoft_report_recruitment_request_form_tree">
+            <field name="name">Recruitment Request Form</field>
+            <field name="model">recruitment.request.form</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="staff_position"/>
+                    <field name="supervisor_and_title"/>
+                    <field name="replacement_for"/>
+                    <field name="date_of_request"/>
+                    <field name="desire_hire_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="xtrasoft_report_loan_request_form_view" model="ir.ui.view">
+            <field name="name">Recruitment Request Form</field>
+            <field name="model">recruitment.request.form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="All">
+                    <sheet>
+                        <group>
+                            <h1 style="text-align:center;">Recruitment Request Form</h1>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="supervisor_and_title"/>
+                                <field name="replacement_for"/>
+                            </group>
+                            <group>
+                                <field name="date_of_request"/>
+                                <field name="desire_hire_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <div>
+                                <h3 style="text-align:center;">Position Request</h3>
+
+                                <h4 style="background-color:black;color:white;padding:2px;">
+                                    STAFF (All Time Temporary)
+                                </h4>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="staff_position" widget="radio" class="oe_edit_only"
+                                   options="{'horizontal': true}"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="proposed_job_type"/>
+                                <field name="department_selection"/>
+                                <field name="participant_name"/>
+                            </group>
+                            <group>
+                                <field name="alternate"/>
+                                <field name="supervisor_name"/>
+                            </group>
+                        </group>
+                        <group>
+                            <div>
+                                <h4 style="background-color:black;color:white;padding:2px;">
+                                    JOB DESCRIPTION
+                                </h4>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="job_description"
+                                   placeholder="Provide work responsibilities for the requested position"/>
+
+                        </group>
+                        <group>
+                            <div>
+                                <h4 style="background-color:black;color:white;padding:2px;">
+                                    FIXED TERM
+                                </h4>
+                            </div>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="fixed_term_duration"/>
+                                <field name="fixed_term_supervisor"/>
+                                <field name="fixed_term_salary_range"/>
+                            </group>
+                            <group>
+                                <field name="fixed_term_start_date"/>
+                                <field name="fixed_term_end_date"/>
+                                <field name="fixed_term_other"/>
+                            </group>
+                        </group>
+                          <group>
+                            <div>
+                                <h4 style="background-color:black;color:white;padding:2px;">
+                                    TEMPORARY TERM
+                                </h4>
+                            </div>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="number_of_days"/>
+                                <field name="number_of_weeks"/>
+                                <field name="number_of_months"/>
+                            </group>
+                            <group>
+                                <field name="temporary_term_start_date"/>
+                                <field name="temporary_term_end_date"/>
+                                <field name="temporary_term_salary_range"/>
+                                <field name="temporary_term_other"/>
+                            </group>
+                        </group>
+                            <group>
+                            <div>
+                                <h4 style="background-color:black;color:white;padding:2px;">
+                                    EDUCATION, SKILLS AND EXPERIENCE
+                                </h4>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="job_description"
+                                   placeholder="Provide education, skills and experience required for the requested position"/>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="xtrasoft_report_recruitment_request_form_menu_button_action_window">
+            <field name="name">Recruitment Request Form</field>
+            <field name="res_model">recruitment.request.form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Recruitment Request Form" id="xtrasoft_recruitment_request_form_menu"
+                  parent="xtrasoft_report.menu_root"
+                  action="xtrasoft_report_recruitment_request_form_menu_button_action_window"/>
+
+
+    </data>
+</odoo>

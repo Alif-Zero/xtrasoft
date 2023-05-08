@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_late_checkin_manager,access.late_check_in.manager,model_late_check_in,hr.group_hr_manager,1,1,0,1
+access_late_checkin_officer,access.late_check_in.officer,model_late_check_in,hr.group_hr_user,1,1,0,0
+access_late_checkin_user,access.late_check_in.user,model_late_check_in,base.group_user,1,0,0,0
+
+access_early_check_out_manager,access.early_check_out.manager,model_early_check_out,hr.group_hr_manager,1,1,0,1
+access_early_check_out_officer,access.early_check_out.officer,model_early_check_out,hr.group_hr_user,1,1,0,0
+access_early_check_out_user,access.early_check_out.user,model_early_check_out,base.group_user,1,0,0,0
+access_hr_attendance_exemption,access_hr_attendance_exemption,model_hr_attendance_exemption,base.group_user,1,1,1,1

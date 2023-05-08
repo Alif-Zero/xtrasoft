@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <report
+            id="report_invoice_id"
+            string="Purchase Order Ext"
+            model="purchase.order"
+            report_type="qweb-pdf"
+            name="mew_reports.purchase_order_ext"
+            file="mew_reports.purchase_order_ext"/>
+
+    <!--    <report-->
+    <!--            id="report_bill_button"-->
+    <!--            string="Purchase Voucher Ext"-->
+    <!--            model="account.move"-->
+    <!--            report_type="qweb-pdf"-->
+    <!--            name="mew_reports.report_bill_template"-->
+    <!--            file="mew_reports.report_bill_template"/>-->
+
+
+    <report id="report_bill_button'"
+            string="Purchase Voucher Ext"
+            model="account.move"
+            report_type="qweb-pdf"
+            name="mew_reports.report_bill_template"
+            file="mew_reports.report_bill_template"/>
+
+</odoo>

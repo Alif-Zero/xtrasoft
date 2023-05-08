@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="xtrasoft_report_loan_request_form_pdf">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h1 style="text-align:center;">Recruitment Request Form</h1>
+
+                        <div class="row" style="padding-top:20px;padding-bottom:20px;">
+                            <table class=" col-sm-12 table table-bordered">
+                                <tr>
+                                    <td>
+                                        <strong>Department</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.name.name" t-esc="o.name.name"/>
+                                    </td>
+                                    <td>
+                                        <strong>Desired Hire Date</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.desire_hire_date" t-esc="o.desire_hire_date"/>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>
+                                        <strong>Supervisor and Title</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.supervisor_and_title" t-esc="o.supervisor_and_title"/>
+                                    </td>
+                                    <td>
+                                        <strong>Date Of Request</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.date_of_request" t-esc="o.date_of_request"/>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>
+                                        <strong>Replacement for (enter name employee)</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.replacement_for.name" t-esc="o.replacement_for.name"/>
+                                    </td>
+                                    <td>
+                                        <!--                                        <strong>Date Of Request</strong>-->
+                                    </td>
+                                    <td>
+                                        <!--                                        <t if="o.date_of_request" t-esc="o.date_of_request"/>-->
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="row">
+                            <table class=" col-sm-12 table table-bordered">
+                                <tr style="background-color:black;color:white;">
+                                    <td colspan="4">
+                                        <h4>STAFF (All Time Temporary)
+                                        </h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+
+                                        <p>
+                                            Requires completed Recruitment Request form, justification, width
+                                            appropriate approvals
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Position :</strong>
+                                    </td>
+                                    <td colspan="3">
+                                        <t-if t-if="o.staff_position == 'administrative'">
+                                            &#x25a3; Administrative/Support
+                                        </t-if>
+                                        <t-else t-if="o.staff_position != 'administrative'">
+                                            &#x25a2; Administrative/Support
+                                        </t-else>
+
+                                        <t-if t-if="o.staff_position == 'manager'">
+                                            &#x25a3; Manager/Supervisor
+                                        </t-if>
+                                        <t-else t-if="o.staff_position != 'manager'">
+                                            &#x25a2; Manager/Supervisor
+                                        </t-else>
+
+                                        <t-if t-if="o.staff_position == 'labor'">
+                                            &#x25a3; Labor/Helper
+                                        </t-if>
+                                        <t-else t-if="o.staff_position != 'labor'">
+                                            &#x25a2; Labor/Helper
+                                        </t-else>
+
+                                        <t-if t-if="o.staff_position == 'operation'">
+                                            &#x25a3; Operation Support
+                                        </t-if>
+                                        <t-else t-if="o.staff_position != 'operation'">
+                                            &#x25a2; Operation Support
+                                        </t-else>
+
+                                        <t-if t-if="o.staff_position == 'finance'">
+                                            &#x25a3; Finance
+                                        </t-if>
+                                        <t-else t-if="o.staff_position != 'finance'">
+                                            &#x25a2; Finance
+                                        </t-else>
+
+                                        <t-if t-if="o.staff_position == 'other'">
+                                            &#x25a3; Other
+                                        </t-if>
+                                        <t-else t-if="o.staff_position != 'other'">
+                                            &#x25a2; Other
+                                        </t-else>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Proposed Job Type</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.proposed_job_type" t-esc="o.proposed_job_type"/>
+                                    </td>
+                                    <td>
+                                        <strong>Alternate</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.alternate" t-esc="o.alternate"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Department Selection</strong>
+                                    </td>
+                                    <td style="width:25%">
+                                        <t if="o.department_selection.name" t-esc="o.department_selection.name"/>
+                                    </td>
+                                    <td>
+                                        <strong>Supervisor</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.supervisor_name" t-esc="o.supervisor_name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:25%">
+                                        <strong>Participant Name</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.participant_name" t-esc="o.participant_name"/>
+                                    </td>
+                                    <td>
+                                        <!--                                        <strong>Supervisor</strong>-->
+                                    </td>
+                                    <td>
+                                        <!--                                        <t if="o.supervisor_name" t-esc="o.supervisor_name"/>-->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" style="background-color:black;color:white;padding:2px;">
+                                        <h4>JOB DESCRIPTION</h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <t if="o.job_description" t-esc="o.job_description"/>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" style="background-color:black;color:white;padding:2px;">
+                                        <h4>FIXED TERM</h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Fixed Term Duration</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.fixed_term_duration" t-esc="o.fixed_term_duration"/>
+                                    </td>
+                                    <td>
+                                        <strong>Start Date</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.fixed_term_start_date" t-esc="o.fixed_term_start_date"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Supervisor</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.fixed_term_supervisor" t-esc="o.fixed_term_supervisor"/>
+                                    </td>
+                                    <td>
+                                        <strong>End Date</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.fixed_term_end_date" t-esc="o.fixed_term_end_date"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Salary Range</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.fixed_term_salary_range" t-esc="o.fixed_term_salary_range"/>
+                                    </td>
+                                    <td>
+                                        <strong>Other</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.fixed_term_other" t-esc="o.fixed_term_other"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" style="background-color:black;color:white;padding:2px;">
+                                        <h4>TEMPORARY TERM</h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Number of Days</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.number_of_days" t-esc="o.number_of_days"/>
+                                    </td>
+                                    <td>
+                                        <strong>Start Date</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.temporary_term_start_date" t-esc="o.temporary_term_start_date"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Number Of Weeks</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.number_of_weeks" t-esc="o.number_of_weeks"/>
+                                    </td>
+                                    <td>
+                                        <strong>End Date</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.temporary_term_end_date" t-esc="o.temporary_term_end_date"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Salary Range</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.temporary_term_salary_range" t-esc="o.temporary_term_salary_range"/>
+                                    </td>
+                                    <td>
+                                        <strong>Number Of Months</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.number_of_months" t-esc="o.number_of_months"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Other</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.temporary_term_other" t-esc="o.temporary_term_other"/>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="4" style="background-color:black;color:white;padding:2px;">
+                                        <h4>EDUCATION, SKILLS AND EXPERIENCE</h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <t if="o.education_skills" t-esc="o.education_skills"/>
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="row">
+                            <table class=" col-sm-12 ">
+                                 <tr >
+                                    <td style="height:50px;"/>
+                                </tr>
+                                <tr>
+                                    <td style="width:24%;">
+                                        <strong>Director Approval
+                                        </strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                    <td style="width:4%"/>
+                                    <td style="width:24%; text-align:right;">
+                                        <strong>Date</strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                </tr>
+                                 <tr >
+                                    <td style="height:50px;"/>
+                                </tr>
+                                <tr >
+                                    <td style="width:24%;">
+                                        <strong>HR Approval
+                                        </strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                    <td style="width:4%"/>
+                                    <td style="width:24%; text-align:right;">
+                                        <strong>Date</strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                </tr>
+                                <tr >
+                                    <td style="height:50px;"/>
+                                </tr>
+                                <tr >
+                                    <td style="width:24%;">
+                                        <strong>HOD Signature
+                                        </strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                    <td style="width:4%"/>
+                                    <td style="width:24%; text-align:right;">
+                                        <strong>Date</strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                </tr>
+                            </table>
+                        </div>
+
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

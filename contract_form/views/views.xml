@@ -1,0 +1,66 @@
+<odoo>
+    <data>
+        <record id="contract_narration_id" model="ir.ui.view">
+            <field name="name">Contract Narration</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page[@name='information']" position="after">
+
+                    <page string="Job Description" name="Job Description">
+                        <field name="job_description" string="Job Description" nolabel="1"/>
+                    </page>
+                </xpath>
+
+                <xpath expr="//field[@name='structure_type_id']" position="after">
+                    <field name="badge_id" string='Employee ID'/>
+                </xpath>
+
+            </field>
+        </record>
+        <record id="hr_employee_badge_view_search" model="ir.ui.view">
+            <field name="name">hr.employee.badge.search.view.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='job_id']" position="after">
+                    <field name="barcode" string='Badge ID'
+                           filter_domain="[('barcode', 'ilike', self)]"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="contract_filter_id" model="ir.ui.view">
+            <field name="name">hr.contract.search.filter</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_search"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//search/field[@name='name']" position="before">
+                    <field name="badge_id" string='Employee ID'/>
+                </xpath>
+
+            </field>
+        </record>
+
+        <record id="hr_payslip_employee_id_field" model="ir.ui.view">
+            <field name="name">hr.employee.id.filter</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="badge_id" string="Employee ID"/>
+                </field>
+            </field>
+        </record>
+        <record id="hr_payslip_employee_id_filter" model="ir.ui.view">
+            <field name="name">hr.employee.search.filter</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search/field[@name='employee_id']" position="before">
+                    <field name="badge_id" string='Employee ID'/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

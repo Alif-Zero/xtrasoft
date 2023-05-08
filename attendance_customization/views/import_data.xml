@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="wizard_import_attendance" model="ir.ui.view">
+            <field name="name">Attendance Import</field>
+            <field name="model">attendance.import</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="file"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_import_create_attendance" string="Done" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="import_attendance_act" model="ir.actions.act_window">
+            <field name="name">Attendance Import</field>
+            <field name="res_model">attendance.import</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+         <menuitem name="Attendance Import" id="ums_attendence_import"
+              parent="attendance_customization.menu_attendence"
+              sequence="2" action="import_attendance_act"/>
+    </data>
+</odoo>

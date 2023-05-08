@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<data>			
+		<menuitem name="Settings" parent="hr_attendance.menu_hr_attendance_settings"
+			id="hr_attendance_settings" sequence="1"
+			groups="hr_attendance.group_hr_attendance_manager" action="hr_attendance.action_hr_attendance_settings" />
+    <menuitem
+        name="Time Off"
+        id="hr_holidays.menu_hr_holidays_root"
+        sequence="95"
+        groups="base.group_user"
+	parent="hr_work_entry_contract.menu_hr_payroll_root"/>
+	
+
+	</data>
+</odoo>

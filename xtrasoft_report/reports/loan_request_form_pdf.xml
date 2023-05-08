@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="loan_request_form_pdf">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h1 style="text-align:center;">Loan Request Form</h1>
+                        <div class="row">
+                            <table class=" col-sm-12 table table-bordered">
+                                <tr>
+                                    <td>
+                                        <strong>Employee Name</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.name" t-esc="o.name"/>
+                                    </td>
+                                    <td>
+                                        <strong>Date</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.employee_date" t-esc="o.employee_date"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Employee Detail</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.employee_detail" t-esc="o.employee_detail"/>
+                                    </td>
+                                    <td>
+                                        <strong>Department Name</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.department_name" t-esc="o.department_name"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Designation</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.employee_designation" t-esc="o.employee_designation"/>
+                                    </td>
+                                    <td>
+                                        <strong>Employee Code</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.employee_code" t-esc="o.employee_code"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>CNIC</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.employee_cnic" t-esc="o.employee_cnic"/>
+                                    </td>
+                                    <td>
+                                        <strong>Employee Salary</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.employee_salary" t-esc="o.employee_salary"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Last Loan Amount</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.last_loan_amount" t-esc="o.last_loan_amount"/>
+                                    </td>
+                                    <td>
+                                        <strong>Current Loan</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.current_loan_balance" t-esc="o.current_loan_balance"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Last Loan Amount</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.last_loan_amount" t-esc="o.last_loan_amount"/>
+                                    </td>
+                                    <td>
+                                        <strong>Required Loan Amount</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.required_loan_amount" t-esc="o.required_loan_amount"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Required Loan Amount</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.required_loan_amount" t-esc="o.required_loan_amount"/>
+                                    </td>
+                                    <td>
+                                        <strong>Approved Loan Amount</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.approved_loan_amount" t-esc="o.approved_loan_amount"/>
+                                    </td>
+                                </tr>
+
+                                <tr style="background-color:black;color:white;">
+                                    <td colspan="4">
+                                        <h4>FATHER DETAIL
+                                        </h4>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <strong>Father Name</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.father_name" t-esc="o.father_name"/>
+                                    </td>
+                                    <td colspan="2" rowspan="4">
+                                        <t if="o.reason_of_loan" t-esc="o.reason_of_loan"/>
+
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <strong>Father Occupation</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.father_occupation" t-esc="o.father_occupation"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Father CNIC</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.father_cnic" t-esc="o.father_cnic"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Address</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.father_address" t-esc="o.father_address"/>
+                                    </td>
+                                </tr>
+                                <tr style="background-color:black;color:white;text-align:center;">
+                                    <td colspan="4">
+                                        <h4>MONTHLY DEDUCTION AMOUNT:
+                                            <t if="o.monthly_deduction_amount" t-esc="o.monthly_deduction_amount"/>
+                                        </h4>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="2">
+                                        <strong>Guarantor#1 Detail</strong>
+                                    </td>
+                                    <td colspan="2">
+                                        <strong>Guarantor#2 Detail</strong>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <strong>Name</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.g_1_name" t-esc="o.g_1_name"/>
+                                    </td>
+                                    <td>
+                                        <strong>Name</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.g_2_name" t-esc="o.g_2_name"/>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <strong>Department</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.g_1_department" t-esc="o.g_1_department"/>
+                                    </td>
+                                    <td>
+                                        <strong>Department</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.g_2_department" t-esc="o.g_2_department"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Designation</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.g_1_designation" t-esc="o.g_1_designation"/>
+                                    </td>
+                                    <td>
+                                        <strong>Designation</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.g_2_designation" t-esc="o.g_2_designation"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Contact No</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.g_1_contact_no" t-esc="o.g_1_contact_no"/>
+                                    </td>
+                                    <td>
+                                        <strong>Contact No</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.g_2_contact_no" t-esc="o.g_2_contact_no"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>CNIC</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.g_1_cnic" t-esc="o.g_1_cnic"/>
+                                    </td>
+                                    <td>
+                                        <strong>CNIC</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.g_2_cnic" t-esc="o.g_2_cnic"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Address</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.g_1_address" t-esc="o.g_1_address"/>
+                                    </td>
+                                    <td>
+                                        <strong>Address</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.g_2_address" t-esc="o.g_2_address"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+
+                        <div class="row">
+                            <table class=" col-sm-12 ">
+                                <tr>
+                                    <td style="height:50px;"/>
+                                </tr>
+                                <tr>
+                                    <td style="width:24%;">
+                                        <strong>Employee Signature
+                                        </strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                    <td style="width:4%"/>
+                                    <td style="width:24%; text-align:right;">
+                                        <strong>Head Of Department</strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                </tr>
+                                <tr>
+                                    <td style="height:50px;"/>
+                                </tr>
+                                <tr>
+                                    <td style="width:24%;">
+                                        <strong>HR Department
+                                        </strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                    <td style="width:4%"/>
+                                    <td style="width:24%; text-align:right;">
+                                        <strong>Production Manager</strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+                                </tr>
+
+                                <tr>
+                                    <td style="height:50px;"/>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="text-align:right;">
+                                        <strong>Director Approval
+                                        </strong>
+                                    </td>
+
+                                    <td style="width:4%"/>
+
+                                    <td colspan="2" style="border-bottom:1px solid black; "/>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

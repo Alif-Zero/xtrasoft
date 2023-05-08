@@ -1,0 +1,81 @@
+<odoo>
+    <data>
+        <record id="contract_approvals_id" model="ir.ui.view">
+            <field name="name">Contract Approvals</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/field[@name='state']" position='attributes'>
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+                <xpath expr="//notebook" position="before">
+                    <!--                                        <field name="hr_state" groups="contract_approvals.group_contract_hr"/>-->
+
+                    <!--                           attrs="{'invisible':[('hr_state', '!=', 'draft'),('hr_state', '==', 'waiting_for_approval_1'),('hr_state', '==', 'waiting_for_approval_2')]}"-->
+                    <group attrs="{'invisible':['|','|',('state2', '==', 'draft'),('state2', '==', 'waiting_for_approval_1'),('state2', '==', 'waiting_for_approval_2')]}">
+                        <group>
+                            <button style="margin:10px;" name="button_probation" string="Probation" type="object"
+                                    class="oe_highlight"
+                                    attrs="{'invisible':[('state2', '==', 'probation')]}"
+                                    state2="open,Expired,cancel"
+                                    groups="contract_approvals.group_contract_hr"/>
+
+                            <button style="margin:10px;" name="button_open" string="Permanent" type="object"
+                                    class="oe_highlight"
+                                    attrs="{'invisible':[('state2', '==', 'open')]}"
+                                    state2="probation,Expired,cancel"
+                                    groups="contract_approvals.group_contract_hr"/>
+                            <button style="margin:10px;" name="button_close" string="Expired" type="object"
+                                    class="oe_highlight"
+                                    attrs="{'invisible':[('state2', '==', 'close')]}"
+                                    state2="probation,open,cancel"
+                                    groups="contract_approvals.group_contract_hr"/>
+
+                            <button style="margin:10px;" name="button_cancel" string="Cancelled" type="object"
+                                    class="oe_highlight"
+                                    attrs="{'invisible':[('state2', '==', 'cancel')]}"
+                                    state2="probation,open,close"
+                                    groups="contract_approvals.group_contract_hr"/>
+                        </group>
+                    </group>
+
+                </xpath>
+                <xpath expr="//header" position="inside">
+                    <button name="button_rejected"
+                            states="waiting_for_approval_1,waiting_for_approval_2"
+                            string="Reject"
+                            type="object"
+                            groups="contract_approvals.group_contract_approval_1,contract_approvals.group_contract_approval_2"/>
+
+                </xpath>
+                <xpath expr="//header" position="inside">
+                    <field name="state2" widget="statusbar"
+                           statusbar_visible="draft,waiting_for_approval_1,waiting_for_approval_2,probation,open,close,cancel"/>
+                </xpath>
+                <xpath expr="//header" position="inside">
+                    <button name="submit_for_approval_1" string="Submit for Approval" type="object" class="oe_highlight"
+                            attrs="{'invisible':[('state2', '!=', 'draft')]}"
+                            state2="draft"/>
+
+
+                    <button name="submit_for_approval_2" string="Finance Approval" type="object" class='oe_highlight'
+                            state2="waiting_for_approval_1"
+
+                            attrs="{'invisible':[('state2', '!=', 'waiting_for_approval_1')]}"
+
+                            groups="contract_approvals.group_contract_approval_1"/>
+
+                    <button name="approved" string="CEO Approval" type="object" class='oe_highlight'
+                            state2="waiting_for_approval_2"
+                            attrs="{'invisible':[('state2', '!=', 'waiting_for_approval_2')]}"
+
+                            groups="contract_approvals.group_contract_approval_2"/>
+
+                </xpath>
+
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

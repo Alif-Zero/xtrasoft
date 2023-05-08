@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <!-- project task wizard -->
+        <record model="ir.ui.view" id="deptwiseatend_detailslogs_wizard_view">
+            <field name="name">Monthly.details</field>
+            <field name="model">attendace.dept.wiz</field>
+            <field name="arch" type="xml">
+                <form string="Select">
+                    <group colspan="2" string="Select Date Report">
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                        <group>
+                            <field name="department" />
+                            <field name="check" invisible="1"/>
+                        </group>
+
+                    </group>
+                    <footer>
+
+                        <!--                            <button name="create_records" string="Create Atendance"-->
+                        <!--                                type="object" default_focus="1" class="oe_highlight" icon="fa-print"/>-->
+                        <button name="print_report" string="Print Report"
+                                type="object" default_focus="1" class="oe_highlight" icon="fa-print"/>
+                        <button string="Cancel" class="btn-default" special="cancel" icon="fa-times"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="deptwiseatend_emp_report_action_nw" model="ir.actions.act_window">
+            <field name="name">Department Wise Report Attendance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">attendace.dept.wiz</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem name="Department Wise Report Attendance"
+                  id="menu_report_departmentWiseatenddetails"
+                  action="deptwiseatend_emp_report_action_nw"
+                  parent="hr.hr_menu_hr_reports"
+                  sequence="16"
+        />
+
+    </data>
+</odoo>

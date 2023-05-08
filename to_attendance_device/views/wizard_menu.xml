@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+		 <menuitem
+        id="attendance_report_check"
+        name="Attendance Reports"
+        parent="hr_attendance.menu_hr_attendance_root"
+        sequence="20"
+        action="to_attendance_device.attendance_report_action_wizard"
+    />
+
+
+    </data>
+</odoo>

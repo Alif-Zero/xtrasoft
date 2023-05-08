@@ -1,0 +1,1 @@
+DocumentTypes = [('Purchase Order','Purchase Order'),('Purchase Request','Purchase Request'),('HR Loan','HR Loan')]

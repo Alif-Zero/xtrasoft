@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="employee_performance_review_pdf">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h1 style="text-align:center;">Employee Performance Review</h1>
+                        <div class="row">
+                            <table class=" col-sm-12 table table-bordered">
+                                <tr style="background-color:black;color:white;">
+                                    <td colspan="4">
+                                        <h4>Employee Information
+                                        </h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Name</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.name.name" t-esc="o.name.name"/>
+                                    </td>
+                                    <td>
+                                        <strong>Date</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.date_today" t-esc="o.date_today"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Job Title:</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.job_title" t-esc="o.job_title"/>
+                                    </td>
+                                    <td>
+                                        <strong>Review Period</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.review_period" t-esc="o.review_period"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Department:</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.department" t-esc="o.department"/>
+                                    </td>
+                                    <td>
+                                        <strong>For The Month Of</strong>
+                                    </td>
+                                    <td>
+                                        <t if="o.month_selection" t-esc="o.month_selection"/>
+                                    </td>
+                                </tr>
+
+                                  <tr>
+                                    <td colspan="4">
+                                        Total Progress: <t if="o.progress" t-esc="o.progress"/> %
+                                    </td>
+                                </tr>
+                                <tr style="background-color:black;color:white;">
+                                    <td colspan="4">
+                                        <h4>Department In-charge
+                                        </h4>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="4">
+                                        Department In-charge Progress: <t if="o.department_progress" t-esc="o.department_progress"/> %
+                                    </td>
+                                </tr>
+
+                                <!--                                =====================================================================-->
+                                <t t-foreach="o.department_checklist_ids" t-as="ol">
+                                    <tr>
+                                        <td>
+                                            <strong>
+                                                <t if="ol.criteria_id.name" t-esc="ol.criteria_id.name"/>
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <t-if t-if="ol.decision == '25'">
+                                                &#x25a3; Poor
+                                            </t-if>
+                                            <t-else t-if="ol.decision != '25'">
+                                                &#x25a2; Poor
+                                            </t-else>
+
+                                            <t-if t-if="ol.decision == '50'">
+                                                &#x25a3; Fair
+                                            </t-if>
+                                            <t-else t-if="ol.decision != '50'">
+                                                &#x25a2; Fair
+                                            </t-else>
+                                            <t-if t-if="ol.decision == '75'">
+                                                &#x25a3; Good
+                                            </t-if>
+                                            <t-else t-if="ol.decision != '75'">
+                                                &#x25a2; Good
+                                            </t-else>
+                                            <t-if t-if="ol.decision == '100'">
+                                                &#x25a3; Excellent
+                                            </t-if>
+                                            <t-else t-if="ol.decision != '100'">
+                                                &#x25a2; Excellent
+                                            </t-else>
+                                        </td>
+                                        <td colspan="2">
+                                            <t if="ol.comments" t-esc="ol.comments"/>
+
+                                        </td>
+                                    </tr>
+                                </t>
+
+                                <!--                                =====================================================================-->
+                                <tr style="background-color:black;color:white;">
+                                    <td colspan="4">
+                                        <h4>HR Section
+                                        </h4>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td colspan="4">
+                                        HR Section Progress: <t if="o.hr_progress" t-esc="o.hr_progress"/> %
+                                    </td>
+                                </tr>
+                                <t t-foreach="o.hr_checklist_ids" t-as="hr">
+                                    <tr>
+                                        <td>
+                                            <strong>
+                                                <t if="hr.criteria_id.name" t-esc="hr.criteria_id.name"/>
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <t-if t-if="hr.decision == '25'">
+                                                &#x25a3; Poor
+                                            </t-if>
+                                            <t-else t-if="hr.decision != '25'">
+                                                &#x25a2; Poor
+                                            </t-else>
+
+                                            <t-if t-if="hr.decision == '50'">
+                                                &#x25a3; Fair
+                                            </t-if>
+                                            <t-else t-if="hr.decision != '50'">
+                                                &#x25a2; Fair
+                                            </t-else>
+                                            <t-if t-if="hr.decision == '75'">
+                                                &#x25a3; Good
+                                            </t-if>
+                                            <t-else t-if="hr.decision != '75'">
+                                                &#x25a2; Good
+                                            </t-else>
+                                            <t-if t-if="hr.decision == '100'">
+                                                &#x25a3; Excellent
+                                            </t-if>
+                                            <t-else t-if="hr.decision != '100'">
+                                                &#x25a2; Excellent
+                                            </t-else>
+                                        </td>
+                                        <td colspan="2">
+                                            <t if="hr.comments" t-esc="hr.comments"/>
+
+                                        </td>
+                                    </tr>
+                                </t>
+
+                                <!--                                =====================================================================-->
+                                <tr style="background-color:black;color:white;">
+                                    <td colspan="4">
+                                        <h4>Other Options
+                                        </h4>
+                                    </td>
+                                </tr>
+                                 <tr>
+                                    <td colspan="4">
+                                        Other Options Progress: <t if="o.misc_progress" t-esc="o.misc_progress"/> %
+                                    </td>
+                                </tr>
+                                <t t-foreach="o.misc_checklist_ids" t-as="mi">
+                                    <tr>
+                                        <td>
+                                            <strong>
+                                                <t if="mi.criteria_id.name" t-esc="mi.criteria_id.name"/>
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <t-if t-if="mi.decision == '25'">
+                                                &#x25a3; Poor
+                                            </t-if>
+                                            <t-else t-if="mi.decision != '25'">
+                                                &#x25a2; Poor
+                                            </t-else>
+
+                                            <t-if t-if="mi.decision == '50'">
+                                                &#x25a3; Fair
+                                            </t-if>
+                                            <t-else t-if="mi.decision != '50'">
+                                                &#x25a2; Fair
+                                            </t-else>
+                                            <t-if t-if="mi.decision == '75'">
+                                                &#x25a3; Good
+                                            </t-if>
+                                            <t-else t-if="mi.decision != '75'">
+                                                &#x25a2; Good
+                                            </t-else>
+                                            <t-if t-if="mi.decision == '100'">
+                                                &#x25a3; Excellent
+                                            </t-if>
+                                            <t-else t-if="mi.decision != '100'">
+                                                &#x25a2; Excellent
+                                            </t-else>
+                                        </td>
+                                        <td colspan="2">
+                                            <t if="mi.comments" t-esc="mi.comments"/>
+
+                                        </td>
+                                    </tr>
+                                </t>
+
+                                <tr style="background-color:black;color:white;">
+                                    <td colspan="4">
+                                        <h4>Evaluation
+                                        </h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Additional Comments</strong>
+                                    </td>
+                                    <td colspan="3">
+                                        <t if="o.additional_comment" t-esc="o.additional_comment"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Goals</strong>
+                                        (as agreed)
+                                    </td>
+                                    <td colspan="3">
+                                        <p>
+                                            Maintaining appropriate Records and Report of all work responsibility of his
+                                            Department(s), to ensure it is operating efficiently, and not utilizing
+                                            excessive resources of DET
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr style="background-color:black;color:white;">
+                                    <td colspan="4">
+                                        <h4>Verification of Review
+                                        </h4>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <p>
+                                            By signing this form, you confirm that you have discussed this review in
+                                            detail. Signing this form does not necessarily indicate that you agree with
+                                            this evaluation
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <table class=" col-sm-12 ">
+                                <tr>
+                                    <td style="height:50px;"/>
+                                </tr>
+                                <tr>
+                                    <td style="width:24%;">
+                                        <strong>Employee Signature
+                                        </strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                    <td style="width:4%"/>
+                                    <td style="width:24%; text-align:right;">
+                                        <strong>Date</strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                </tr>
+                                <tr>
+                                    <td style="height:50px;"/>
+                                </tr>
+                                <tr>
+                                    <td style="width:24%;">
+                                        <strong>Senior Consultant Signature
+                                        </strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                    <td style="width:4%"/>
+                                    <td style="width:24%; text-align:right;">
+                                        <strong>Date</strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                </tr>
+                                <tr>
+                                    <td style="height:50px;"/>
+                                </tr>
+                                <tr>
+                                    <td style="width:24%;">
+                                        <strong>Director Signature
+                                        </strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                    <td style="width:4%"/>
+                                    <td style="width:24%; text-align:right;">
+                                        <strong>Date</strong>
+                                    </td>
+                                    <td style="border-bottom:1px solid black; width:24%;"/>
+
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

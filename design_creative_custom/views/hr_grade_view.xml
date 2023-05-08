@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <!--<record id="hr_grade_view_form_priority_1" model="ir.ui.view">
+            <field name="name">hr.grade.form</field>
+            <field name="model">hr.grade</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <form string="Grades">
+                    <sheet>
+
+                        <field name="name"/>
+                        <field name="grade"/>
+                        <field name="department"/>
+                        <field name="designation"/>
+                    </sheet>
+
+                </form>
+            </field>
+
+        </record>-->
+
+        <record id="hr_grade_view_form_viewonly" model="ir.ui.view">
+            <field name="name">hr.grade.form</field>
+            <field name="model">hr.grade</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Grades">
+                    <sheet>
+                        <group col="4" colspan="4">
+	                        <field name="name" required="1"/>
+	                        <field name="grade" required="1"/>
+	                        <field name="department" required="1"/>
+	                        <field name="designation" required="1"/>
+                        </group>
+                    </sheet>
+
+                </form>
+            </field>
+
+        </record>
+
+        <record model="ir.actions.act_window" id="hr_grade_view_action">
+            <field name="name">Hr Grade</field>
+            <field name="res_model">hr.grade</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create Hr Grade records
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem id="hr_grade_actionx_menu" name="Hr Grades"
+                  parent="hr.menu_human_resources_configuration"
+                  action="hr_grade_view_action"/>
+
+    </data>
+</odoo>

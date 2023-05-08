@@ -1,0 +1,110 @@
+<odoo>
+    <data>
+
+
+        <record model="ir.ui.view" id="xtrasoft_report_loan_request_form_tree">
+            <field name="name">Loan Request Form</field>
+            <field name="model">loan.request.form</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="employee_detail"/>
+                    <field name="employee_code"/>
+                    <field name="employee_designation"/>
+                    <field name="department_name"/>
+                    <field name="employee_date"/>
+                    <field name="employee_cnic"/>
+                    <field name="employee_salary"/>
+                    <field name="last_loan_amount"/>
+                    <field name="current_loan_balance"/>
+                    <field name="required_loan_amount"/>
+                    <field name="approved_loan_amount"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="xtrasoft_report_loan_request_form_view" model="ir.ui.view">
+            <field name="name">Loan Request Form</field>
+            <field name="model">loan.request.form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="All">
+                    <sheet>
+                        <group>
+                            <h1 style="text-align:center;">Loan Request Form</h1>
+                        </group>
+                        <h4>Employee Detail</h4>
+                        <group>
+                            <group>
+                                <field name="name" required="True"/>
+                                <field name="employee_detail" required="True"/>
+                                <field name="employee_designation" required="True"/>
+                                <field name="employee_cnic" required="True"/>
+                                <field name="last_loan_amount" required="True"/>
+                                <field name="required_loan_amount" required="True"/>
+                            </group>
+                            <group>
+                                <field name="employee_date" required="True"/>
+                                <field name="department_name" required="True"/>
+                                <field name="employee_code" required="True"/>
+                                <field name="employee_salary" required="True"/>
+                                <field name="current_loan_balance" required="True"/>
+                                <field name="approved_loan_amount" required="True"/>
+                            </group>
+                        </group>
+                        <h4>Father Detail</h4>
+                        <group>
+                            <group>
+                                <field name="father_name" required="True"/>
+                                <field name="father_occupation" required="True"/>
+                                <field name="father_cnic" required="True"/>
+                                <field name="father_address" required="True"/>
+                            </group>
+                            <group>
+                                <field name="reason_of_loan" required="True"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="monthly_deduction_amount" required="True"/>
+                        </group>
+                        <group>
+                            <group>
+                                <h4>Guarantor#1 Detail</h4>
+                                <field name="g_1_name" required="True"/>
+                                <field name="g_1_department" required="True"/>
+                                <field name="g_1_designation" required="True"/>
+                                <field name="g_1_contact_no" required="True"/>
+                                <field name="g_1_cnic" required="True"/>
+                                <field name="g_1_address" required="True"/>
+                            </group>
+                            <group>
+                                <h4>Guarantor#2 Detail</h4>
+
+                                <field name="g_2_name" required="True"/>
+                                <field name="g_2_department" required="True"/>
+                                <field name="g_2_designation" required="True"/>
+                                <field name="g_2_contact_no" required="True"/>
+                                <field name="g_2_cnic" required="True"/>
+                                <field name="g_2_address" required="True"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="xtrasoft_report_loan_request_form_menu_button_action_window">
+            <field name="name">Loan Request Form</field>
+            <field name="res_model">loan.request.form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Loan Request Form" id="xtrasoft_report_loan_request_form_menu"
+                  parent="xtrasoft_report.menu_root"
+                  action="xtrasoft_report_loan_request_form_menu_button_action_window"/>
+
+
+    </data>
+</odoo>

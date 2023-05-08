@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+
+        <!--        <record id="action_account_payments" model="ir.actions.act_window">-->
+        <!--            <field name="name">Payments</field>-->
+        <!--            <field name="res_model">account.payment</field>-->
+        <!--            <field name="view_mode">tree,kanban,form,graph</field>-->
+        <!--            <field name="context">{-->
+        <!--                'default_payment_type': 'inbound',-->
+        <!--                'default_partner_type': 'customer',-->
+        <!--                'search_default_inbound_filter': 1,-->
+        <!--                'res_partner_search_mode': 'customer',-->
+        <!--                }-->
+        <!--            </field>-->
+        <!--            <field name="view_id" ref="view_account_payment_tree"/>-->
+        <!--            <field name="help" type="html">-->
+        <!--                <p class="o_view_nocontent_smiling_face">-->
+        <!--                    Register a payment-->
+        <!--                </p>-->
+        <!--                <p>-->
+        <!--                    Payments are used to register liquidity movements. You can process those payments by your own means-->
+        <!--                    or by using installed facilities.-->
+        <!--                </p>-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+        <!--        <record id="action_account_payments_payable" model="ir.actions.act_window">-->
+        <!--            <field name="name">Payments</field>-->
+        <!--            <field name="res_model">account.payment</field>-->
+        <!--            <field name="view_mode">tree,kanban,form,graph</field>-->
+        <!--            <field name="context">{-->
+        <!--                'default_payment_type': 'outbound',-->
+        <!--                'default_partner_type': 'supplier',-->
+        <!--                'search_default_outbound_filter': 1,-->
+        <!--                'res_partner_search_mode': 'supplier',-->
+        <!--                }-->
+        <!--            </field>-->
+        <!--            <field name="view_id" ref="view_account_supplier_payment_tree"/>-->
+        <!--            <field name="help" type="html">-->
+        <!--                <p class="o_view_nocontent_smiling_face">-->
+        <!--                    Register a payment-->
+        <!--                </p>-->
+        <!--                <p>-->
+        <!--                    Payments are used to register liquidity movements. You can process those payments by your own means-->
+        <!--                    or by using installed facilities.-->
+        <!--                </p>-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+        <!--        <record id="action_account_payments_transfer" model="ir.actions.act_window">-->
+        <!--            <field name="name">Internal Transfers</field>-->
+        <!--            <field name="res_model">account.payment</field>-->
+        <!--            <field name="view_mode">tree,kanban,form,graph</field>-->
+        <!--            <field name="context">{'default_payment_type': 'transfer', 'search_default_transfers_filter': 1}</field>-->
+        <!--            <field name="domain">[]</field>-->
+        <!--            <field name="view_id" ref="view_account_supplier_payment_tree"/>-->
+        <!--            <field name="help" type="html">-->
+        <!--                <p class="o_view_nocontent_smiling_face">-->
+        <!--                    Register a payment-->
+        <!--                </p>-->
+        <!--                <p>-->
+        <!--                    Payments are used to register liquidity movements. You can process those payments by your own means-->
+        <!--                    or by using installed facilities.-->
+        <!--                </p>-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+        <menuitem action="account.action_account_payments" id="account.menu_action_account_payments_receivable"
+                  parent="account.menu_finance_entries_accounting_miscellaneous" name="Customer receipt"
+                  sequence="15"/>
+        <menuitem action="account.action_account_payments_payable" id="account.menu_action_account_payments_payable"
+                  parent="account.menu_finance_entries_accounting_miscellaneous" name="Vendor voucher"
+                  sequence="20"/>
+    </data>
+</odoo>

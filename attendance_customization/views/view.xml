@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="inherit_department">
+        <field name="name">hr.department.formt</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[1]" position="after">
+                <group string="Attendance Information">
+                    <field name="st_checkin" placeholder="00:00"/>
+                    <field name="st_checkout" placeholder="00:00"/>
+                    <field name="grace_time" placeholder="00:00"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="inherit_employee">
+        <field name="name">hr.employee.formt</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tz']" position="after">
+                <group string="Attendance Information">
+                    <field name="st_checkin" placeholder="00:00"/>
+                    <field name="st_checkout" placeholder="00:00"/>
+                    <field name="grace_time" placeholder="00:00"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_attendance_custom" model="ir.actions.act_window">
+        <field name="name">DC Attendance</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">attendance.custom</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('is_modif', '=', False)]</field>
+
+
+    </record>
+
+    <record id="action_attendance_custom_modif" model="ir.actions.act_window">
+        <field name="name">Attendance Modification Requests</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">attendance.custom</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('is_modif', '=', True)]</field>
+    </record>
+
+    <record id="view_search_action_domain" model="ir.ui.view">
+        <field name="name">attendance.device.filter</field>
+        <field name="model">attendance.custom</field>
+        <field name="arch" type="xml">
+            <search string="Search Attendance">
+				<field name="employee_id"/>
+				<field name="is_modif"/>
+				<field name="attendance_date"/>
+				<field name="job_title"/>
+				<field name="status"/>
+				<field name="working"/>
+				<field name="site"/>
+				<field name="no_attend"/>
+				<field name="sick_leave"/>
+				<field name="absent"/>
+				<field name="sick_from"/>
+				
+                <filter name="IN-Complete" string="In-Complete Attendance"
+                        domain="[('valid','=',False)]"/>
+                <separator/>
+                <filter name="Complete" string="Complete Attendance"
+                        domain="[('valid','=',True)]"/>
+                <separator/>
+
+
+            </search>
+        </field>
+    </record>
+
+
+    <record id="view_attendance_ing_tree" model="ir.ui.view">
+        <field name="name">custom.attendance.tree</field>
+        <field name="model">attendance.custom</field>
+        <field name="arch" type="xml">
+            <tree string="Attendance list">
+                <field name="roll_number"/>
+                <field name="employee_id"/>
+
+
+                <field name="job_title"/>
+                <field name="attendance_date"/>
+
+
+                <field name="ot_15"/>
+                <field name="ot_125"/>
+                <field name="allow_viewotf" invisible="1"/>
+                <field name="allow_viewoto" invisible="1"/>
+
+
+                <field name="check_ot_lunch" attrs="{'invisible':[('allow_viewotf','!=',True)]}"/>
+                <field name="check_ot_normal" attrs="{'invisible':[('allow_viewoto','!=',True)]}"/>
+
+                <field name="working"/>
+                <field name="absent"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="action_form">
+        <field name="name">attendance.custom.form</field>
+        <field name="model">attendance.custom</field>
+        <field name="arch" type="xml">
+            <form class="o_lead_opportunity_form">
+
+                <header>
+                    <button name="validate_record" attrs="{'invisible': [('is_modif','!=',True)]}"
+                            class="btn-primary" string="Validate Record" type="object"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <separator style="color:black;font-weight:bold;font-size:28px;" string="Attendance Information"
+                               colspan="4"/>
+                    <group col="4" colspan="12">
+                        <field name="employee_id"/>
+                        <field name="is_modif"/>
+                        <field name="is_bonus_day" force_save="1" invisible="1"/>
+                        <field name="attendance_date"/>
+                        <field name="roll_number"/>
+                        <field name="custom_ID"/>
+                        <field name="job_title"/>
+                        <field name="job_code"/>
+                        <field name="site"/>
+                        <field name="status"/>
+                        <field name="note" readonly="1" force_save="1"/>
+
+                    </group>
+                    <group>
+                        <field name="valid" force_save="1"/>
+                    </group>
+
+                    <group>
+                        <field name="options" attrs="{'readonly':[('is_modif','=',False)]}" widget="radio"/>
+                    </group>
+
+                    <!--                    <group>-->
+                    <!--                        <field name="first_check_in_input"-->
+                    <!--                               attrs="{'invisible':[('valid','=',True)]}"/>-->
+                    <!--                        <field name="first_check_out_input"-->
+                    <!--                               attrs="{'invisible':[('valid','=',True)]}"/>-->
+
+                    <!--                        <field name="second_check_in_input"-->
+                    <!--                               attrs="{'invisible':[('valid','=',True)]}"/>-->
+
+                    <!--                        <field name="second_check_out_inputt"-->
+                    <!--                               attrs="{'invisible':[('valid','=',True)]}"/>-->
+
+
+                    <!--                    </group>-->
+
+
+                    <group col="2" string="Check In Records" colspan="12">
+                        <field name="check_ins" editable="bottom" force_save="1"
+                               attrs="{'readonly':[('is_modif','=',False)]}">
+                            <tree>
+                                <field name="check" readonly="1" invisible="1" force_save="1"/>
+                                <field name="status"/>
+                                <field name="timestamp" string="Check in"/>
+                                <field name="note"/>
+                            </tree>
+                            <form>
+                                <!--                                <field name="check" readonly="1"/>-->
+                                <!--                                <field name="status" readonly="1"/>-->
+                                <group>
+                                    <field name="timestamp" string="Datetime" readonly="0"/>
+                                </group>
+                                <group>
+                                    <field name="note"/>
+                                    <field name="check" readonly="1"  force_save="1" invisible="1"/>
+                                </group>
+
+
+                            </form>
+                        </field>
+
+                        <!--                        <field name="first_shift_record" options="{'no_create': True}" invisible="1"/>-->
+                        <!--                        <field name="first_check_in" placeholder="00:00"/>-->
+                        <!--                        <field name="first_check_out" placeholder="00:00"/>-->
+                        <!--                        <field name="first_shift_total_hours" placeholder="00:00"/>-->
+                    </group>
+
+
+                    <br/>
+                    <group col="2" string="Check Out Records" colspan="12">
+
+                        <field name="check_outs" editable="bottom" force_save="1"
+                               attrs="{'readonly':[('is_modif','=',False)]}">
+                            <tree>
+                                <field name="check" readonly="1" force_save="1" invisible="1"/>
+                                <field name="status"/>
+                                <field name="timestamp" string="Check out"/>
+                                <field name="note"/>
+                            </tree>
+                            <form>
+                                <!--                                <field name="check" readonly="1"/>-->
+                                <!--                                <field name="status" readonly="1"/>-->
+                                <group>
+                                    <field name="timestamp" string="Datetime" readonly="0"/>
+                                </group>
+                                <group>
+                                    <field name="note"/>
+                                    <field name="check" readonly="1" force_save="1" invisible="1"/>
+                                </group>
+
+                            </form>
+                        </field>
+
+
+                        <!--                        <field name="second_shift_record" options="{'no_create': True}" invisible="1"/>-->
+                        <!--                        <field name="second_check_in" placeholder="00:00"/>-->
+                        <!--                        <field name="second_check_out" placeholder="00:00"/>-->
+                        <!--                        <field name="second_shift_total_hours" placeholder="00:00"/>-->
+                    </group>
+
+                    <group col="4" colspan="12">
+                        <field name="working" placeholder="00:00"/>
+                        <field name="late_in" placeholder="00:00"/>
+                        <field name="apply_latein_deduction" force_save="1"/>
+                        <field name="exception_approved"/>
+                        <field name="early_in" placeholder="00:00"/>
+                        <field name="early_out" placeholder="00:00"/>
+                        <field name="ot_15" placeholder="00:00"/>
+                        <field name="ot_125" placeholder="00:00"/>
+                        <field name="has_ot" invisible="1"/>
+                        <field name="no_attend" placeholder="00:00"/>
+                        <field name="ignored" placeholder="00:00"/>
+                    </group>
+
+                    <group col="2" colspan="8">
+                        <field name="absent"/>
+
+                        <field name="sick_leave"/>
+
+                        <field name="sick_from"
+                               attrs="{'required':[('sick_leave','=',True)],'invisible':[('sick_leave','!=',True)]}"/>
+                        <field name="sick_to"
+                               attrs="{'required':[('sick_leave','=',True)],'invisible':[('sick_leave','!=',True)]}"/>
+
+                    </group>
+
+                    <group col="2" colspan="8">
+
+                        <field name="leave"/>
+
+                        <field name="leave_from"
+                               attrs="{'required':[('leave','=',True)],'invisible':[('leave','!=',True)]}"/>
+                        <field name="leave_to"
+                               attrs="{'required':[('leave','=',True)],'invisible':[('leave','!=',True)]}"/>
+
+                    </group>
+
+                    <group col="2" colspan="8">
+
+                        <field name="Emerg"/>
+
+                        <field name="emerg_from"
+                               attrs="{'required':[('Emerg','=',True)],'invisible':[('Emerg','!=',True)]}"/>
+                        <!--                        <field name="sick_to"-->
+                        <!--                               attrs="{'required':[('sick_leave','=',True)],'invisible':[('sick_leave','!=',True)]}"/>-->
+
+                    </group>
+
+                    <group col="2" colspan="8">
+
+                        <field name="Unpaid"/>
+
+                        <field name="unpaid_from"
+                               attrs="{'required':[('Unpaid','=',True)],'invisible':[('Unpaid','!=',True)]}"/>
+                        <field name="unpaid_to"
+                               attrs="{'required':[('Unpaid','=',True)],'invisible':[('Unpaid','!=',True)]}"/>
+
+                    </group>
+
+                    <group col="2" colspan="8">
+
+                        <field name="Mater"/>
+
+                        <field name="mater_from"
+                               attrs="{'required':[('Mater','=',True)],'invisible':[('Mater','!=',True)]}"/>
+                        <field name="mater_to"
+                               attrs="{'required':[('Mater','=',True)],'invisible':[('Mater','!=',True)]}"/>
+
+                    </group>
+
+                    <group col="2" colspan="8">
+
+                        <field name="Busi"/>
+
+                        <field name="busi_from"
+                               attrs="{'required':[('Busi','=',True)],'invisible':[('Busi','!=',True)]}"/>
+                        <field name="busi_to"
+                               attrs="{'required':[('Busi','=',True)],'invisible':[('Busi','!=',True)]}"/>
+
+                    </group>
+
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <menuitem id="menu_attendence" name="DC Attendance"
+            
+              sequence="12"/>
+    <menuitem name="DC Attendance" id="ums_attendence_root"
+              parent="menu_attendence"
+              sequence="2" action="action_attendance_custom"/>
+
+    <menuitem name="Attendance Modification" id="ums_attendence_root_modif"
+              parent="menu_attendence"
+              sequence="2" action="action_attendance_custom_modif"/>
+
+
+</odoo>

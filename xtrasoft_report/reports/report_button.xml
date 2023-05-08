@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+
+<!--    <record id="xtrasoft_report_recruitment_request_pdf" model="ir.actions.report">-->
+<!--        <field name="name">Recruitment Request Form</field>-->
+<!--        <field name="model">recruitment.request.form</field>-->
+<!--        <field name="report_type">qweb-pdf</field>-->
+<!--        <field name="report_name">xtrasoft_report.xtrasoft_report_loan_request_form_pdf</field>-->
+<!--        <field name="report_file">xtrasoft_report.xtrasoft_report_loan_request_form_pdf</field>-->
+<!--        <field name="binding_model_id" ref="model_recruitment_request_form"/>-->
+<!--    </record>-->
+
+
+
+
+    <report
+            id="confirmation_services_report_id"
+            string="Recruitment Request Form"
+            model="recruitment.request.form"
+            report_type="qweb-pdf"
+            name="xtrasoft_report.xtrasoft_report_loan_request_form_pdf"
+            file="xtrasoft_report.xtrasoft_report_loan_request_form_pdf"/>
+
+    <report
+            id="employee_performance_review_pdf_id"
+            string="Employee Performance Review"
+            model="employee.performance.review"
+            report_type="qweb-pdf"
+            name="xtrasoft_report.employee_performance_review_pdf"
+            file="xtrasoft_report.employee_performance_review_pdf"/>
+
+    <report
+            id="loan_request_form_pdf_id"
+            string="Loan Request Form"
+            model="loan.request.form"
+            report_type="qweb-pdf"
+            name="xtrasoft_report.loan_request_form_pdf"
+            file="xtrasoft_report.loan_request_form_pdf"/>
+
+
+
+</odoo>

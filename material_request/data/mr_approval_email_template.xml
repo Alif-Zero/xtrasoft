@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    	<record id="mr_department_approval_email_template" model="mail.template">
+        	<field name="name">Material Request: Material Request Approval Alert</field>
+            <field name="email_from">${ctx['email_from']}</field>
+            <field name="email_to">${ctx['notification_to_approvers']}</field>
+            <field name="subject">Material Request Approval Alert</field>
+            <field name="model_id" ref="material_request.model_material_request"/>
+            <field name="auto_delete" eval="False"/>
+	  		<field name="body_html">
+             <![CDATA[
+                <header>
+                <strong>Material Request Approval Alert</strong>
+                </header>
+                <p> A Material Request with number ${object.name} has been initiated by ${object.requested_by.name} please validate.</p>
+                <br /><br /><br /><br />
+                <p>Sent Using Odoo</p>
+            ]]>
+
+	  		</field>
+       	</record>
+		
+		<record id="mr_manager_email_template" model="mail.template">
+        	<field name="name">Material Request: Material Request Approval Alert</field>
+            <field name="email_from">${ctx['email_from']}</field>
+            <field name="email_to">${ctx['notification_to_approvers']}</field>
+            <field name="subject">Material Request Approval Alert</field>
+            <field name="model_id" ref="material_request.model_material_request"/>
+            <field name="auto_delete" eval="False"/>
+	  		<field name="body_html">
+             <![CDATA[
+                <header>
+                <strong>Material Request Approval Alert</strong>
+                </header>
+                <p> A Material Request with number ${object.name} has been validated by ${ctx['approver_name']} please approve.</p>
+                <br /><br /><br /><br />
+                <p>Sent Using Odoo</p>
+            ]]>
+
+	  		</field>
+       	</record>
+		
+		<record id="mr_approval_email_to_initiator_template" model="mail.template">
+        	<field name="name">Material Request: Material Request Approval Alert</field>
+            <field name="email_from">${ctx['email_from']}</field>
+            <field name="email_to">${ctx['notification_to_initiator']}</field>
+            <field name="subject">Material Request Approval Alert</field>
+            <field name="model_id" ref="material_request.model_material_request"/>
+            <field name="auto_delete" eval="False"/>
+	  		<field name="body_html">
+             <![CDATA[
+                <header>
+                <strong>Material Request Approval Alert</strong>
+                </header>
+                <p>Your Material Request with number ${object.name} has been approved by ${ctx['approver_name']}.</p>
+                <br /><br /><br /><br />
+                <p>Sent Using Odoo</p>
+            ]]>
+
+	  		</field>
+       	</record>
+		<record id="mr_approval_reject_email_template" model="mail.template">
+        	<field name="name">Material Request: Material Request Rejection Alert</field>
+            <field name="email_from">${ctx['email_from']}</field>
+            <field name="email_to">${ctx['notification_to_approvers']}</field>
+            <field name="subject">Material Request Rejection Alert</field>
+            <field name="model_id" ref="material_request.model_material_request"/>
+            <field name="auto_delete" eval="False"/>
+	  		<field name="body_html">
+             <![CDATA[
+                <header>
+                <strong>Material Request Rejection Alert</strong>
+                </header>
+                <p>Your Material Request with number ${object.name} has been rejected by ${ctx['rejected_by']} with reason ${ctx['rejection_reason']}.</p>
+                <br /><br /><br /><br />
+                <p>Sent Using Odoo</p>
+            ]]>
+
+	  		</field>
+       	</record>
+
+		<record id="mr_create_transfer_email_template" model="mail.template">
+        	<field name="name">Material Request: Create Material Trasnfer Alert</field>
+            <field name="email_from">${ctx['email_from']}</field>
+            <field name="email_to">${ctx['notification_to_stock_users']}</field>
+            <field name="subject">Create Material Trasnfer Alert</field>
+            <field name="model_id" ref="material_request.model_material_request"/>
+            <field name="auto_delete" eval="False"/>
+	  		<field name="body_html">
+             <![CDATA[
+                <header>
+                <strong>Create Material Transfer Alert</strong>
+                </header>
+                <p>A Material Request with number ${object.name} has been approved by ${ctx['approver_name']} please create stock transfer request.</p>
+                <br /><br /><br /><br />
+                <p>Sent Using Odoo</p>
+            ]]>
+
+	  		</field>
+       	</record>
+		
+		
+    </data>
+</odoo>

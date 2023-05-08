@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="empinfox_format" model="report.paperformat">
+            <field name="name">attendeance</field>
+            <field name="format">custom</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">10</field>
+            <field name="orientation">Landscape</field>
+        </record>
+
+        <report
+                id="action_report_document_empinfox"
+                model="emplog.info.details"
+                string="Employee info Report"
+                report_type="qweb-pdf"
+                name="design_creative_custom.document_report_empinfox"
+                file="design_creative_custom.document_report_empinfox"
+                paperformat="empinfox_format"
+
+
+        />
+
+        <template id="document_report_empinfox">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="col-auto mw-100 mb-2">
+                        <strong>Design Creative W.L.L</strong>
+                    </div>
+                    <div class="col-auto mw-100 mb-2">
+                        <strong>Employee Information</strong>
+                    </div>
+
+                    <div class="page">
+
+                        <table class="table table-sm" style="page-break-inside: avoid;">
+                            <thead>
+                                <tr>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Roll#</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Employee Name</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Nationality</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Passport No</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Passport Expiry</strong>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>CPR No</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>CPR expiry</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>RP Expiry</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Bank Name</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Bank Account Number</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>IBAN</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="col-auto mw-100 mb-2"
+                                             color="#17a2b8">
+                                            <strong>Tenure</strong>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="dtax" t-as="line">
+                                    <t t-if="line.get('data') == 'd'">
+                                        <tr>
+
+                                            <td align="left">
+                                                <strong><span t-esc="line.get('div')"/></strong>
+                                            </td>
+
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="line.get('data') == 'nd'">
+
+                                        <tr>
+                                            <td align="center">
+                                                <span t-esc="line.get('roll')"/>
+                                            </td>
+                                            <td align="center">
+                                                <span t-esc="line.get('emp')"/>
+                                            </td>
+                                            <td align="center">
+                                                <span t-esc="line.get('nat')"/>
+
+                                            </td>
+                                            <td align="center">
+                                                <span t-esc="line.get('pexp')"/>
+                                            </td>
+                                            <td align="center">
+                                                <span t-esc="line.get('pexpd')"/>
+                                            </td>
+                                            <td align="center">
+                                                <span t-esc="line.get('cprexp')"/>
+
+                                            </td>
+                                            <td align="center">
+                                                <span t-esc="line.get('cprexpd')"/>
+                                            </td>
+                                            <td align="center">
+                                                <span t-esc="line.get('rpexpd')"/>
+                                            </td>
+                                            <td align="center">
+                                                <span t-esc="line.get('bname')"/>
+
+                                            </td>
+
+                                            <td align="center">
+                                                <span t-esc="line.get('bacount')"/>
+
+                                            </td>
+
+
+                                            <td align="center">
+                                                <span t-esc="line.get('iban')"/>
+
+                                            </td>
+                                            <td align="center">
+                                                <span t-esc="line.get('tenur')"/>
+
+                                            </td>
+
+
+                                        </tr>
+                                    </t>
+
+                                </t>
+
+
+                            </tbody>
+
+                        </table>
+
+
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

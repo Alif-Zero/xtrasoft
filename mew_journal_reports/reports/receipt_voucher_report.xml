@@ -1,0 +1,250 @@
+<odoo>
+    <template id="mew_journal_conditional_report_two">
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+            <div class="col-12" style="text-align:center">
+                <h4>
+                    <strong>
+                        <span>BANK RECEIPT VOUCHER</span>
+
+                    </strong>
+                </h4>
+            </div>
+            <div class="container " style="font-size: 12px">
+                <table class="table " style="border-top: 1px solid; ">
+                    <div class="row" style="border-top:3px solid black;padding-top: 16px;">
+                        <div class="col-3">
+                            <div>
+                                <span>Voucher Type:</span>
+                                <span>JV</span>
+                                <!--                                    <span t-raw="o.name[-4:]"/>-->
+                                <!--                                <span t-field="o.date"/>-->
+                            </div>
+                            <div>
+                                <span>Entered by:</span>
+                                <span t-field="o.create_uid.display_name"/>
+                            </div>
+
+                            <div>
+                                <!--                                    <b>-->
+                                <!--                                        <strong>Cheque:</strong>-->
+                                <!--                                    </b>-->
+                                <!--                                    <span></span>-->
+                            </div>
+
+                        </div>
+                        <div class="col-6" style="text-align:center">
+
+                        </div>
+                        <div class="col-3" style="margin-left:15px;">
+                            <div>
+                                <span>Voucher No:</span>
+                                <span t-esc="o.journal_voucher_seq"/>
+
+                            </div>
+                            <div>
+                                <span>Voucher Date:</span>
+                                <span t-field="o.date"/>
+
+                            </div>
+                            <div>
+                                <span>Posted by:</span>
+                                <span t-field="o.write_uid.display_name"/>
+                            </div>
+                        </div>
+                    </div>
+                </table>
+
+                <table class="table table-borderless" style="font-size:16px;">
+                    <thead>
+                        <tr style="border-top:1px solid">
+                            <th style="text-align:left; padding-bottom: 22px;padding-top: 22px;" colspan="2">
+                                <strong>Account Code / Account Title</strong>
+                                <b>
+                                    <!--                                                <t t-raw="line.account_id.name"/>-->
+                                </b>
+                            </th>
+                            <th style="text-align:left; padding-bottom: 22px;padding-top: 22px;;">
+                                <strong>Narration</strong>
+                            </th>
+
+
+                            <th style="text-align:left;">
+                                <div>
+                                    <div style="border-bottom: 1px solid; text-align: center;">
+                                        <b>
+                                            <strong>Rupee</strong>
+                                        </b>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <b>
+                                            <span style="padding-right: 50px;">Debit</span>
+                                        </b>
+                                        <b>
+                                            <span>Credit</span>
+                                        </b>
+                                    </div>
+
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody style="border-top:1px solid;  ">
+                        <!--                            <t t-set="move_id" t-value="o.move_id.id"/>-->
+                        <!--                            <t t-foreach="request.env['account.move'].search([('id', '=', move_id)])" t-as="obj">-->
+                        <t t-foreach="o.invoice_line_ids.ids" t-as="i">
+                            <t t-foreach="request.env['account.move.line'].search([('id', '=', i)])"
+                               t-as="line">
+
+                                    <tr style="font-size:13px; padding-top:2px; padding-bottom:2px;">
+                                    <td style="text-align:left; width:30%; padding-top:2px; padding-bottom:2px;"
+                                        colspan="2">
+                                        <t t-raw="line.account_id.code"/>
+                                        <br/>
+                                        <t t-raw="line.account_id.name"/>
+
+                                    </td>
+                                    <!--                                        <td style="text-align:left; width: 15%">-->
+                                    <!--                                            <t t-raw="line.account_id.display_name"/>-->
+                                    <!--                                        </td>-->
+                                    <td style="text-align:left; width:30%; padding-top:2px; padding-bottom:2px;">
+                                        <t t-raw="line.name"/>
+
+                                    </td>
+
+
+
+
+                                         <td class=" " style="width:20% ; padding-top:2px; padding-bottom:2px;">
+                                        <table class="justify-content-center col-sm-12">
+
+                                            <tr>
+                                                <td class=" "
+                                                    style="text-align:left;padding-top:2px; padding-bottom:2px; padding-left:30px;">
+                                                    <span style="">
+                                                         <t t-raw="line.debit"
+                                                   t-options="{&quot;widget&quot;: &quot;integer&quot;}"/>
+                                                    </span>
+                                                </td>
+                                                <td class=" "
+                                                    style=" text-align:right;padding-top:2px; padding-bottom:2px;padding-right:20px;">
+                                                    <span>
+                                                        <t t-raw="line.credit"
+                                                   t-options="{&quot;widget&quot;: &quot;integer&quot;}"/>
+                                                    </span>
+                                                </td>
+
+                                            </tr>
+
+                                        </table>
+                                    </td>
+
+
+
+
+                                </tr>
+                            </t>
+                        </t>
+                        <!--   ================================  start =====================================-->
+
+
+                     <tr style="border-bottom:3px solid black; border-top:1px solid black; font-size:14px;">
+                            <td class="" style="width:20%; padding-top:15px;">Amount Inwords:</td>
+                            <td style="padding-top:15px;" colspan="2">
+                                <span>Rupees</span>
+                                <t t-raw="o.int_to_word"/>
+                                <span>Only</span>
+
+                            </td>
+
+                            <td class=" " style="width:30%;border-bottom:3px solid black;">
+                                <table class="justify-content-center col-sm-12">
+
+                                    <tr>
+                                        <t t-set="total_debits" t-value="0.00"/>
+                                        <t t-set="total_credits" t-value="0.00"/>
+                                        <t t-foreach="o.invoice_line_ids.ids" t-as="i">
+                                            <t t-foreach="request.env['account.move.line'].search([('id', '=', i)])"
+                                               t-as="line">
+
+                                                <t t-if="line.debit &gt;= 0.0">
+                                                    <t t-set="total_debits"
+                                                       t-value="total_debits + line.debit"/>
+                                                </t>
+
+                                                <t t-if="line.credit &gt;= 0.0">
+                                                    <t t-set="total_credits"
+                                                       t-value="total_credits + line.credit"/>
+                                                </t>
+                                            </t>
+
+                                        </t>
+
+                                        <td class=" "
+                                            style="text-align:left;padding-top:7px; padding-bottom:2px; padding-left:30px;">
+                                            <span>
+
+                                                <t t-raw="total_debits"
+                                                   t-options="{&quot;widget&quot;: &quot;integer&quot;}"/>
+                                            </span>
+                                        </td>
+                                        <td class=" "
+                                            style=" text-align:right;padding-top:7px; padding-bottom:2px;padding-right:20px;">
+                                            <span>
+
+                                                <t t-raw="total_credits"
+                                                   t-options="{&quot;widget&quot;: &quot;integer&quot;}"/>
+                                            </span>
+                                        </td>
+
+                                    </tr>
+
+                                </table>
+                            </td>
+
+                        </tr>
+
+
+                        <!--   ================================  end =====================================-->
+
+
+                    </tbody>
+                </table>
+
+                <!--                <table class="table table-sm table-borderless"-->
+                <!--                       style="border-top:1px solid; padding-top:1px;font-size:14px;">-->
+                <!--                   -->
+                <!--                    <tr>-->
+                <!--                        <t t-foreach="request.env['account.move.line'].search([('id', '=', o.invoice_line_ids.ids[1])])"-->
+                <!--                           t-as="line">-->
+
+
+                <!--                            <td class=" " style="width:20%">-->
+                <!--                                <table class="justify-content-center col-sm-12">-->
+
+                <!--                                    <tr>-->
+                <!--                                        <td class=" "></td>-->
+                <!--                                        <td class=""></td>-->
+                <!--                                    </tr>-->
+                <!--                                </table>-->
+                <!--                            </td>-->
+                <!--                        </t>-->
+                <!--                    </tr>-->
+                <!--                    &lt;!&ndash;                        </t>&ndash;&gt;-->
+                <!--                </table>-->
+                <!--                <h1 style="border-top:1px solid;">jjj</h1>-->
+            </div>
+        </t>
+
+    </template>
+
+    <template id="mew_payment_voucher_template_two">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="mew_journal_reports.mew_journal_conditional_report_two" t-lang="o.partner_id.lang"/>
+            </t>
+        </t>
+
+    </template>
+
+</odoo>

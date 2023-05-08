@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data> 
+
+       <record model="ir.ui.view" id="purchase_request_form_inherit">
+        <field name="name">purchase.request.form.inherit</field>
+        <field name="model">purchase.request</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_form"></field>
+        <field name="arch" type="xml">
+        	<xpath expr="//notebook" position="after">
+        		<group>
+        			<field name="approver_ids" nolabel="1" mode="kanban">
+        				<kanban create="false" delete="false" class="oe_background_grey o_kanban_dashboard o_salon_kanban">
+        					<field name='sequence' />
+							<field name='name' />
+							<field name='res_id' />
+							<field name='document_type' />
+							<field name='user_id' />
+							<field name='authority' />
+							<field name='action' />
+							<field name='date' />
+							<field name='comment' />
+							<field name='po_id' />
+							<field name='image_128' />
+							<field name='valid_user' />
+							<field name='action_taken_as' />
+							<templates>
+                                  <t t-name="kanban-box">
+									<div t-attf-class="oe_kanban_global_click">
+										<div class="oe_kanban_details">
+											<div class="row">
+												<div class="col-md-3">
+													<div class="o_kanban_image">
+					                                    <img alt="Avatar" t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" />
+					                                </div>
+												</div>
+												<div class="col-md-5">
+													
+													<div><h2><field name='name' /></h2>
+														<h4><field name='authority' /></h4>
+													</div>
+													<div><field name='action_taken_as' /></div>
+													<t t-if="record.action.value == 'Accept'">
+														<span><strong>Accepted</strong></span>
+													</t>
+													<t t-if="record.action.value == 'Reject'">
+														<span><strong>Rejected</strong></span>
+													</t>
+													<div><field name='date' /></div>
+													<t t-if="record.comment.value">
+														<b>Comments:</b><field name='comment' />
+													</t>
+													
+												</div>
+												<t t-if="record.valid_user.value == 1">
+														<div style="float:right">
+										                    <a class="btn btn-sm btn-success" string="Accept" name="accept" type="object" role="button">
+										                        <i class="fa fa-check" role="img" aria-label="Accept" title="Accept"/>
+										                    </a>
+										                    <a class="btn btn-sm btn-danger" string="Reject" name="%(launch_approval_rejection_wizard)d" context="{'default_approval_id':active_id}" type="action" role="button">
+										                        <i class="fa fa-times" role="img" aria-label="Reject" title="Reject"/>
+										                    </a>
+									                </div>
+												</t>
+												<t t-if="record.action.value == 'Accept'">
+													<a class="btn btn-sm btn-success" string="Accepted" role="button"/>
+												</t>
+												<t t-if="record.action.value == 'Reject'">
+													<a class="btn btn-sm btn-danger" string="Rejected" role="button"/>
+												</t>
+													
+											</div>
+										</div>
+									</div>
+									</t>
+                                        
+                                        
+                                        
+                           </templates>
+        				</kanban>
+        				<form>
+        					<sheet>
+        						<group string="comment">
+        						<field name="valid_user" invisible="1"/>
+        							<field name="comment" nolabel="1" attrs="{'readonly':['|',('valid_user','=',0),('valid_user','=',False)]}"/>
+        						</group>
+        					</sheet>
+        				</form>
+        			</field>
+        		</group>
+        	</xpath>
+        	</field>
+        </record>
+        
+  </data>
+</odoo>

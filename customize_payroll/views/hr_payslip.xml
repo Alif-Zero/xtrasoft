@@ -1,0 +1,64 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_hr_payslip_form_inherits">
+	        <field name="name">view.hr.payslip.form</field>
+	        <field name="model">hr.payslip</field>
+	        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+	        <field name="arch" type="xml">
+			<xpath expr="//group" position="after">
+				<group col="6" colspan="6">
+					<field name="total_loan"/>
+					<field name="recovered_amount"/>
+					<field name="balance_amount"/>
+					<field name="total_overtime"/>
+				</group>
+			</xpath>
+	       	<xpath expr="//field[@name='worked_days_line_ids']/tree/field[@name='number_of_days']" position="after">
+				<field name="total_present"/>
+				<field name="total_absent"/>
+	       	</xpath>
+	        </field>
+        </record>
+
+        <record id="attendance_allowance_setting_view" model="ir.ui.view">
+            <field name="name">Attendance Allowance Configuration</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="hr_attendance.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@data-key='hr_attendance']" position="inside">
+                    <h2>Attendance Allowance</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                
+                                <label for="labour_att_allowance"/>
+                                <div class="text-muted">
+                                </div>
+                                <div>
+                                    <div class="content-group mt16">
+                                        <field name="labour_att_allowance" colspan="4" nolabel="1"/>
+                                    </div>
+
+
+                                </div>
+								<label for="management_att_allowance"/>
+                                <div class="text-muted">
+                                </div>
+                                <div>
+                                    <div class="content-group mt16">
+                                        <field name="management_att_allowance" colspan="4" nolabel="1"/>
+                                    </div>
+
+
+                                </div>
+                            </div>
+							
+                        </div>
+                     
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

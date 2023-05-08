@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_hr_employee_definex" model="ir.actions.act_window">
+        <field name="name">Define</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.define.emp</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="view_hr_employeedefzx" model="ir.ui.view">
+        <field name="name">custom.hr.tree</field>
+        <field name="model">hr.define.emp</field>
+        <field name="arch" type="xml">
+            <tree string="HR Employee">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="action_hr_employeedef_form">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.define.emp</field>
+        <field name="arch" type="xml">
+            <form class="o_lead_opportunity_form">
+
+                <header>
+                    <!--                    <button name="update_recors" string="Update" type="object" class="btn-primary"></button>-->
+                </header>
+
+                <sheet>
+                    <separator style="color:black;font-weight:bold;font-size:28px;" string="Employee info"
+                               colspan="4"/>
+                    <group col="4" colspan="12">
+
+
+                        <field name="employee_id"/>
+                        <field name="department_id"/>
+
+
+                    </group>
+                    <notebook>
+                        <page string="Select Members">
+                            <field name="members">
+                                <tree editable="bottom">
+                                    <field name="employee_id"/>
+                                    <field name="department_id"/>
+
+
+                                </tree>
+                            </field>
+
+
+                        </page>
+                    </notebook>
+
+                </sheet>
+
+
+            </form>
+        </field>
+    </record>
+
+    <menuitem name="Define employee" id="ums_hremployee_defmenu"
+              parent="hr.menu_human_resources_configuration"
+              sequence="2" action="action_hr_employee_definex"/>
+
+</odoo>

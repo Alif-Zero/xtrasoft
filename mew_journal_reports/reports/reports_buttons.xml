@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <data>
+
+        <report id="mew_payment_voucher_button_one'"
+                string="Bank Payment Voucher"
+                model="account.move"
+                report_type="qweb-pdf"
+                name="mew_journal_reports.mew_payment_voucher_template_one"
+                file="mew_journal_reports.mew_payment_voucher_template_one"/>
+
+         <report id="mew_receipt_voucher_button'"
+                string="Bank Receipt Voucher"
+                model="account.move"
+                report_type="qweb-pdf"
+                name="mew_journal_reports.mew_payment_voucher_template_two"
+                file="mew_journal_reports.mew_payment_voucher_template_two"/>
+    </data>
+</odoo>

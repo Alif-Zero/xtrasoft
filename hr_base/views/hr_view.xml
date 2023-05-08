@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="hr_base_view_employee_form_payslip" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.payslip.employees</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_by_employees"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='compute_sheet']" position="attributes">
+                <attribute name="confirm">Are you sure you want to do this?. All the Attendace in modification will
+                    become marked as absent!
+                </attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="hr_base_view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.form</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='o_work_employee_main']" position="inside">
+                <group string="Details">
+                    <field name="date_of_join" required="1"/>
+
+                    <field name="resign" attrs="{'invisible': ['|',('terminate','=',True),('runaway','=',True)]}"/>
+                    <field name="terminate" attrs="{'invisible': ['|',('resign','=',True),('runaway','=',True)]}"/>
+                    <field name="runaway" attrs="{'invisible': ['|',('terminate','=',True),('resign','=',True)]}"/>
+                    <field name="manager_log" force_save="1" invisible="1"/>
+
+                    <field name="date_of_leave"
+                           attrs="{'required': ['|','|',('resign','=',True),('terminate','=',True),('runaway','=',True)]}"/>
+					<field name="is_notice_period_served"/>
+					<field name="is_np_waive_served"/>
+                    <field name="bank_name"/>
+                    <field name="Ac_number"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_employee_tree_inhrtx" model="ir.ui.view">
+        <field name="name">hr.employee.tree.absent</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="/tree/field[@name='parent_id']" position="after">
+                <field name="consider_days"/>
+                <field name="absents"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="hr_payslip_form_inherit_days" model="ir.ui.view">
+        <field name="name">hr.payslip.inherit.form2x</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='number']" position="before">
+                <field name="total_work_day"/>
+                <field name="absents"/>
+                <field name="sick_leaves"/>
+                <field name="consider_days"/>
+
+            </xpath>
+            <xpath expr="//button[@name='compute_sheet']" position="attributes">
+                <attribute name="confirm">Are you sure you want to do this?. All the Attendace in modification will
+                    become marked as absent!
+                </attribute>
+            </xpath>
+        </field>
+
+    </record>
+
+
+    <record model="ir.ui.view" id="action_form_confirm_dialog">
+        <field name="name">Confirmation</field>
+        <field name="model">confirm.dialog</field>
+        <field name="arch" type="xml">
+            <form class="o_lead_opportunity_form">
+
+                <group>
+                    <field name="name" readonly="1"/>
+                </group>
+                <footer>
+                    <button name="validate" string="Validate"
+                            type="object" default_focus="1" class="oe_highlight" icon="fa-print"/>
+                    <button string="Cancel" class="btn-default" special="cancel" icon="fa-times"/>
+                </footer>
+
+            </form>
+
+        </field>
+    </record>
+
+
+</odoo>

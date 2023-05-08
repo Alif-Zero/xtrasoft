@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <report
+            id="action_report_payslip"
+            model="hr.payslip"
+            string="Payslip"
+            report_type="qweb-pdf"
+            name="design_creative_custom.report_payslip"
+            file="design_creative_custom.report_payslip"
+            print_report_name="'Payslip - %s' % (object.employee_id.name)"
+    />
+
+    <template id="report_payslip">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.internal_layout">
+                    <div class="page">
+                        <style>
+                            table {
+                            border: 1px solid black;
+                            border-collapse: collapse;
+                            border-radius:16px;
+                            -moz-border-radius:6px;
+                            }
+                            td {
+                            border: none;
+                            }
+                        </style>
+                        <!--                    <h2 t-field="o.name"/>-->
+                        <div style="background-color: blue;">
+                            <h2 style="color:white;">
+                                <strong>PaySlip for the Period
+                                    <span t-field="o.date_from"/>
+                                    To
+                                    <span t-field="o.date_to"/>
+                                </strong>
+                            </h2>
+                        </div>
+
+                        <!--                    <table class="table table-sm table-bordered">-->
+                        <!--                        <tr>-->
+                        <!--                            <td></td>-->
+                        <!--                            <td>-->
+                        <!--                                <div><span t-field="o.company_id.name"/></div>-->
+                        <!--                                <div><span t-field="o.company_id.street"/></div>-->
+                        <!--                                <div><span t-field="o.company_id.street2" t-if="o.company_id.street2"/></div>-->
+                        <!--                                <div>-->
+                        <!--                                    <span t-field="o.company_id.city"/>-->
+                        <!--                                    <span t-field="o.company_id.state_id"/>-->
+                        <!--                                    <span t-field="o.company_id.zip"/>-->
+                        <!--                                </div>-->
+                        <!--                                <div><span t-field="o.company_id.country_id"/></div>-->
+                        <!--                            </td>-->
+                        <!--                        </tr>-->
+                        <!--                    </table>-->
+
+                        <table name="employee-infos" class="table table-sm table-bordered">
+                            <tr>
+                                <td width="20%">
+                                    <strong>Trans No.</strong>
+                                </td>
+                                <td width="30%">
+                                    <span t-field="o.number"/>
+                                </td>
+                                <td width="20%">
+                                    <strong>Division</strong>
+                                </td>
+                                <td width="30%">
+                                    <!--                                    <span t-field="o.employee_id.job_id"/>-->
+                                </td>
+                            </tr>
+                            <!--                        <tr>-->
+                            <!--                            <td><strong>Address</strong></td>-->
+                            <!--                            <td colspan="3">-->
+                            <!--                                <div t-field="o.employee_id.address_home_id"-->
+                            <!--                                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>-->
+                            <!--                            </td>-->
+                            <!--                        </tr>-->
+                            <tr>
+                                <td width="20%">
+                                    <strong>Staff No.</strong>
+                                </td>
+                                <td width="30%">
+                                    <span t-field="o.id"/>
+                                </td>
+                                <td width="20%">
+                                    <strong>Department</strong>
+                                </td>
+                                <td width="30%">
+                                    <span t-field="o.contract_id.department_id"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="20%">
+                                    <strong>Staff Name</strong>
+                                </td>
+                                <td width="30%">
+                                    <span t-field="o.employee_id"/>
+                                </td>
+
+                            </tr>
+
+                        </table>
+
+                        <hr style="border: 1px solid Black;"/>
+
+                        <h2 style="color:black;">
+                            <strong>Computations of days and hours</strong>
+                        </h2>
+
+                        <div class="row" col="12" colspan="12">
+                            <div class="col-2">Absent</div>
+                            <div class="col-2"></div>
+                            <div class="col-1.5">Sick Leave</div>
+                            <div class="col-2"></div>
+                            <div class="col-1">Leave</div>
+                            <div class="col-2"></div>
+                            <div class="col-2">Adj. vs Vac</div>
+                            <div class="col-2"></div>
+                        </div>
+                        <br/>
+                        <div class="row" col="12" colspan="12">
+                            <div class="col-2">Vacation</div>
+                            <div class="col-2"></div>
+                            <div class="col-1">Others</div>
+                            <div class="col-2"></div>
+                            <div class="col-1">Total</div>
+                            <div class="col-2"></div>
+                            <div class="col-1.5">Due Days</div>
+                            <div class="col-2"></div>
+                        </div>
+
+                        <hr style="border: 1px solid Black;"/>
+
+
+                        <table class="table">
+                            <tr>
+                                <td width="50%">
+                                    <strong>
+                                        <b>
+                                            <h2>Allowances</h2>
+                                        </b>
+                                    </strong>
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td>
+                                                <strong>Basic Salary</strong>
+                                            </td>
+                                            <td>
+                                                <span t-esc="o.line_ids.filtered(lambda line: line.code == 'BASIC').total"
+                                                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <strong>Housing Allowance</strong>
+                                            </td>
+                                            <td>
+                                                <span t-esc="o.line_ids.filtered(lambda line: line.code == 'BASIC').total"
+                                                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <strong>OT1</strong>
+                                            </td>
+                                            <td>
+                                                <span t-esc="o.line_ids.filtered(lambda line: line.code == 'BASIC').total"
+                                                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <strong>OT2</strong>
+                                            </td>
+                                            <td>
+                                                <span t-esc="o.line_ids.filtered(lambda line: line.code == 'BASIC').total"
+                                                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            </td>
+
+                                        </tr>
+
+                                    </table>
+
+                                </td>
+                                <td width="50%">
+                                    <strong>
+                                        <b>
+                                            <h2>Deductions</h2>
+                                        </b>
+                                    </strong>
+
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td>
+                                                <strong>GOSI</strong>
+                                            </td>
+                                            <td>
+                                                <span t-esc="o.line_ids.filtered(lambda line: line.code == 'GDEDUC').total"
+                                                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <strong>Absent</strong>
+                                            </td>
+                                            <td>
+<!--                                                <span t-esc="o.line_ids.filtered(lambda line: line.code == 'BASIC').total"-->
+<!--                                                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>-->
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <strong>Hourly</strong>
+                                            </td>
+                                            <td>
+                                                <span t-esc="o.line_ids.filtered(lambda line: line.code == 'LATEINDEDUCT').total"
+                                                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            </td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td>
+                                                <strong>Loan</strong>
+                                            </td>
+                                            <td>
+                                                <span t-esc="o.line_ids.filtered(lambda line: line.code == 'LODEDUCT').total"
+                                                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                            </td>
+
+                                        </tr>
+
+                                    </table>
+                                </td>
+
+                            </tr>
+                        </table>
+
+                        <hr style="border: 1px solid Black;"/>
+
+                        <div class="row" col="12" colspan="12">
+                            <div class="col-2">Due Amount</div>
+                            <div class="col-2"></div>
+                            <div class="col-2">Allowances</div>
+                            <div class="col-2"></div>
+                            <div class="col-2">Deductions</div>
+                            <div class="col-2"></div>
+                        </div>
+                        <br/>
+                        <div class="row" col="12" colspan="12">
+                            <div class="col-2">Gross Pay</div>
+                            <div class="col-2"></div>
+                            <div class="col-2">Rounding</div>
+                            <div class="col-2"></div>
+                            <div class="col-2">
+                                <strong>Net Pay</strong>
+                            </div>
+
+                        </div>
+
+                        <!--                        <table class="table table-sm">-->
+                        <!--                            <thead>-->
+                        <!--                                <tr>-->
+                        <!--                                    <th>Code</th>-->
+                        <!--                                    <th>Name</th>-->
+                        <!--                                    <th>Number of Hours</th>-->
+                        <!--                                    <th>Number of Days</th>-->
+                        <!--                                    <th>Quantity/rate</th>-->
+                        <!--                                    <th>Amount</th>-->
+                        <!--                                </tr>-->
+                        <!--                            </thead>-->
+                        <!--                            <tbody>-->
+                        <!--                                <tr t-foreach="o.worked_days_line_ids" t-as="worked_days">-->
+                        <!--                                    <td>-->
+                        <!--                                        <span t-field="worked_days.code"/>-->
+                        <!--                                    </td>-->
+                        <!--                                    <td>-->
+                        <!--                                        <span t-field="worked_days.name"/>-->
+                        <!--                                    </td>-->
+                        <!--                                    <td>-->
+                        <!--                                        <span t-field="worked_days.number_of_hours"/>-->
+                        <!--                                    </td>-->
+                        <!--                                    <td>-->
+                        <!--                                        <span t-field="worked_days.number_of_days"/>-->
+                        <!--                                    </td>-->
+                        <!--                                    <td></td>-->
+                        <!--                                    <td>-->
+                        <!--                                        <span t-esc="worked_days.amount" digits="[42, 2]"-->
+                        <!--                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>-->
+                        <!--                                    </td>-->
+                        <!--                                </tr>-->
+                        <!--                                <tr t-foreach="o.line_ids.filtered(lambda line: line.appears_on_payslip)" t-as="line">-->
+                        <!--                                    <td>-->
+                        <!--                                        <span t-field="line.code"/>-->
+                        <!--                                    </td>-->
+                        <!--                                    <td>-->
+                        <!--                                        <span t-field="line.name"/>-->
+                        <!--                                    </td>-->
+                        <!--                                    <td></td>-->
+                        <!--                                    <td></td>-->
+                        <!--                                    <td>-->
+                        <!--                                        <span t-field="line.quantity"/>-->
+                        <!--                                    </td>-->
+                        <!--                                    <td>-->
+                        <!--                                        <span t-esc="line.total"-->
+                        <!--                                              t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>-->
+                        <!--                                    </td>-->
+                        <!--                                </tr>-->
+                        <!--                            </tbody>-->
+                        <!--                        </table>-->
+                        <hr style="border: 1px solid Black;"/>
+
+                        <p class="text-left" style="float:left">
+                            <strong>Prepared By</strong>
+                        </p>
+
+
+                        <p class="text-right" style="float:right">
+                            <strong>Recieved By</strong>
+                        </p>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

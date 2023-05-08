@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <!-- project task wizard -->
+        <record model="ir.ui.view" id="createdetailslogs_wizard_view">
+            <field name="name">Attendacne.Create</field>
+            <field name="model">attendace.create.wiz</field>
+            <field name="arch" type="xml">
+                <form string="Select">
+                    <group colspan="2" string="Select Dates">
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/></group>
+                        <group>
+                            <field name="employee" required="1" widget="many2many_tags"/>
+                        </group>
+
+                    </group>
+                    <footer>
+
+                        <!--                            <button name="create_records" string="Create Atendance"-->
+                        <!--                                type="object" default_focus="1" class="oe_highlight" icon="fa-print"/>-->
+                        <button name="create_attendance" string="Create Attendance" confirm="Are You sure you want to Create.All the existing records for selected employees will be deleted and will create as per their shifts.Please sync the attendance after this process"
+                                type="object" default_focus="1" class="oe_highlight" icon="fa-print"/>
+                        <button string="Cancel" class="btn-default" special="cancel" icon="fa-times"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="create_emp_report_action_nw" model="ir.actions.act_window">
+            <field name="name">Create Attendance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">attendace.create.wiz</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem name="Create Attendance"
+                  id="menu_report_createatendx"
+                  action="create_emp_report_action_nw"
+                  parent="menu_attendence"
+                  sequence="6"
+        />
+
+    </data>
+</odoo>

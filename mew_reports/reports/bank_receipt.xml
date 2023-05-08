@@ -1,0 +1,358 @@
+<odoo>
+    <template id="external_layout_header_inherit_mew"
+              inherit_id="web.external_layout_standard">
+        <xpath expr="//div[1]" position="replace">
+            <div class="header" t-attr-style="report_header_style">
+
+                <!--                <div class="row">-->
+                <!--                    <div class="col-3">-->
+                <!--                        <img style="width:200px;height:100px;margin-top:-10px"-->
+                <!--                             t-att-src="image_data_uri(o.company_id.logo)"/>-->
+                <!--                    </div>-->
+                <!--                    <div class="col-6">-->
+
+                <!--                    </div>-->
+                <!--                    <div class="col-3" style="font-size:10px">-->
+                <!--                        <strong>-->
+                <!--                            &lt;!&ndash;                            <span>MALIR EXPRESSWAY LTD</span>&ndash;&gt;-->
+                <!--                            <span t-field="o.company_id.name"/>-->
+                <!--                        </strong>-->
+                <!--                        <br/>-->
+                <!--                        <span style="margin-top:-5px">X-22/A, Site Area,</span>-->
+                <!--                        <br/>-->
+                <!--                        <span style="margin-top:-5px">Kotri Hyderabad, Pakistan</span>-->
+                <!--                        <br/>-->
+                <!--                        <span style="margin-top:-5px">Phone : +92 223870751-4</span>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+                <!--            </div>-->
+
+
+                <div class="row" style="padding-top:20px;padding-bottom:20px;">
+                    <table class=" col-sm-12 bordered">
+                        <tr>
+                            <td style="width:70%; vertical-align:top">
+                                <img style="width:200px;height:100px;"
+                                     t-att-src="image_data_uri(o.company_id.logo)"/>
+                            </td>
+                            <td style="width:30%;vertical-align:top">
+                                <b style="" t-field="o.company_id.name"/>
+                                <br/>
+                                <span t-field="o.company_id.street"/>
+                                <span t-field="o.company_id.street2"/>
+                                <br/>
+                                <span t-field="o.company_id.city"/>
+                                <span t-field="o.company_id.state_id.name"/>
+                                <span t-field="o.company_id.country_id"/>
+                                <span t-field="o.company_id.zip"/>
+                                <br/>
+
+                                <b>Phone : </b>
+                                <span t-field="o.company_id.phone"/>
+
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+        </xpath>
+    </template>
+
+    <template id="mew_receipt_layout"
+              inherit_id="account.report_payment_receipt_document">
+        <!--        <xpath expr="//div[1]/h3" position="replace">-->
+
+        <!--            <h3 style="text-align:center">-->
+        <!--                Payment Receipt:-->
+        <!--                <span t-field="o.name"/>-->
+        <!--            </h3>-->
+        <!--        </xpath>-->
+        <!--        <xpath expr="//div[class('page')]//div[class('row mb64')]" position="replace">-->
+        <!--            <b>hello world</b>-->
+        <!--        </xpath>-->
+
+        <xpath expr="//table[1]" position="replace">
+            <div class="col-14" style="text-align:center">
+
+                <h4>
+                    <t t-if="o.journal_id.type == 'bank'">
+                        <t t-if="o.payment_type == 'inbound'">
+                            <span>BANK RECEIPT VOUCHER</span>
+                        </t>
+                        <t t-if="o.payment_type == 'outbound'">
+                            <span>BANK PAYMENT VOUCHER</span>
+                        </t>
+                    </t>
+                    <t t-if="o.journal_id.type == 'cash'">
+                        <t t-if="o.payment_type == 'inbound'">
+                            <span>CASH RECEIPT VOUCHER</span>
+                        </t>
+                        <t t-if="o.payment_type == 'outbound'">
+                            <span>CASH PAYMENT VOUCHER</span>
+                        </t>
+                    </t>
+
+                </h4>
+            </div>
+
+            <div class="container " style="font-size: 12px">
+                <table class="table " style="border-top: 1px solid; ">
+                    <div class="row" style="border-top:3px solid black;padding-top: 16px;">
+                        <div class="col-3">
+                            <div>
+                                <span>Voucher Type:</span>
+                                <span t-if="o.voucher_seq" t-esc="o.voucher_seq[:3]"/>
+
+                            </div>
+                            <div>
+                                <span>Entered by:</span>
+                                <span t-field="o.create_uid.display_name"/>
+                            </div>
+
+                            <div>
+                                <t t-if="o.journal_id.type == 'bank'">
+                                    <span>Cheque:</span>
+                                </t>
+                                <span>
+                                    <t t-raw="o.check_number_one"></t>
+                                </span>
+                            </div>
+
+                        </div>
+                        <div class="col-6" style="text-align:center">
+
+                        </div>
+                        <div class="col-3" style="margin-left:15px;">
+                            <div>
+                                <span>Voucher No:</span>
+                                <span t-esc="o.voucher_seq"/>
+
+                            </div>
+                            <div>
+                                <span>Voucher Date:</span>
+                                <span t-field="o.date"/>
+
+                            </div>
+                            <div>
+                                <span>Posted by:</span>
+                                <span t-field="o.write_uid.display_name"/>
+                            </div>
+                        </div>
+                    </div>
+                </table>
+
+                <table class="table table-borderless" style="font-size:14px">
+                    <thead>
+                        <tr style="border-top:1px solid">
+                            <th style="text-align:left; padding-bottom: 22px;padding-top: 22px;" colspan="2">
+                                <strong>Account Code / Account Title</strong>
+                            </th>
+                            <th style="text-align:left;  padding-bottom: 22px;padding-top: 22px;">
+
+                                <t t-if="o.journal_id.type == 'bank'">
+                                    <t t-if="o.payment_type == 'inbound'">
+                                        <strong>Receiver From</strong>
+                                    </t>
+                                    <t t-if="o.payment_type == 'outbound'">
+                                        <strong>Payee</strong>
+                                    </t>
+                                </t>
+                                <t t-if="o.journal_id.type == 'cash'">
+                                    <t t-if="o.payment_type == 'inbound'">
+                                        <strong>Receiver From</strong>
+                                    </t>
+                                    <t t-if="o.payment_type == 'outbound'">
+                                        <strong>Payee</strong>
+                                    </t>
+                                </t>
+
+                            </th>
+                            <th style="text-align:left; padding-bottom: 22px;padding-top: 22px;;">
+                                <strong>Narration</strong>
+                            </th>
+
+
+                            <th style="text-align:left;">
+                                <div>
+                                    <div style="border-bottom: 1px solid; text-align: center;">
+                                        <b>
+                                            <strong>Rupees</strong>
+                                        </b>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <b>
+                                            <span style="padding-right: 50px;">Debit</span>
+                                        </b>
+                                        <b>
+                                            <span>Credit</span>
+                                        </b>
+                                    </div>
+
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody style="border-top:1px solid;  ">
+                        <tr style="height:15px;">
+                        </tr>
+                        <t t-set="move_id" t-value="o.move_id.id"/>
+                        <t t-foreach="request.env['account.move'].search([('id', '=', move_id)])" t-as="obj">
+                            <t t-foreach="obj.invoice_line_ids.ids" t-as="i">
+                                <t t-foreach="request.env['account.move.line'].search([('id', '=', i)])" t-as="line">
+
+                                    <tr style="padding-top:1; font-size:12px;">
+                                        <td style="text-align:left; width:30%; padding-top:5px; padding-bottom:0px;"
+                                            colspan="2">
+                                            <t t-raw="line.account_id.code"/>
+                                            <br/>
+                                            <t t-raw="line.account_id.name"/>
+
+                                        </td>
+
+
+                                        <td style="text-align:left; width:15% ;padding-top:5px; padding-bottom:0px;">
+                                            <t t-raw="line.partner_id.name"/>
+
+                                        </td>
+                                        <td style="text-align:left; width:30%; padding-top:5px; padding-bottom:0px;">
+                                            <t t-raw="line.name"/>
+
+                                        </td>
+
+
+                                        <td class=" " style="width:20% ; padding-top:5px; padding-bottom:0px; ">
+                                            <table class="justify-content-center col-sm-12">
+
+                                                <tr>
+                                                    <td class=" "
+                                                        style="text-align:left;padding-top:3px;">
+                                                        <span style="">
+                                                            <t t-raw="line.debit"
+                                                               t-options="{&quot;widget&quot;: &quot;integer&quot;}"/>
+
+                                                        </span>
+                                                    </td>
+                                                    <td class=" "
+                                                        style=" text-align:right; padding-top:3px;">
+                                                        <span>
+                                                            <t t-raw="line.credit"
+                                                               t-options="{&quot;widget&quot;: &quot;integer&quot;}"/>
+                                                        </span>
+                                                    </td>
+
+                                                </tr>
+
+                                            </table>
+                                        </td>
+
+
+                                    </tr>
+                                </t>
+                            </t>
+                        </t>
+
+
+                        <tr style="height:15px;">
+                        </tr>
+                        <!--                =============================          start      ===================================-->
+
+
+                        <t t-foreach="request.env['account.move'].search([('id', '=', move_id)])"
+                           t-as="obj">
+
+                            <tr style="border-bottom:3px solid black;border-top:1px solid black; padding-top:0px; padding-bottom:0px; ">
+                                <td style="padding:2px;">
+                                    <span style="padding:0px; ">Amount In Words:</span>
+                                </td>
+                                <td style="width:58%; padding:2px;" colspan="3">
+                                    <span style="padding:0px; ">Rupees</span>
+                                    <t t-raw="obj.int_to_word"/>
+                                    <span style="padding:0px; ">Only</span>
+
+
+                                </td>
+
+                                <td class=" " style="width:20% ; padding:2px;">
+                                    <table class="col-sm-12">
+
+                                        <tr style="margin-right:10px;">
+                                            <t t-set="total_debits" t-value="0.00"/>
+                                            <t t-set="total_credits" t-value="0.00"/>
+                                            <t t-foreach="obj.invoice_line_ids.ids" t-as="i">
+                                                <t t-foreach="request.env['account.move.line'].search([('id', '=', i)])"
+                                                   t-as="line">
+
+                                                    <t t-if="line.debit &gt;= 0.0">
+                                                        <t t-set="total_debits"
+                                                           t-value="total_debits + line.debit"/>
+                                                    </t>
+
+                                                    <t t-if="line.credit &gt;= 0.0">
+                                                        <t t-set="total_credits"
+                                                           t-value="total_credits + line.credit"/>
+                                                    </t>
+                                                </t>
+
+                                            </t>
+
+                                            <td class=" "
+                                                style="text-align:left;padding-top:0px; padding-bottom:0px;padding-left:20px; ">
+                                                <span style="padding:0px;">
+
+                                                    <t t-raw="total_debits"
+                                                       t-options="{&quot;widget&quot;: &quot;integer&quot;}"/>
+                                                </span>
+                                            </td>
+                                            <td style=" text-align:right; padding-top:0px; padding-bottom:0px;padding-right:20px;">
+                                                <span style="padding:0px;">
+                                                    <t t-raw="total_credits"
+                                                       t-options="{&quot;widget&quot;: &quot;integer&quot;}"/>
+                                                </span>
+                                            </td>
+
+                                        </tr>
+
+                                    </table>
+                                </td>
+
+                            </tr>
+
+                            <!--                    <tr>-->
+                            <!--                        <t t-foreach="request.env['account.move.line'].search([('id', '=', obj.invoice_line_ids.ids[1])])"-->
+                            <!--                           t-as="line">-->
+                            <!--                                <td class="" style="width:20%">Voucher Narration:</td>-->
+                            <!--                                <td>-->
+                            <!--                                    <t t-raw="line.name"/>-->
+                            <!--                                </td>-->
+
+                            <!--                            <td class=" " style="width:20%">-->
+                            <!--                                <table class="justify-content-center col-sm-12">-->
+
+                            <!--                                    <tr>-->
+
+                            <!--                                        <td class=" "></td>-->
+                            <!--                                        <td class=""></td>-->
+                            <!--                                    </tr>-->
+                            <!--                                </table>-->
+                            <!--                            </td>-->
+                            <!--                        </t>-->
+                            <!--                    </tr>-->
+                        </t>
+
+
+                    </tbody>
+                </table>
+                <!--                ================================       end        ================================-->
+
+                <!--                <table class="table table-sm table-borderless"-->
+                <!--                       style="border-top:1px solid; padding-top:1px;font-size:14px;">-->
+
+                <!--                </table>-->
+            </div>
+        </xpath>
+    </template>
+
+
+</odoo>

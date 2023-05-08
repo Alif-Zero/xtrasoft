@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_hr_leave" model="ir.actions.act_window">
+        <field name="name">Define Leaves</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.calendar.leave</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="view_hr_leave" model="ir.ui.view">
+        <field name="name">custom.hr.leave.tree</field>
+        <field name="model">hr.calendar.leave</field>
+        <field name="arch" type="xml">
+            <tree string="Publiolidaysc H">
+                <field name="name" string="Name" />
+                <!--                <field name="leave"/>-->
+
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="action_hr_leave_form">
+        <field name="name">hr.employee.leave.form</field>
+        <field name="model">hr.calendar.leave</field>
+        <field name="arch" type="xml">
+            <form class="o_lead_opportunity_form">
+
+                <sheet>
+                    <separator style="color:black;font-weight:bold;font-size:28px;" string="Public Holidays"
+                               colspan="4"/>
+                    <group col="2">
+
+
+                        <field name="name" placeholder="e.g Calender 2020" required="1"/>
+                        <field name="follow"/>
+                        <!--                        <field name="leave"/>-->
+
+
+                    </group>
+                    <notebook>
+                        <page string="Leave">
+                            <field name="leave">
+                                <tree editable="bottom">
+                                    <field name="leave_name"/>
+                                    <field name="leave_date"/>
+                                </tree>
+                            </field>
+
+
+                        </page>
+                    </notebook>
+
+                </sheet>
+
+
+            </form>
+        </field>
+    </record>
+    <menuitem id="menu_hr_leave" name="HR"
+
+              sequence="11"/>
+    <menuitem name="Public Holidays" id="ums_hrleave"
+              parent="hr.menu_human_resources_configuration"
+              sequence="3" action="action_hr_leave"/>
+
+</odoo>

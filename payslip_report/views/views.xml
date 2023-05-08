@@ -1,0 +1,22 @@
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="hr_payslip_form_new">
+            <field name="name">hr_payslip_form_new</field>
+            <field name="model">hr.payslip</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='number']" position="after">
+                    <field name="no_of_days"/>
+                    <field name="late_checkin_days_2" string='Late Checkin Days'/>
+                    
+                    <field name="wage"/>
+                    
+                    
+
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>
