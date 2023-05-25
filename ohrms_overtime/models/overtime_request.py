@@ -38,6 +38,9 @@ class OverTimeTemplate(models.Model):
     _name='overtime.template'
     _rec_name = 'department_id'
 
+    def _default_overtime_type_id(self):
+        return self.env['overtime.type'].search([('name', '=', 'cash hour')], limit=1).id
+
     department_id=fields.Many2one('hr.department','Department',required=1)
     type=fields.Selection([('cash','Cash'),('leave','Leave')],required=1,default='cash')
     duration_type=fields.Selection([('hours','Hours'),('days','Days')],required=1,default='hours')
@@ -46,11 +49,15 @@ class OverTimeTemplate(models.Model):
     # overtime_type_id=fields.Many2one('overtime.type',required=1)
     overtime_ids=fields.One2many('hr.overtime','template_id')
     hours=fields.Float(string='Hours')
-    
-    def _default_overtime_type_id(self):
-        return self.env['overtime.type'].search([('name', '=', 'cash hour')], limit=1).id
-
     overtime_type_id=fields.Many2one('overtime.type', index=True,required=1, default=_default_overtime_type_id)
+
+    @api.onchange('date')
+    def _onchange_date(self):
+        for rec in self:
+            wd = rec.date.weekday()
+            ov_type = self.env['overtime.type'].search([('overtime_day','=', wd)], limit=1)
+            if ov_type:
+                rec.overtime_type_id = ov_type.id
 
     def GetEmployees(self):
         self.overtime_ids=False
@@ -229,6 +236,17 @@ class HrOverTime(models.Model):
             else:
                 raise UserError(_("Day Overtime Needs Day Wage in Employee Contract."))
 
+
+    @api.onchange('date_from')
+    def _onchange_date_from(self):
+        for rec in self:
+            if not rec.date_from:
+                return
+            wd = rec.date_from.weekday()
+            ov_type = self.env['overtime.type'].search([('overtime_day','=', wd)], limit=1)
+            if ov_type:
+                rec.overtime_type_id = ov_type.id
+
     def submit_to_f(self):
         # notification to employee
         recipient_partners = [(4, self.current_user.partner_id.id)]
@@ -386,7 +404,15 @@ class HrOverTimeType(models.Model):
     leave_type = fields.Many2one('hr.leave.type', string='Leave Type', domain="[('id', 'in', leave_compute)]")
     leave_compute = fields.Many2many('hr.leave.type', compute="_get_leave_type")
     rule_line_ids = fields.One2many('overtime.type.rule', 'type_line_id')
-
+    overtime_day = fields.Selection([
+        ('0', 'Monday'),
+        ('1', 'Tuesday'),
+        ('2', 'Wednesday'),
+        ('3', 'Thursday'),
+        ('4', 'Friday'),
+        ('5', 'Saturday'),
+        ('6', 'Sunday'),
+    ])
     @api.onchange('duration_type')
     def _get_leave_type(self):
         dur = ''

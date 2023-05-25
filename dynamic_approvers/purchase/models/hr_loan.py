@@ -53,7 +53,14 @@ class HRLoan(models.Model):
                     authority = authority,
                     action_taken_as = x.action_taken_as
                     )))
-            
+                activty_type = self.env.ref('odoo_hr.advance_laon_activity').id
+                activity_id = self.env['mail.activity'].create({
+                    'res_id': self.id,
+                    'summary': 'Please confirm {} request'.format(self.name),
+                    'activity_type_id': activty_type,
+                    'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.loan')], limit=1).id,
+                    'user_id': user_id,
+                })
         return data
     
     

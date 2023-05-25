@@ -32,8 +32,7 @@
         'purchase/views/purchase_order_views.xml',
         'purchase/views/purchase_request_views.xml',  
         'purchase/views/hr_loan_views.xml',    
-        
-        
+        'wizards/bulk_loan_approval.xml',    
         
     ],
     # only loaded in demonstration mode

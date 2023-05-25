@@ -22,13 +22,24 @@ class hr_loan_type(models.Model):
     """(NULL)"""
     _name = 'hr.loan.type'
     name = fields.Char(string='Loan Type', required=True)
+    type = fields.Selection([
+        ('advance', 'Advance'),
+        ('Loan', 'Loan'),
+        ])
+    allow_percentage = fields.Float(default=25.0)
+    permanent_emp = fields.Boolean(string="Permanent Employee")
     rule_type_id = fields.Many2one('hr.salary.rule.type', string="Recovery Rule", domain="[('is_recovery_advances','=',True)]")
+    min_duration = fields.Integer(string="Complete at least Months")
+    next_loan_after = fields.Integer(string="Next Loan after Months")
+    max_intallments = fields.Integer(string="Maximum Installments", default=12)
+    stoppage_limit = fields.Integer(string="Stoppage Limit", default=1)
 
+    approver_user_ids = fields.Many2many('res.users',string="Approver Users")
 
 class hr_loan(models.Model):
-    """(NULL)"""
     _name = 'hr.loan'
-    
+    _description = 'HR Loan Advance'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     
     def bulk_confirm(self):
         data = self.env['hr.loan'].search([('contract_id.employee_category.code','in',['B','C']),('company_id','=',1),('state','=','Draft')])
@@ -72,6 +83,8 @@ class hr_loan(models.Model):
                         self.env.cr.execute("update hr_loan set state = 'Recovered' where id = %s",(each.id,))
                     else:
                         each.state = 'Recovered'
+                    if not each.recovered_date:
+                        each.recovered_date = date.today()
             else:
                 each.balance_amount=each.net_amount
         
@@ -82,41 +95,63 @@ class hr_loan(models.Model):
         else:
             return False
     
+    def _check_user_group(self):
+        group_pool = self.env['res.groups']
+        user = self.env['res.users'].browse(self._uid)
+        employee_pool = self.env['hr.employee']
+        employee = employee_pool.search([('user_id', '=', user.id)])
+        if user.has_group('lms_hr.group_salary_manager') or user.has_group('base.group_erp_manager'):
+            return False
+        else:
+            return True
+
     name = fields.Char(string="Name",default='/',readonly=True)
     company_id = fields.Many2one('res.company', string='Company',related='employee_id.company_id',store=True)
-    state = fields.Selection([('Draft', 'Draft'),('Waiting Approval','Waiting Approval'),('Approved', 'Approved'), ('Recovered', 'Recovered'), ('Rejected', 'Rejected')], string='Status', default='Draft')
+    state = fields.Selection([('Draft', 'Draft'),
+                              ('Waiting Approval','Waiting Approval'),
+                              ('Approved', 'Approved'), 
+                              ('Recovered', 'Recovered'), 
+                              ('Rejected', 'Rejected')], 
+                              string='Status', default='Draft', tracking=True)
+
     department_id = fields.Many2one('hr.department', string='Department',related='employee_id.department_id',store=True)
-    loan_type = fields.Many2one('hr.loan.type', string='Advance Type', ondelete='restrict',required=True)
+    loan_type = fields.Many2one('hr.loan.type', string='Advance Type', ondelete='restrict',required=True, tracking=True)
     date = fields.Date(string='Date', default=fields.Date.context_today)
-    employee_id = fields.Many2one('hr.employee', string="Employee",default=_get_employee)
+    employee_id = fields.Many2one('hr.employee', string="Employee",default=_get_employee, tracking=True)
     designation_id = fields.Many2one('hr.job', string='Designation')
     contract_id = fields.Many2one('hr.contract', string='Contract Number')
-    deduction_from = fields.Date(string="Deduction from Salary")
-    approve_amount = fields.Integer(string="Requested Amount")
-    deducted_amount = fields.Integer(string="Already Paid Amount(If Any)")
+    deduction_from = fields.Date(string="Deduction from Salary", tracking=True)
+    approve_amount = fields.Integer(string="Requested Amount", tracking=True)
+    deducted_amount = fields.Integer(string="Already Paid Amount(If Any)", tracking=True)
     net_amount = fields.Integer(string="Net Amount", compute=_cal_amount, store=True, readonly=True)
-    installments = fields.Integer(string="No. of Installments")
+    installments = fields.Integer(string="No. of Installments", tracking=True)
     per_month_installment = fields.Integer(string="Per Month Installment",compute='_cal_installment', store=True)
     balance_amount = fields.Integer(string="Balance Amount", compute=_calc_balance, store=True)
     loan_line = fields.One2many('hr.loan.line', 'loan_id', string="Loan Line")
     description = fields.Text(string="Note")
-    submitted_by = fields.Many2one('res.users', string='Submitted By')
-    submitted_at = fields.Date(string='Submitted At')
-    confirmed_by = fields.Many2one('res.users', string='Approved By')
+    submitted_by = fields.Many2one('res.users', string='Submitted By', tracking=True)
+    submitted_at = fields.Date(string='Submitted At', tracking=True)
+    confirmed_by = fields.Many2one('res.users', string='Approved By', tracking=True)
 #     submitted_by = fields.Many2one('res.users', string='Submitted By')
-    rejected_by = fields.Many2one('res.users', string='Rejected By')
+    rejected_by = fields.Many2one('res.users', string='Rejected By', tracking=True)
     
-    journal_id = fields.Many2one('account.journal', string="Bank Journal")
-    applicable_cheque = fields.Boolean(default=False)
+    journal_id = fields.Many2one('account.journal', string="Bank Journal", tracking=True)
+    applicable_cheque = fields.Boolean(default=False, tracking=True)
 #     applicable_cheque = fields.Boolean(related="journal_id.allow_check_writing")
-    cheque_id = fields.Many2one('account.cheque_book', string="Cheque #")
+    cheque_id = fields.Many2one('account.cheque_book', string="Cheque #", tracking=True)
     move_id = fields.Many2one('account.move', string="Accounting Entry")
-    payment_date = fields.Date(string="Payment Date")
+    payment_date = fields.Date(string="Payment Date", tracking=True)
 #     period_id = fields.Many2one('account.period')
     debit_account_id = fields.Many2one('account.account', string="Account", compute='get_account')
     installment_created=fields.Boolean('Installment Created',default=False)
     installment_type=fields.Selection([('System Generated Plan','System Generated Plan'),('Manual Plan','Manual Plan')],'Installment Plan Type',default='System Generated Plan',required=True)
-    
+    stoppage_limit = fields.Integer(copy=False)
+    recovered_date = fields.Date(string="Recivery Date",copy=False)
+
+    is_readonly = fields.Boolean(string="Read Only", default=_check_user_group)
+    confirmed_date = fields.Date(string='Approved Date')
+    show_own_record = fields.Char(string="Own Record", compute='_get_own_advances', search='_search_own_advances')
+    is_special_approval = fields.Boolean(copy=False)
     @api.onchange('state')
     def create_installments(self):
         if self.state=='Approved':
@@ -152,6 +187,7 @@ class hr_loan(models.Model):
     #         self.loan_id.installments=self.installments
     #         self.loan_id.per_month_installment=self.per_month_installment
             self.installment_created=True
+
     @api.depends('installments', 'balance_amount')
     def _cal_installment(self):
         for each in self:
@@ -159,6 +195,7 @@ class hr_loan(models.Model):
                 each.per_month_installment = round(each.balance_amount / each.installments)
             else:
                 each.per_month_installment=0
+
     @api.constrains('employee_id','state')
     def loan_request_unique(self):
         for x in self:
@@ -186,8 +223,7 @@ class hr_loan(models.Model):
                 _logger.info("payment register for Advance %s"%(x.name))
             except Exception as e:
                 _logger.error("Error payment register for Advance %s, %s"%(x.employee_id.name,e))
-    
-    
+
     def register_payment(self):
         account = self.debit_account_id and self.debit_account_id.id
 #         if self.cheque_id and self.cheque_id.state != 'Open':
@@ -250,9 +286,7 @@ class hr_loan(models.Model):
             
         move_obj.action_post()
         self.move_id = move_obj.id
-        
-        
-    
+
     @api.depends('loan_type','journal_id')
     def get_account(self):
         account = False
@@ -263,15 +297,14 @@ class hr_loan(models.Model):
                 if rule and rule.account_credit:
                     account = rule.account_credit.id
         self.debit_account_id = account
-        
-        
-    
+
     def get_period(self):
         period = False
         timenow = time.strftime('%Y-%m-%d')
-        period_obj = self.env['account.period'].search([('date_start','<=',timenow),
-                                           ('date_stop','>=',timenow),
-                                           ('company_id','=',self.company_id.id)], limit=1)
+        period_obj = self.env['account.period'].search([
+                ('date_start','<=',timenow),
+                ('date_stop','>=',timenow),
+                ('company_id','=',self.company_id.id)], limit=1)
         if period_obj:
             period = period_obj.id
         self.period_id = period
@@ -282,23 +315,7 @@ class hr_loan(models.Model):
                 raise ValidationError("You can not discard the record because draft payslips found  against the installment's, please first delete or confirm the the payslip")
         self.state = 'Discarded'
         self.discarded_by = self._uid
-                
-    
-    
-    def _check_user_group(self):
-        group_pool = self.env['res.groups']
-        user = self.env['res.users'].browse(self._uid)
-        employee_pool = self.env['hr.employee']
-        employee = employee_pool.search([('user_id', '=', user.id)])
-        if user.has_group('lms_hr.group_salary_manager') or user.has_group('base.group_erp_manager'):
-            return False
-        else:
-            return True
 
-    is_readonly = fields.Boolean(string="Read Only", default=_check_user_group)
-    confirmed_date = fields.Date(string='Approved Date')
-    show_own_record = fields.Char(string="Own Record", compute='_get_own_advances', search='_search_own_advances')
-    
     def _get_own_advances(self):
         _logger.info("user can show only his record")
          
@@ -320,7 +337,6 @@ class hr_loan(models.Model):
     @api.model
     def get_filtered_record(self):
         view_id_tree = self.env['ir.ui.view'].search([('name', '=', 'hr.loan.tree')])
-
         return {
             'type': 'ir.actions.act_window',
             'name': _('Student Profile'),
@@ -334,12 +350,11 @@ class hr_loan(models.Model):
         }
     
     
-    def unlink(self):
-        for each in self:
-            if each.state != 'Draft':
-                raise ValidationError('Cannot delete record which is not in draft state')
-        
-        return super(hr_loan, self).unlink()
+    # def unlink(self):
+    #     for each in self:
+    #         if each.state != 'Draft':
+    #             raise ValidationError('Cannot delete record which is not in draft state')
+    #     return super(hr_loan, self).unlink()
     
     
     def print_record(self):
@@ -466,7 +481,6 @@ class hr_loan(models.Model):
             contract = employee.contract_id.id
             job = employee.contract_id.job_id.id
             department = employee.contract_id.department_id.id
-        
         result = {
                   'contract_id':contract or '',
                   'designation_id':job or '',
@@ -488,8 +502,7 @@ class hr_loan(models.Model):
             existing_loan = self.search([('employee_id', '=', self.employee_id.id), ('state', '=', 'Approved'), ('loan_type', '=', self.loan_type.id)])
             if existing_loan.ids:
                 raise except_orm('Invalid Action', '\nEmployee '+self.employee_id.name+'\n already is availing the service of ' + str(self.loan_type.name).lower() + ' advance, \n record reference '+str(tuple(existing_loan.ids)))
-        
-    
+
     @api.constrains('approve_amount', 'deducted_amount', 'installments')
     def check_negative_values(self):
         if self.approve_amount < 0:
@@ -500,21 +513,74 @@ class hr_loan(models.Model):
             raise ValidationError('Installments can not be negative')
         return True
     
-    
-    def submit_for_approval(self):
-        date = datetime.strptime(str(self.date), '%Y-%m-%d').date()
-        if not self.loan_type.rule_type_id:
+    def action_special_approval(self):
+        activty_type = self.env.ref('odoo_hr.advance_laon_activity').id
+        for user in self.loan_type.approver_user_ids:
+            activity_id = self.env['mail.activity'].create({
+                'res_id': self.id,
+                'summary': 'Please confirm this request',
+                'activity_type_id': activty_type,
+                'res_model_id': self.env['ir.model'].search([('model', '=', 'hr.loan')], limit=1).id,
+                'user_id': user.id,
+            })
+        self.is_special_approval = True
+
+
+    def _check_validation(self):
+        loan_type = self.loan_type
+        if not loan_type.rule_type_id:
             raise ValidationError('Please configure recovery rules in advance types')
-        rule = self.env['hr.salary.rule'].sudo().search([('rule_type_id','=',self.loan_type.rule_type_id.id)])
+        
+        rule = self.env['hr.salary.rule'].sudo().search([('rule_type_id','=', loan_type.rule_type_id.id)])
         if not rule:
-            raise ValidationError("No rule found against rule type %s"%(self.loan_type.rule_type_id.name))
+            raise ValidationError("No rule found against rule type %s" %(loan_type.rule_type_id.name))
+        
+        if self.env.user.id in loan_type.approver_user_ids.ids:
+            return True
+        
+        # Check employee is permanent
+        if loan_type.permanent_emp:
+            if self.contract_id.date_end:
+                raise ValidationError("Only Permanent Employee applicable for %s."%(loan_type.name))
+        
+        # min duration in company
+        diff = relativedelta(date.today(),self.contract_id.date_start)
+        months = diff.years * 12 + diff.months
+        if loan_type.min_duration >= months :
+            raise ValidationError("Loan will be given to the Employee who will complete at least %s Months."%(loan_type.min_duration))
+
+        # Allow percentage
+        allow_percentage = loan_type.allow_percentage
+        approve_amount = self.approve_amount
+        if self.contract_id.wage * (allow_percentage / 100) < approve_amount:
+            raise ValidationError("Requested Amount should be less than %s%s of the basic salary."%(allow_percentage,'%'))
+
+        # Allow Max installments 
+        if self.installments >  loan_type.max_intallments:
+            raise ValidationError("Installments should not be greater than %s."%(loan_type.max_intallments))
+        
+        # Reapply laon after
+        if loan_type.next_loan_after:
+            after_apply = date.today() + relativedelta(months=-loan_type.next_loan_after)
+            last_recovered_date = self.env['hr.loan'].search([('employee_id','=', self.employee_id.id), ('state', '=', 'Recovered'),('recovered_date','>',after_apply)])
+            if last_recovered_date:
+                raise ValidationError("Naxt loan will be allowed after %s months of return of the previous loan."%(loan_type.next_loan_after))
+
+    def submit_for_approval(self):
+        self._check_validation()
+        
+        date = datetime.strptime(str(self.date), '%Y-%m-%d').date()
+        
+        
         loan_request_no = self.env['ir.sequence'].next_by_code('loan_request_seq')
         request_year=self.date.year
 #         joining_month=datetime.strptime(date, '%Y-%m-%d').strftime("%m")
-        self.write({'name':str(self.loan_type.name)+"-"+str(request_year)+'-'+str(loan_request_no),
-                    'state':'Waiting Approval',
-                    'submitted_at': fields.Date.context_today(self),
-                    'submitted_by':self.env.user.id,})
+        self.write({
+                'name':str(self.loan_type.name)+"-"+str(request_year)+'-'+str(loan_request_no),
+                'state':'Waiting Approval',
+                'submitted_at': fields.Date.context_today(self),
+                'submitted_by':self.env.user.id,
+            })
         
     
     def merge_installments(self):
@@ -556,7 +622,7 @@ class InstallmentPlanWizard(models.TransientModel):
     _name = 'installment.plan.wizard'
     loan_id=fields.Many2one('hr.loan','Loan')
     balance_amount = fields.Integer(string="Balance Amount")
-    installments = fields.Integer(string="No    . of Installments")
+    installments = fields.Integer(string="No. of Installments")
     per_month_installment = fields.Integer(string="Per Month Installment", compute='_cal_installment', store=True)
     
     @api.depends('installments', 'balance_amount')
@@ -679,7 +745,6 @@ class hr_installment_merge(models.TransientModel):
              
         
 class hr_loan_line(models.Model):
-    """(NULL)"""
     _name = 'hr.loan.line'
     _order = 'year,month'
 
@@ -716,6 +781,9 @@ class hr_loan_line(models.Model):
     
     def shift_at_last(self):
         rec = self.search([('loan_id','=',self.loan_id.id)], order="id desc", limit=1)
+        if self.loan_id.stoppage_limit >= self.loan_id.loan_type.stoppage_limit:
+            raise ValidationError("Only %s time stoppage of loan installment will be allowed during loan repayment period."%(self.loan_id.loan_type.stoppage_limit))
+            
         month = int(rec.month)
         year = int(rec.year)
         if month and year:
@@ -724,10 +792,10 @@ class hr_loan_line(models.Model):
                 month = 1
             else:
                 month += 1
+            rec.loan_id.stoppage_limit += 1
             self.write({'year':str(year), 'month':str(month).zfill(2)})
 
 class hr_loan_payment(models.TransientModel):
-    """(NULL)"""
     _name = 'hr.loan.payment'
     
     loan_id = fields.Many2one('hr.loan', string="Loan")

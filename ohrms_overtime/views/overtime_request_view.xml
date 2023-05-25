@@ -108,8 +108,7 @@
                                        filename="attchd_copy_name"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name='type'  attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name='overtime_type_id' groups="hr.group_hr_user"  attrs="{'readonly': [('state', '!=', 'f_approve')],
-                                 'invisible': [('state', '=', 'draft')], 'required': [('state', '=', 'f_approve')]}"/>
+                                <field name='overtime_type_id' groups="hr.group_hr_user" force_save="1"  attrs="{'readonly': [('state', '!=', 'f_approve')], 'required': [('state', '=', 'f_approve')]}"/>
                                 <field name="cash_hrs_amount" force_save="1" attrs="{'invisible': ['|','|',('state', '=', 'draft'),('type','!=', 'cash'),('duration_type','!=','hours')]}"/>
                                 <field name="cash_day_amount" force_save="1" attrs="{'invisible': ['|','|',('state', '=', 'draft'),('type','!=', 'cash'),('duration_type','!=','days')]}"/>
                                 <field name="attchd_copy_name" invisible="1"/>

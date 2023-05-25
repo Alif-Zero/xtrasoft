@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- add picking to batch  -->
+    <record id="loan_approval_wizard_form" model="ir.ui.view">
+        <field name="name">loan.approval.wizard.form</field>
+        <field name="model">loan.approval.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+              
+                <notebook>
+                    <page name="loan_reqeust" string="Loan/Advance Request">
+                        <field name="loan_approval_ids" readonly="1">
+                            <tree >
+                                <field name="loan_id"/>
+                                <field name="name"/>
+                                <field name="document_type"/>
+                                <field name="user_id"/>
+                                <field name="authority"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="loan_appove" type="object" string="Approve" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="loan_approval_wizard_action" model="ir.actions.act_window">
+        <field name="name">Approval</field>
+        <field name="res_model">loan.approval.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_hr_loan"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+</odoo>

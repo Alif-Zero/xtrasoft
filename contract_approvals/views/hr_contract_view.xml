@@ -56,8 +56,6 @@
                     <button name="submit_for_approval_1" string="Submit for Approval" type="object" class="oe_highlight"
                             attrs="{'invisible':[('state2', '!=', 'draft')]}"
                             state2="draft"/>
-
-
                     <button name="submit_for_approval_2" string="Finance Approval" type="object" class='oe_highlight'
                             state2="waiting_for_approval_1"
 

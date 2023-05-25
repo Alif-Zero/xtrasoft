@@ -2,7 +2,11 @@
 
 from odoo import models, api, fields
 import logging
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
+
 _logger = logging.getLogger(__name__)
+
 
 class PayslipWorkDays(models.Model):
     _inherit = 'hr.payslip.worked_days'
@@ -20,6 +24,7 @@ class PayslipWorkDays(models.Model):
 #             if each.payslip_id.employee_id and each.payslip_id.date_from:
 #                 print (each.payslip_id.employee_id)
 #                 print (each.payslip_id.date_from)
+
     @api.depends('payslip_id.employee_id','payslip_id.date_from','payslip_id.date_to')
     def _cal_total_absent(self):
         for each in self:
@@ -28,8 +33,23 @@ class PayslipWorkDays(models.Model):
                 attendance_obj=self.env['hr.attendance'].search([('attendance_date','>=',each.payslip_id.date_from),('attendance_date','<=',each.payslip_id.date_to),('employee_id','=',each.payslip_id.employee_id.id),('status','=','Absent')])
                 each.total_absent=len(attendance_obj)
 
+
 class HRContract(models.Model):
     _inherit='hr.contract'
+
+
+    def call_attendance_allowance(self, rule,contract, payslip):
+        attendance_allowance = 0.0
+        try:
+            absent_rec=self.env['hr.attendance'].search([('attendance_date','>=',payslip.date_from),('attendance_date','<=',payslip.date_to),('employee_id','=',payslip.employee_id),('status','=','Absent')])
+            leave_rec=self.env['hr.attendance'].search([('attendance_date','>=',payslip.date_from),('attendance_date','<=',payslip.date_to),('employee_id','=',payslip.employee_id),('status','=','On Leave')])
+            att_count=self.env['hr.attendance'].search_count([('attendance_date','>=',payslip.date_from),('attendance_date','<=',payslip.date_to),('employee_id','=',payslip.employee_id)])
+            no_of_days = (payslip.date_to - payslip.date_from).days + 1 
+            if not absent_rec and not leave_rec  and att_count >= int(no_of_days):
+                attendance_allowance= contract.attend_allowance
+        except Exception as e:
+            _logger.exception("Salary Rule Information: Attendance Allowance Rule (call_attendance_allowance), Rule Code %s Error Message: %s" % (rule, str(e)))
+        return attendance_allowance
     
     def cal_labour_allowance(self, rule,contract, payslip):
         attendance_allowance = 0.0
@@ -54,10 +74,11 @@ class HRContract(models.Model):
             att_count=self.env['hr.attendance'].search_count([('attendance_date','>=',payslip.date_from),('attendance_date','<=',payslip.date_to),('employee_id','=',payslip.employee_id)])
             no_of_days = (payslip.date_to - payslip.date_from).days + 1 
             if not absent_rec and not leave_rec  and att_count >= int(no_of_days):
-                attendance_allowance=att_allowance
+                attendance_allowance= att_allowance
         except Exception as e:
             _logger.exception("Salary Rule Information: Attendance Allowance Rule (cal_labour_attendance_allowance), Rule Code %s Error Message: %s" % (rule, str(e)))
         return attendance_allowance
+
 
 class AttAllowanceSettings(models.TransientModel):
     _inherit = 'res.config.settings'
@@ -75,11 +96,19 @@ class AttAllowanceSettings(models.TransientModel):
 
 class HrPayslip(models.Model):
     _inherit='hr.payslip'
+
+    def _get_period_id(self):
+        month = date.today().month
+        period = self.env['payslip.period'].search([('month_from', '=', month)], limit=1)
+        return period
+
     total_loan=fields.Float('Total Loan',compute='cal_loan_amount',store=True)
     recovered_amount=fields.Float('Recovered Amount',compute='cal_loan_amount',store=True)
     balance_amount=fields.Float('Balance Amount',compute='cal_loan_amount',store=True)
     total_overtime=fields.Float('Total Overtime',compute='cal_overtime')
-    
+    period_id = fields.Many2one('payslip.period', default=_get_period_id,string="Payslip Month")
+
+
     @api.depends('employee_id','date_from','date_to')
     def cal_overtime(self):
         for each in self:
@@ -88,6 +117,7 @@ class HrPayslip(models.Model):
             for rec in overimt_obj:
                 overtime_time+=rec.days_no_tmp_1
             each.total_overtime=overtime_time
+
     @api.depends('employee_id')
     def cal_loan_amount(self):
         for each in self:
@@ -100,3 +130,27 @@ class HrPayslip(models.Model):
                 each.total_loan=0
                 each.recovered_amount=0
                 each.balance_amount=0
+    
+    @api.onchange('employee_id')
+    def _onchange_employee_id(self):
+        for rec in self:
+            rec.contract_id = rec.employee_id.contract_id.id 
+    
+    @api.onchange('contract_id')
+    def _onchange_contract_id(self):
+        for rec in self:
+            rec.struct_id = rec.contract_id.struct_id.id
+
+    @api.onchange('period_id')
+    def _onchange_period_id(self):
+        for rec in self:
+            if rec.state == 'draft' and rec.period_id:
+                year = date.today().year
+                date_from = date(year,int(rec.period_id.month_from),int(rec.period_id.day_from))
+                rec.date_from = date_from
+                if rec.period_id.month_to < rec.period_id.month_from:
+                    year += 1
+                date_to = date(year,int(rec.period_id.month_to),int(rec.period_id.day_to))
+                rec.date_to = date_to 
+                # fields.Date.to_string(date.today().replace(day=1))
+                # date_to = fields.Date.to_string((datetime.now() + relativedelta(months=+1, day=1, days=-1)).date())

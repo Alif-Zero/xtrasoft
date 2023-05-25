@@ -131,7 +131,30 @@ class HRContract(models.Model):
         except Exception as e:
             _logger.exception("Salary Rule Information: Allowance of Overtime Rule (calc_overtime_allowance), Rule Code %s Error Message: %s" % (rule, str(e)))
         return ot_allowance
+
+    def calc_overtime_allowance_type(self, rule, contract, payslip,type_id=[]):
+        ot_allowance = 0.0
+        try:
+            if type_id:
+                overtime_type = self.env['overtime.type'].search([('id', 'in', type_id)])
+            else:
+                overtime_type = self.env['overtime.type'].search([])
+
+            ot_records = self.env['hr.overtime'].search([('employee_id', '=', payslip.employee_id),
+                                                             ('state', '=', 'approved'),
+                                                             ('type','=','cash'),
+                                                             ('overtime_type_id','in',overtime_type.ids),
+                                                             ])
+            print(ot_records)
+            for ot in ot_records:
+                print(ot.date_from.date(),payslip.date_to ,ot.date_from,payslip.date_from)
+                if ot.date_from.date()<=payslip.date_to and ot.date_from.date()>=payslip.date_from:
+                    ot_allowance+=ot.cash_hrs_amount
+        except Exception as e:
+            _logger.exception("Salary Rule Information: Allowance of Overtime Rule (calc_overtime_allowance), Rule Code %s Error Message: %s" % (rule, str(e)))
+        return ot_allowance
     
+
     over_hour = fields.Monetary('Hour Wage')
     over_day = fields.Monetary('Day Wage')
     

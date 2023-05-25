@@ -13,9 +13,6 @@ class LoanClass(models.Model):
 class PayslipReport(models.Model):
     _inherit = 'hr.payslip'
     
-    
-    
-
     loan_ids = fields.Many2many('hr.loan', index=True)
     remaining_loan_amount = fields.Char()
     wage = fields.Monetary(related='contract_id.wage', string='Basic Salary')

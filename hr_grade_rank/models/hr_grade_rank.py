@@ -28,12 +28,33 @@ class GradeGrade(models.Model):
     mobile = fields.Boolean()
     fuel = fields.Float()
     mobile_allowance = fields.Float()
+    attend_allowance = fields.Float(string="Attendance Allowance")
     leaves = fields.Char()
     other = fields.Char()
     # Promotion 
     promotion_id = fields.One2many('hr.grade.promotion', 'grade_id')
+    struct_id = fields.Many2one('hr.payroll.structure', string="Salary Structure")
 
 
+class HRContract(models.Model):
+    _inherit='hr.contract'
+    
+    struct_id = fields.Many2one('hr.payroll.structure', string="Salary Structure")
+    grade_id = fields.Many2one('grade.grade', string="Grade")
+    rank_id = fields.Many2one('rank.rank', string="Rank")
+    attend_allowance = fields.Float(string="Attenance Allowance")
+    
+    @api.onchange('employee_id')
+    def _onchange_employee_gr(self):
+        for rec in self:
+            rec.grade_id = rec.employee_id.grade_id.id
+            rec.rank_id = rec.employee_id.rank_id.id
+    
+    @api.onchange('grade_id')
+    def _onchange_grade_id(self):
+        for rec in self:
+            rec.struct_id = rec.grade_id.struct_id.id
+            rec.attend_allowance = rec.grade_id.attend_allowance
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 

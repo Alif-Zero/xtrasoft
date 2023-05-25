@@ -9,9 +9,10 @@ from odoo import models, fields, api
 class HrAttendance(models.Model):
     _inherit = 'hr.attendance'
 
-    late_check_in = fields.Integer(string="Late Check-in(Minutes)", compute="get_late_minutes")
-    early_check_out = fields.Integer(string="Early Check-out(Minutes)", compute="get_early_minutes")
+    late_check_in = fields.Integer(string="Late Check-in(Minutes)")
+    early_check_out = fields.Integer(string="Early Check-out(Minutes)")
 
+    @api.onchange('check_in', 'status')
     def get_late_minutes(self):
         for rec in self:
             rec.late_check_in = 0.0
@@ -42,6 +43,7 @@ class HrAttendance(models.Model):
                                 final = t1 - t2
                                 rec.sudo().late_check_in = final.total_seconds() / 60
     
+    @api.onchange('check_out','status')
     def get_early_minutes(self):
         for rec in self:
             rec.early_check_out = 0.0

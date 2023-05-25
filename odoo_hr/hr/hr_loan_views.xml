@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
 <data>
-	<data noupdate="0">
+	<data noupdate="1">
 		<record id="loan_request_seq" model="ir.sequence">
 			<field name="name">Loan Request Sequence</field>
 		   	<field name="code">loan_request_seq</field>
@@ -11,6 +11,12 @@
 			<field name="number_next">1</field>
 			<field name="number_increment">1</field>
 		 </record>
+         <record id="advance_laon_activity" model="mail.activity.type">
+            <field name="name">Approve Loan/Advance</field>
+            <field name="delay_count">1</field>
+            <field name="delay_unit">days</field>
+            <field name="res_model_id" ref="odoo_hr.model_hr_loan"/>
+        </record>
 	</data>
 	
     <function model="hr.installment.month" name="generate_month" >
@@ -25,10 +31,27 @@
         <field name="arch" type="xml">
 			<form>
 				<sheet>
-				<group colspan="4" col="4">
-                	<field name="name"/>
-                	<field name="rule_type_id" options="{'no_quick_create': True, 'no_create_edit': True,'no_open': True}"/>
+				<group>
+                    <group>
+                        <field name="name"/>
+                        <field name="type"/>
+                        <field name="rule_type_id" options="{'no_quick_create': True, 'no_create_edit': True,'no_open': True}"/>
+                    </group>
+                    <group>
+                        <field name="allow_percentage"/>
+                        <field name="permanent_emp"/>
+                        <field name="min_duration"/>
+                        <field name="next_loan_after"/>
+                        <field name="max_intallments"/>
+                        <field name="stoppage_limit"/>
+                        <!-- <field name="user_ids" widget="many2many_tags" options="{'no_quick_create': True, 'no_create_edit': True,'no_open': True}"/> -->
+                    </group>
 				</group>
+                <notebook>
+                    <page name="approve_user_ids" string="Approver User">
+                        <field name="approver_user_ids" options="{'no_quick_create': True, 'no_create_edit': True,'no_open': True}"/>
+                    </page>
+                </notebook>
 				</sheet>
             </form>
         </field>
@@ -103,6 +126,8 @@
 			<form>
 			<field name="applicable_cheque" invisible="1" />
 				<header>
+                <field name="is_special_approval" invisible="1"/>
+                <button name="action_special_approval" type="object" string="Special Approval" attrs="{'invisible': ['|',('is_special_approval', '=',True),('state','!=', 'Draft')]}" class="oe_highlight"/>
 				<button name="submit_for_approval" type="object" class="oe_highlight" states="Draft" string="Submit for Approval" id="submit_for_approval"/>
 <!--					<button name="submit_loan_request" string="Submit" states="Draft" type="object" class="oe_highlight" groups="base.group_erp_manager,odoo_hr.group_salary_manager,odoo_hr.group_salary_officer"/>
 				<button name="confirm_loan_request" string="Confirm" states="Draft" type="object" class="oe_highlight" groups="base.group_erp_manager,odoo_hr.group_salary_manager,odoo_hr.group_salary_officer"/>
@@ -140,6 +165,7 @@
 	                <field name="approve_amount" required="1" attrs="{'readonly':[('state','!=','Draft')]}"/>
 	                <field name="deducted_amount" attrs="{'readonly':[('state','!=','Draft')]}"/>
 	                <field name="net_amount" required="1" attrs="{'readonly':True}"/>
+	                <field name="recovered_date" attrs="{'readonly':False}"/>
 	                
 				</group>
 				<!--<group col="2" colspan="2">
@@ -184,6 +210,11 @@
 				</group>
 				<field name="description" placeholder="Note.." attrs="{'readonly':[('state','in',['Recovered','Discarded'])]}"/>
 				</sheet>
+                  <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" />
+                    <field name="activity_ids" widget="mail_activity" />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
             </form>
         </field>
     </record>
@@ -242,10 +273,11 @@
         </field>
     </record>
 	<record model="ir.actions.act_window" id="server_action_lms_hr_loan">
-        <field name="name">Loan and Advance Requests</field>
+        <field name="name">Personal Loan Requests</field>
         <field name="res_model">hr.loan</field>
         <field name="view_mode">tree,form</field>
-		
+        <field name="domain">[('loan_type.type', '=', 'Loan')]</field>
+        <field name="context">{'default_loan_type':1}</field>
     </record>
 	
 	<record id="view_act_object_tree" model="ir.actions.act_window.view">
@@ -258,10 +290,30 @@
         <field name="view_id" ref="view_hr_loan_form" />
         <field name="act_window_id" ref="server_action_lms_hr_loan" />
     </record>
-	
-	<menuitem name="Loan and Advance Requests" id="menu_hr_loan" action="server_action_lms_hr_loan" parent='hr_payroll.menu_hr_payroll_employees_root' sequence="50" groups="base.group_user,base.group_erp_manager,hr.group_hr_manager,odoo_hr.group_salary_officer,odoo_hr.group_salary_manager"/>
 
-	<record model="ir.ui.view" id="view_hr_loan_application_form">
+    <record model="ir.actions.act_window" id="server_action_lms_hr_advance">
+        <field name="name">Advance Salary Requests</field>
+        <field name="res_model">hr.loan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('loan_type.type', '=', 'advance')]</field>
+        <field name="context">{'default_loan_type':2}</field>
+    </record>
+	
+	<record id="view_act_object_tree_adv" model="ir.actions.act_window.view">
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_hr_loan_tree" />
+        <field name="act_window_id" ref="server_action_lms_hr_advance" />
+    </record>
+    <record id="view_act_object_form_adv" model="ir.actions.act_window.view">
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_hr_loan_form" />
+        <field name="act_window_id" ref="server_action_lms_hr_advance" />
+    </record>
+	
+	<menuitem name="Personal Loan Requests" id="menu_hr_loan" action="server_action_lms_hr_loan" parent='hr_payroll.menu_hr_payroll_employees_root' sequence="50" groups="base.group_user,base.group_erp_manager,hr.group_hr_manager,odoo_hr.group_salary_officer,odoo_hr.group_salary_manager"/>
+	<menuitem name="Advance Salary Requests" id="menu_hr_advance" action="server_action_lms_hr_advance" parent='hr_payroll.menu_hr_payroll_employees_root' sequence="51" groups="base.group_user,base.group_erp_manager,hr.group_hr_manager,odoo_hr.group_salary_officer,odoo_hr.group_salary_manager"/>
+
+	<!-- <record model="ir.ui.view" id="view_hr_loan_application_form">
         <field name="name">hr.loan.form</field>
         <field name="model">hr.loan</field>
         <field name="type">form</field>
@@ -278,8 +330,9 @@
 				</div>
 				<field name="is_readonly" invisible="1"/>
 				<field name='installment_created' invisible="1"/>
-<!--				<field name="installment_type" invisible="1"/>
--->				<group>
+				<field name="installment_type" invisible="1"/>
+				
+<group>
 					<field name="company_id" invisible="1" required="1" options="{'no_quick_create':True,'no_create_edit':True, 'no_open': True}" />
 				</group>
 				<group colspan="4" col="4">
@@ -366,7 +419,7 @@
         <field name="act_window_id" ref="action_loan_advance_request" />
     </record>
 	
-	<menuitem name="Loan and Advance Requests" id="menu_hr_loan_requests" action="action_loan_advance_request" parent='hr.menu_hr_employee_payroll' sequence="50" groups="base.group_user,base.group_erp_manager,hr.group_hr_manager,hr.group_hr_user,odoo_hr.group_salary_officer,odoo_hr.group_salary_manager"/>
+	<menuitem name="Loan and Advance Requests" id="menu_hr_loan_requests" action="action_loan_advance_request" parent='hr.menu_hr_employee_payroll' sequence="50" groups="base.group_user,base.group_erp_manager,hr.group_hr_manager,hr.group_hr_user,odoo_hr.group_salary_officer,odoo_hr.group_salary_manager"/> -->
 
     <!--<record id="server_action_lms_hr_loan" model="ir.actions.server">
           <field name="name">Advance and Recovery</field>
@@ -374,7 +427,7 @@
           <field name="state">code</field>
           <field name="code">model.get_filtered_record()</field>
     </record>-->
-    <menuitem name="Recovery of Advances" id="menu_hr_loan" action="server_action_lms_hr_loan" parent='hr_payroll.menu_hr_payroll_employees_root' sequence="50" groups="base.group_user,base.group_erp_manager,hr.group_hr_manager,hr.group_hr_user,odoo_hr.group_salary_officer,odoo_hr.group_salary_manager"/>
+    <!-- <menuitem name="Recovery of Advances" id="menu_hr_loan" action="server_action_lms_hr_loan" parent='hr_payroll.menu_hr_payroll_employees_root' sequence="50" groups="base.group_user,base.group_erp_manager,hr.group_hr_manager,hr.group_hr_user,odoo_hr.group_salary_officer,odoo_hr.group_salary_manager"/> -->
     <record model="ir.ui.view" id="view_hr_installment_merge_form">
         <field name="name">hr.installment.merge.form</field>
         <field name="model">hr.installment.merge</field>

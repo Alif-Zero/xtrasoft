@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- add picking to batch  -->
+    <record id="contract_approval_wizard_form" model="ir.ui.view">
+        <field name="name">contract_approval_wizard.form</field>
+        <field name="model">contract.approval.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+              
+                <notebook>
+                    <page name="contract_ids" string="Contracts">
+                        <field name="contract_ids">
+                        </field> 
+                        <field name="state">
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="action_appove" type="object" string="Approve" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="contract_approval_wizard_action_finance" model="ir.actions.act_window">
+        <field name="name">Finance Approval</field>
+        <field name="res_model">contract.approval.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'contract_state2': 'waiting_for_approval_1'
+        }</field>
+        <field name="binding_model_id" ref="model_hr_contract"/>
+        <field name="binding_view_types">list</field>
+    </record>
+    <record id="contract_approval_wizard_action_ceo" model="ir.actions.act_window">
+        <field name="name">CEO Approval</field>
+        <field name="res_model">contract.approval.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'contract_state2': 'waiting_for_approval_2'
+        }</field>
+        <field name="binding_model_id" ref="model_hr_contract"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+</odoo>

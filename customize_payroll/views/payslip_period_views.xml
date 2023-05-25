@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="view_action_payslip_period_tree" model="ir.ui.view">
+        <field name="name">payslip.period.tree</field>
+        <field name="model">payslip.period</field>
+        <field name="arch" type="xml">
+            <tree editable="top">
+            <field name="name"/>
+            <field name="day_from"/>
+            <field name="month_from"/>
+            <field name="day_to"/>
+            <field name="month_to"/>
+            </tree>
+        </field>
+    </record>
+
+	<record id="action_payslip_period" model="ir.actions.act_window">
+		<field name="name">Payslip Period</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">payslip.period</field>
+		<field name="view_mode">tree</field>
+	</record>
+
+	<menuitem name="Payslip Period" id="menu_payslip_period" parent='hr_payroll.menu_hr_salary_configuration' action="action_payslip_period" sequence="55" groups="base.group_erp_manager,base.group_user"/>
+
+</odoo>

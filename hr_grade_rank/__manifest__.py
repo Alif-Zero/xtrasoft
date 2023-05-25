@@ -10,7 +10,11 @@
     "category": "Human Resources",
     "website": "http://www.serpentcs.com",
     "depends": ["hr"],
-    "data": ["security/ir.model.access.csv", "views/hr_grade_rank_view.xml"],
+    "data": [
+        "security/ir.model.access.csv", 
+        "views/hr_grade_rank_view.xml",
+        "views/hr_contract_view.xml",
+        ],
     "images": ["static/description/HRGradeRank.png"],
     "sequence": 1,
     "installable": True,
