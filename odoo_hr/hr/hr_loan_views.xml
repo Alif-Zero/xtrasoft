@@ -79,11 +79,11 @@
     </record>
 				
     <record model="ir.actions.act_window" id="action_hr_loan_type">
-        <field name="name">Advance Types</field>
+        <field name="name">Advance-Loan Configuration</field>
         <field name="res_model">hr.loan.type</field>
         <field name="view_mode">tree,form</field>
     </record>
-     <menuitem name='Advance Types' id="menu_hr_loan_type" action="action_hr_loan_type" parent='hr_payroll.menu_hr_salary_configuration' sequence="100" groups="base.group_erp_manager,odoo_hr.group_salary_officer,odoo_hr.group_salary_manager"/>
+     <menuitem name='Advance-Loan Configuration' id="menu_hr_loan_type" action="action_hr_loan_type" parent='hr_payroll.menu_hr_salary_configuration' sequence="100" groups="base.group_erp_manager,odoo_hr.group_salary_officer,odoo_hr.group_salary_manager"/>
     
     <record model="ir.ui.view" id="installment_type_wizard_view">
             <field name="name">installment.plan.wizard.form</field>
@@ -276,7 +276,7 @@
         <field name="name">Personal Loan Requests</field>
         <field name="res_model">hr.loan</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('loan_type.type', '=', 'Loan')]</field>
+        <field name="domain">[('loan_type.type', '=', 'loan')]</field>
         <field name="context">{'default_loan_type':1}</field>
     </record>
 	

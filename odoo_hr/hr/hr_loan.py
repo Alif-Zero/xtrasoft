@@ -18,13 +18,12 @@ YearsList = [('2020','2020'),('2021','2021'),('2022','2022'),('2023','2023'),('2
                              ,('2032','2032'),('2033','2033'),('2034','2034'),('2035','2035'),('2036','2036'),('2037','2037'),('2038','2038'),('2039','2039'),('2040','2040'),('2041','2041')
                              ,('2042','2042'),('2043','2043'),('2044','2044'),('2045','2045'),('2046','2046'),('2047','2047'),('2048','2048'),('2049','2049'),('2050','2050')]
 
-class hr_loan_type(models.Model):
-    """(NULL)"""
+class HRLoanType(models.Model):
     _name = 'hr.loan.type'
     name = fields.Char(string='Loan Type', required=True)
     type = fields.Selection([
         ('advance', 'Advance'),
-        ('Loan', 'Loan'),
+        ('loan', 'Loan'),
         ])
     allow_percentage = fields.Float(default=25.0)
     permanent_emp = fields.Boolean(string="Permanent Employee")
@@ -199,8 +198,8 @@ class hr_loan(models.Model):
     @api.constrains('employee_id','state')
     def loan_request_unique(self):
         for x in self:
-            if x.employee_id and x.state and x.loan_type.name =='Loan':
-                rec = x.search([('employee_id','=',x.employee_id.id),('state','not in',['Recovered','Rejected']),('loan_type.name','=','Loan')])
+            if x.employee_id and x.state and x.loan_type.name =='loan':
+                rec = x.search([('employee_id','=',x.employee_id.id),('state','not in',['Recovered','Rejected']),('loan_type.name','=','loan')])
                 if len(rec)>1:
                     raise ValidationError("""You can't apply new loan request unless previous case is settled !""")
 
@@ -495,7 +494,11 @@ class hr_loan(models.Model):
         self.contract_id = result['contract_id']
         self.designation_id = result['designation_id']
         self.department_id = result['department_id']
-    
+        if self.loan_type.type == 'loan' and self.contract_id.loan_salary_type:
+            self.loan_type = self.contract_id.loan_salary_type
+        
+        if self.loan_type.type == 'advance' and self.contract_id.advance_salary_type:
+            self.loan_type = self.contract_id.advance_salary_type
     
     def check_loan(self):
         if self.loan_type:
@@ -620,7 +623,7 @@ class hr_loan(models.Model):
 
 class InstallmentPlanWizard(models.TransientModel):
     _name = 'installment.plan.wizard'
-    loan_id=fields.Many2one('hr.loan','Loan')
+    loan_id=fields.Many2one('hr.loan','loan')
     balance_amount = fields.Integer(string="Balance Amount")
     installments = fields.Integer(string="No. of Installments")
     per_month_installment = fields.Integer(string="Per Month Installment", compute='_cal_installment', store=True)

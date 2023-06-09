@@ -6,8 +6,9 @@ from odoo import api, fields, models
 class RankRank(models.Model):
     _name = "rank.rank"
     _description = "Rank"
-
+    _rec_name = 'job_id'
     name = fields.Char("Position")
+    job_id = fields.Many2one('hr.job')
     description = fields.Text("Description")
     salary_range = fields.Text("Salary Range")
     grade_id = fields.Many2one("grade.grade", "Grade")
@@ -31,9 +32,12 @@ class GradeGrade(models.Model):
     attend_allowance = fields.Float(string="Attendance Allowance")
     leaves = fields.Char()
     other = fields.Char()
-    # Promotion 
+    # Promotion and config
     promotion_id = fields.One2many('hr.grade.promotion', 'grade_id')
     struct_id = fields.Many2one('hr.payroll.structure', string="Salary Structure")
+    not_time_attendance = fields.Integer(string="Allow No time Attendance")
+    advance_salary_type = fields.Many2one('hr.loan.type', string="Advance Salary Type", domain=[('type','=','advance')])
+    loan_salary_type = fields.Many2one('hr.loan.type', string="Employee Loan Type", domain=[('type','=','loan')])
 
 
 class HRContract(models.Model):
@@ -43,6 +47,9 @@ class HRContract(models.Model):
     grade_id = fields.Many2one('grade.grade', string="Grade")
     rank_id = fields.Many2one('rank.rank', string="Rank")
     attend_allowance = fields.Float(string="Attenance Allowance")
+    not_time_attendance = fields.Integer(string="Allow No time Attendance")
+    advance_salary_type = fields.Many2one('hr.loan.type', string="Advance Salary Type", domain=[('type','=','advance')])
+    loan_salary_type = fields.Many2one('hr.loan.type', string="Employee Loan Type", domain=[('type','=','loan')])
     
     @api.onchange('employee_id')
     def _onchange_employee_gr(self):
@@ -55,6 +62,11 @@ class HRContract(models.Model):
         for rec in self:
             rec.struct_id = rec.grade_id.struct_id.id
             rec.attend_allowance = rec.grade_id.attend_allowance
+            rec.not_time_attendance = rec.grade_id.not_time_attendance
+            rec.advance_salary_type = rec.grade_id.advance_salary_type
+            rec.loan_salary_type = rec.grade_id.loan_salary_type
+
+
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
