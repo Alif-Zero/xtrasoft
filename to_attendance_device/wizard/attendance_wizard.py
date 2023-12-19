@@ -16,7 +16,14 @@ class AttendanceRecords1(models.Model):
     _inherit = 'hr.attendance'
     time_start = fields.Float()
     time_end = fields.Float()
-    status = fields.Selection([('Absent', 'Absent'), ('Present', 'Present'),('On Leave','On Leave'),('Half Day','Half Day'),('Holiday','Holiday')])
+    status = fields.Selection([
+        ('Absent', 'Absent'), 
+        ('Present', 'Present'),
+        ('On Leave','On Leave'),
+        ('Half Day','Half Day'),
+        ('Holiday','Holiday'),
+        ('Public','Public Holiday'),
+        ])
     check_in = fields.Datetime(required=False, default=False)
     attendance_date=fields.Date(string='Date')
     department_id=fields.Many2one('hr.department',related='employee_id.department_id',store=True)
@@ -71,43 +78,49 @@ class AttendanceRecords1(models.Model):
                 #     })
 
 
-    @api.onchange('worked_hours')
+    @api.onchange('worked_hours','check_in','check_out', 'status')
     def GetVariance(self):
         import pytz
         for rec in self:
-            if rec.status!='Holiday' and rec.overtime_id:
-                day_of_week=rec.attendance_date.weekday()
-                employee_calendar=self.env['resource.calendar.attendance'].search([('dayofweek','=',day_of_week),('day_period','=','afternoon'),('calendar_id','=',rec.employee_id.resource_calendar_id.id)])
+            if rec.status not in ('Holiday', 'Public') and rec.overtime_id:
+                day_of_week = rec.attendance_date.weekday()
+                employee_calendar = self.env['resource.calendar.attendance'].search(
+                    [('dayofweek', '=', day_of_week), ('day_period', '=', 'afternoon'),
+                     ('calendar_id', '=', rec.employee_id.resource_calendar_id.id)])
                 tz = pytz.timezone('Asia/Karachi')
                 tz1 = pytz.timezone('UTC')
                 tz2 = pytz.timezone('Asia/Karachi')
-                delta=0
+                delta = 0
                 # now=fields.Datetime.now(tz)
                 # print (rec.check_out.time(tz)
                 if rec.check_out:
-                    dt =datetime.strptime(str(rec.check_out),"%Y-%m-%d %H:%M:%S")
+                    dt = datetime.strptime(str(rec.check_out), "%Y-%m-%d %H:%M:%S")
                     dt = tz1.localize(dt)
                     dt = dt.astimezone(tz2)
                     work_to = employee_calendar.hour_to
                     if rec.time_end:
                         work_to = rec.time_end
-                    result='{0:02.0f}:{1:02.0f}'.format(*divmod(work_to * 60, 60))
-                    
+                    result = '{0:02.0f}:{1:02.0f}'.format(*divmod(work_to * 60, 60))
+
                     dt = dt.strftime("%H:%M:%S")
                     x = datetime.strptime(result, "%H:%M")
-                    y= datetime.strptime(dt, "%H:%M:%S")
-                    delta=(y-x).total_seconds() / 3600
+                    y = datetime.strptime(dt, "%H:%M:%S")
+                    delta = (y - x).total_seconds() / 3600
                 # dt=dt.astimez.one(tz)
                 # print (str(dt-str('18:00'))
                 # variance=rec.check_out.time()
-                rec.variance=delta
-            elif rec.status!='Holiday' and not rec.overtime_id:
-                hours_per_day = rec.hours_per_day or rec.employee_id.resource_calendar_id.hours_per_day 
-                rec.variance=rec.worked_hours - hours_per_day 
-            elif rec.status=='Holiday':
-                rec.variance=rec.worked_hours
+                rec.variance = delta
+
+            elif rec.status not in ('Holiday', 'Public') and not rec.overtime_id:
+                hours_per_day = rec.hours_per_day or rec.employee_id.resource_calendar_id.hours_per_day
+                rec.variance = rec.worked_hours - hours_per_day
+            elif rec.status in ('Holiday', 'Public') and rec.overtime_id:
+                hours_per_day = rec.hours_per_day or rec.employee_id.resource_calendar_id.hours_per_day
+                rec.variance = rec.worked_hours
+            elif rec.status not in ('Holiday', 'Public'):
+                rec.variance = rec.worked_hours
             else:
-                rec.variance=0
+                rec.variance = 0
 class AttendanceWizard(models.TransientModel):
     _name = 'attendance.wizard'
     _description = 'Attendance Wizard'
@@ -150,10 +163,17 @@ class AttendanceWizard(models.TransientModel):
                 rec.status='On Leave'
 
     def AttendanceHolidayStatus(self):
-        print(self.env['hr.attendance'].search([('status','=','Absent')]))
-        for rec in self.env['hr.attendance'].search([]):
-            if self.env['date.holiday'].search([('date','=',rec.attendance_date)]):
-                rec.status='Holiday'
+        date = fields.Datetime.now().date() - timedelta(days=45)
+        attendance_record = self.env['hr.attendance'].search([('attendance_date', '>=', date)])
+        for rec in attendance_record:
+            holiday = self.env['date.holiday'].search([('date', '=', rec.attendance_date)], limit=1)
+            if holiday.type == 'Weekly Holiday':
+                rec.status = 'Holiday'
+                rec.GetOverTime()
+            if holiday.type == 'Public Holiday':
+                rec.status = 'Public'
+                rec.GetOverTime()
+
     def get_employee_period(self, employee,date):
         start_time = 0
         end_time = 0
@@ -238,9 +258,9 @@ class AttendanceWizard(models.TransientModel):
                         attendance_record.status = 'Present'
                         # if attendance_record.check_in==attendance_record.check_out:
                         if attendance_record.check_in<=dt_string-timedelta(hours=13):
-                            if attendance_record.worked_hours<5:
+                            if attendance_record.worked_hours<4:
                                 attendance_record.status='Absent'
-                            if attendance_record.worked_hours==5:
+                            if attendance_record.worked_hours==4:
                                 attendance_record.status='Half Day'
                         for att in relvant_data:
                             att.hr_attendance_id=attendance_record.id

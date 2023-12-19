@@ -1,5 +1,13 @@
 <odoo>
 	<template id="payslipdetailreport" name="Payslip Report">
+		<style>
+			.table tr th{
+				border-color: black;
+			}
+			.table tr td{
+				border-color: black;
+			}
+		</style>
         <t t-call="web.html_container">
             <!-- <a href="#" icon="gtk-print" string="Print" align="right" type="button" class="btn btn-default btn-sm" style="float:right" onclick="myFunction()">
                 <span class="glyphicon glyphicon-print" icon="gtk-print">Print</span>
@@ -9,87 +17,92 @@ function myFunction() {
 window.print();
 }
 </script> -->
-            <table class="table table-light" style="font-size:13px;border:1px;">
-                <thead class="thead-light">
-                    <tr>
-                        <th colspan="4" class="text-center"><h3>Payslip Detail Report</h3></th>
+            <table class="table table-light" style="font-size:13px;border: 1px solid black;" >
+                <thead class="thead-light" style="border: 1px solid black;">
+                    <tr style="border: 1px solid black;">
+                        <th colspan="4" class="text-center" style="border: 1px solid black;"><h3>Payslip Detail Report</h3></th>
                     </tr>
-                    <tr style="font-size:14px">
-                        <th>Date From</th>
-                        <th>Date To</th>
-                        <th>Salary Structure</th>
+                    <tr style="font-size:14px;border: 1px solid black;">
+                        <th style="border: 1px solid black;">Date From</th>
+                        <th style="border: 1px solid black;">Date To</th>
+                        <th style="border: 1px solid black;">Salary Structure</th>
+                        <th style="border: 1px solid black;">Salary Batch</th>
                     </tr>
                 </thead>
-                <tbody style="font-size:14px">
+                <tbody style="font-size:14px" >
                     <tr>
-                        <td><t t-esc="date_from"/></td>
-                        <td><t t-esc="date_to"/></td>
-                        <td><t t-esc="structure"/></td>
+                        <td style="border: 1px solid black;"><t t-esc="date_from"/></td>
+                        <td style="border: 1px solid black;"><t t-esc="date_to"/></td>
+                        <td style="border: 1px solid black;"><t t-esc="structure"/></td>
+                        <td style="border: 1px solid black;"><t t-esc="batch"/></td>
                     </tr>
                 </tbody>
             </table>        
-            <table  style="font-size:10px;border:1px;">
-                <thead class="thead-light" style="background-color:silver;">
-                    <tr>
-                        <th>Sr.No.</th>
-                        <th>Employee</th>
-                        <th>Department</th>
-                        <th>Date</th>
-                        <th>Present</th>
-						<th>Absent</th>
-						<th>Late Check in Days</th>
-						<th>Total Days</th>
-						<th>Basic Salary</th>
-						<th>Attendance Allowance</th>
-						<th>Overtime Hours</th>
-						<th>Overtime Allowance</th>
-						<th>Gross Salary</th>
-						<th>Advance Salary</th>
-						<th>Late Check in</th>
-						<th>Loan</th>
-						<th>Unpaid Short Leave</th>
-						<th>Absent</th>
-						<th>Net Salary</th>
-						<th>Signature</th>
+            <table class="table table-light table-sm" style="font-size:10px">
+                <thead class="thead-light">
+                    <tr >
+                        <th style="border: 1px solid black;">Sr.No.</th>
+                        <th style="border: 1px solid black;">Employee</th>
+                        <th style="border: 1px solid black;">Slip</th>
+                        <th style="border: 1px solid black;">Status</th>
+                        <t t-if="rules" t-foreach="rules" t-as="r">
+                            <th class="text-center" style="border: 1px solid black;"><t t-esc="r.name"/></th>
+                        </t>
+                        <th style="border: 1px solid black;">Balance</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-set="seq" t-value="1"/>
-                    <t t-if="slip_records" t-foreach="slip_records" t-as="s">                    
-                        <tr class="table">
-                            <td class="text-center"><span t-esc="seq"/><t t-set="seq" t-value="seq+1"/></td>
-                            <td><t t-esc="s['employee_name']"/></td>
-							<td><t t-esc="s['department_name']"/></td>
-							<td><t t-esc="s['date_to']"/></td>
-							<td><t t-esc="s['total_present']"/></td>
-							<td><t t-esc="s['total_absent']"/></td>
-							<td><t t-esc="s['late_checkin_days']"/></td>
-							<td><t t-esc="s['no_of_days']"/></td>
-							<td><t t-esc="s['basic_salary']"/></td>
-							<td><t t-esc="s['attendance_allowance']"/></td>
-							<td><t t-esc="s['overtime_hours']"/></td>
-							<td><t t-esc="s['overtime_allowance']"/></td>
-							<td><t t-esc="s['gross_salary']"/></td>
-							<td><t t-esc="s['advance_salary']"/></td>
-							<td><t t-esc="s['late_checkin_deduction']"/></td>
-							<td><t t-esc="s['loan_deduction']"/></td>
-							<td><t t-esc="s['halfday_deduction']"/></td>
-							<td><t t-esc="s['absent_deduction']"/></td>
-							<td><t t-esc="s['net_salary']"/></td>
-							<td></td>
-							
-<!--
-                            <td><t t-esc="s.number"/></td>
-                            <td><t t-esc="s.state.capitalize()"/></td>
-                            <td><t t-esc="s.remain_amount"/></td> -->   
-                        </tr>    
+                    <t t-set="seq" t-value="0"/>
+                    <t t-set="balance" t-value="0"/>
+                    <t t-if="slip_records" t-foreach="slip_records.keys()" t-as="s">
+                        <t t-set="balance" t-value="balance+s.remain_amount"/>
+                        <t t-if="s.remain_amount > 0.0">
+                            <tr class="table-warning" style="border: 1px solid black;">
+                                <td class="text-center" style="border: 1px solid black;"><t t-esc="seq"/></td>
+                                <td style="border: 1px solid black;"><t t-esc="s.employee_id.name"/></td>
+                                <td style="border: 1px solid black;"><t t-esc="s.number"/></td>
+                                <td style="border: 1px solid black;"><t t-esc="s.state.capitalize()"/></td>
+                                <t t-if="rules" t-foreach="rules" t-as="r">
+                                    <td class="text-right" style="border: 1px solid black;"><t t-esc="'{:,}'.format(round(slip_records[s].get(r,0)))"/></td>
+                                </t>
+                                <td style="border: 1px solid black;"><t t-esc="s.remain_amount"/></td>    
+                            </tr>    
+                        </t>
+                        <t t-else="">
+                            <tr class="table-success" style="border: 1px solid black;">
+                                <td class="text-center" style="border: 1px solid black;"><t t-esc="seq"/></td>
+                                <td style="border: 1px solid black;"><t t-esc="s.employee_id.name"/></td>
+                                <td style="border: 1px solid black;"><t t-esc="s.number"/></td>
+                                <td style="border: 1px solid black;"><t t-esc="s.state.capitalize()"/></td>
+                                <t t-if="rules" t-foreach="rules" t-as="r">
+                                    <td class="text-right" style="border: 1px solid black;"><t t-esc="'{:,}'.format(round(slip_records[s].get(r,0)))"/></td>
+                                </t>
+                                <td style="border: 1px solid black;"><t t-esc="s.remain_amount"/></td>    
+                            </tr>
+                        </t>
+                        
+                    </t>
+                    <t t-if="emp_records" t-foreach="emp_records.keys()" t-as="s">
+                        <t t-set="seq" t-value="seq+1"/>
+                        <tr style="border: 1px solid black;">
+                            <td class="text-center" style="border: 1px solid black;"><t t-esc="seq"/></td>
+                            <td style="border: 1px solid black;"><t t-esc="s.name"/></td>
+                            <td class="text-center" style="border: 1px solid black;">-</td>
+                            <td class="text-center" style="border: 1px solid black;">-</td>
+                            <t t-if="rules" t-foreach="rules" t-as="r">
+                                <td class="text-right" style="border: 1px solid black;"><t t-esc="'{:,}'.format(round(emp_records[s].get(r,0)))"/></td>
+                            </t>
+                            <td class="text-center" style="border: 1px solid black;">-</td>    
+                        </tr>
                     </t>
                 </tbody>
-              <tfooter>
-                    <tr style="background-color:silver;">
-                        <th colspan="15" class="text-center">Total</th>
-						<th class="text-right" colspan="5"><t t-esc="total"/></th>
-                        
+                <tfooter style="border: 1px solid black;">
+                    <tr class="table-info" style="border: 1px solid black;">
+                        <th colspan="4" class="text-center" style="border: 1px solid black;">Total</th>
+                        <t t-if="rules" t-foreach="rules" t-as="r">
+                            <th class="text-right" style="border: 1px solid black;"><t t-esc="'{:,}'.format(round(rule_dic.get(r,0)))"/></th>
+                        </t>
+                        <th class="text-right" style="border: 1px solid black;"><t t-esc="'{:,}'.format(round(balance,0))"/></th>
                     </tr>
                 </tfooter>
             </table>

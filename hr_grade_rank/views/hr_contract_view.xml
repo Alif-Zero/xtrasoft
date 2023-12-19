@@ -7,10 +7,16 @@
             <xpath expr="//page[@name='information']//group[@name='main_info']" position="inside">
             <group name="grade_info" string="Grade - Salary Configuration">
                 <field name="grade_id" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
-                <field name="rank_id" domain="[('grade_id','=', grade_id)]" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
+                <field name="job_id" domain="[('grade_id','=', grade_id)]" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
                 <field name="struct_id" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
                 <field name="attend_allowance"/>
-                <field name="not_time_attendance"/>
+                <field name="allow_late_checkin"/>
+                <field name="checking_grace_period"/>
+                <field name="checking_late_count"/>
+                <field name="allow_early_checkout"/>
+                <field name="checkout_grace_period"/>
+                <field name="early_checkout_count"/>
+                <field name="allow_late_checkin"/>
                 <field name="advance_salary_type"/>
                 <field name="loan_salary_type"/>
             </group>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <record id="product_move_pdf_report_format" model="report.paperformat">
+            <field name="name">Product Move A4</field>
+            <field name="default" eval="False" />
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">30</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="dpi">110</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">20</field>
+        </record>
+    <record id="product_move_pdf_report" model="ir.actions.report">
+        <field name="name">Product Move Report</field>
+        <field name="model">product.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="paperformat_id" ref="az_product_report.product_move_pdf_report_format"/>
+        <field name="report_name">az_product_report.product_move_report_doc</field>
+        <field name="report_file">az_product_report.product_move_report_doc</field>
+    </record>
+</odoo>

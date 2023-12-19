@@ -106,6 +106,7 @@ class EmployeeChart(http.Controller):
             loop_len = len(child_ids)*2
             lines = self.get_lines(loop_len)
             nodes = self.get_nodes(child_ids)
+            # if lines or nodes:
             table += lines + nodes
             return table
 

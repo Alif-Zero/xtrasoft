@@ -67,5 +67,6 @@ class UserAttendance(models.Model):
 class HolidaySchedule(models.Model):
     _name='date.holiday'
 
+    name = fields.Char(string="Name")
     type=fields.Selection([('Weekly Holiday','Weekly Holiday'),('Public Holiday','Public Holiday')],default='Weekly Hourly',string='Type')
     date=fields.Date(string='Date')

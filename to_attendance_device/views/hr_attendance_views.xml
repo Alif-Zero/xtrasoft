@@ -33,7 +33,7 @@
 <!--		            <field name="activity_id"/>-->
 		        </field>
             <field name="worked_hours" position="after">
-				<field name="variance" string="Variance"/>
+				<field name="variance" widget="float_time" string="Variance"/>
                 <field name="status"/>
             </field>
 

@@ -13,13 +13,13 @@
                         <field name="description" placeholder="Description"/>
                     </group>
                     <notebook>
-                        <page string="Ranks" name="rank">
+                        <page string="Job Position" name="job_position">
                             <h2>Position</h2>
-                            <field name="rank_ids" editable="inline">
-                                <tree string="Ranks">
+                            <field name="job_ids">
+                                <tree string="Jobs">
                                     <field name="name"/>
-                                    <field name="job_id"/>
-                                    <field name="salary_range"/>
+                                    <field name="min_salary"/>
+                                    <field name="max_salary"/>
                                     <field name="description"/>
                                 </tree>
                             </field>
@@ -55,10 +55,15 @@
                         <page string="Salary Rule" name="salary_rule">
                             <group name="salary_group">
                                 <group>
-                                    <field name="struct_id" string="Salary Stucture"/>
-                                    <field name="not_time_attendance"/>
+                                    <field name="allow_late_checkin"/>
+                                    <field name="checking_grace_period"/>
+                                    <field name="checking_late_count"/>
+                                    <field name="allow_early_checkout"/>
+                                    <field name="checkout_grace_period"/>
+                                    <field name="early_checkout_count"/>
                                 </group>
                                 <group>
+                                    <field name="struct_id" string="Salary Stucture"/>
                                     <field name="advance_salary_type"/>
                                     <field name="loan_salary_type"/>
                                 </group>
@@ -105,7 +110,8 @@
                         <field name="job_id" required="1"/>
                     </group>
                     <group>
-                        <field name="salary_range"/>
+                        <field name="min_salary"/>
+                        <field name="max_salary"/>
                     </group>
                     <field name="description" placeholder="Description"/>
                 </sheet>
@@ -121,7 +127,8 @@
             <tree string="Ranks">
                 <field name="name"/>
                 <field name="job_id"/>
-                <field name="salary_range"/>
+                <field name="min_salary"/>
+                <field name="max_salary"/>
                 <field name="description"/>
             </tree>
         </field>
@@ -133,10 +140,31 @@
         <field name="res_model">rank.rank</field>
         <field name="view_mode">tree,form</field>
     </record>
-
+    <record id="view_hr_job_tree" model="ir.ui.view">
+        <field name="name">hr.job.tree.rank</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_tree"/>
+        <field name="arch" type="xml">
+            <field name="department_id" position="after">
+                <field name="min_salary"/>
+                <field name="max_salary"/>
+            </field>
+        </field>
+    </record>   
+    <record id="view_hr_job_form" model="ir.ui.view">
+        <field name="name">hr.job.form.rank</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <field name="department_id" position="after">
+                <field name="min_salary"/>
+                <field name="max_salary"/>
+            </field>
+        </field>
+    </record>
     <!-- RANK MENU -->
-    <menuitem id="menu_rank" parent="hr.menu_human_resources_configuration"
-              action="action_employee_rank"/>
+    <!-- <menuitem id="menu_rank" parent="hr.menu_human_resources_configuration"
+              action="action_employee_rank"/> -->
 
     <!-- EMPLOYEES INHERITED FORM VIEW -->
     <record id="view_employee_form_grade_rank" model="ir.ui.view">
@@ -144,12 +172,12 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <field name="job_id" position="after">
+            <field name="job_id" position="before">
                 <field name="grade_id" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
-                <field name="rank_id" domain="[('grade_id', '=', grade_id)]" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
             </field>
         </field>
     </record>
+    <!-- <field name="rank_id" domain="[('grade_id', '=', grade_id)]" options="{'no_quick_create': True, 'no_create_edit' : True}"/> -->
 
     <!-- EMPLOYEES INHERITED TREE VIEW -->
     <record id="view_employee_tree_grade_rank" model="ir.ui.view">
@@ -157,9 +185,9 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_tree"/>
         <field name="arch" type="xml">
-            <field name="job_id" position="after">
+            <field name="job_id" position="before">
                 <field name="grade_id"/>
-                <field name="rank_id"/>
+                <!-- <field name="rank_id"/> -->
             </field>
         </field>
     </record>
@@ -173,13 +201,14 @@
             <filter name="group_job" position="after">
                 <filter string="Grade" icon="terp-gtk-select-all" domain="[]"
                         name ='grade' context="{'group_by':'grade_id'}"/>
-                <filter string="Rank" icon="terp-gtk-select-all" domain="[]"
-                        name='rank' context="{'group_by':'rank_id'}"/>
-            </filter>
-        </field>
-    </record>
-
-    <!-- EMPLOYEES INHERITED KANBAN VIEW -->
+                    </filter>
+                </field>
+            </record>
+            
+            <!-- EMPLOYEES INHERITED KANBAN VIEW -->
+            <!-- <filter string="Rank" icon="terp-gtk-select-all" domain="[]"
+                    name='rank' context="{'group_by':'rank_id'}"/> -->
+                    <!-- <field name="rank_id"/> -->
     <record id="hr_kanban_view_emp_grade_rank" model="ir.ui.view">
         <field name="name">hr.employee.kanban.grade.rank</field>
         <field name="model">hr.employee</field>
@@ -187,17 +216,16 @@
         <field name="arch" type="xml">
             <xpath expr="//templates" position="before">
                 <field name="grade_id"/>
-                <field name="rank_id"/>
             </xpath>
             <xpath expr="//field[@name='work_phone']" position="after">
                 <li t-if="record.grade_id.raw_value">
                     <field name="grade_id"/>
                 </li>
-                <li t-if="record.rank_id.raw_value">
-                    <field name="rank_id"/>
-                </li>
             </xpath>
         </field>
     </record>
+    <!-- <li t-if="record.rank_id.raw_value">
+        <field name="rank_id"/>
+    </li> -->
 
 </odoo>

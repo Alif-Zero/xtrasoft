@@ -8,9 +8,12 @@ from odoo import models, fields, api
 
 class HrAttendance(models.Model):
     _inherit = 'hr.attendance'
+    #
+    # late_check_in = fields.Integer(string="Late Check-in(Minutes)")
+    # early_check_out = fields.Integer(string="Early Check-out(Minutes)")
 
-    late_check_in = fields.Integer(string="Late Check-in(Minutes)")
-    early_check_out = fields.Integer(string="Early Check-out(Minutes)")
+    late_check_in = fields.Integer(string="Late Check-in(Minutes)", compute="get_late_minutes")
+    early_check_out = fields.Integer(string="Early Check-out(Minutes)", compute="get_early_minutes")
 
     @api.onchange('check_in', 'status')
     def get_late_minutes(self):
@@ -25,6 +28,8 @@ class HrAttendance(models.Model):
                             work_from = schedule.hour_from
                             if rec.time_start:
                                 work_from = rec.time_start
+                            else:
+                                rec.time_start = schedule.hour_from
                             result = '{0:02.0f}:{1:02.0f}'.format(*divmod(work_from * 60, 60))
     
                             user_tz = self.env.user.tz
@@ -56,6 +61,8 @@ class HrAttendance(models.Model):
                             work_to = schedule.hour_to
                             if rec.time_end:
                                 work_to = rec.time_end
+                            else:
+                                rec.time_end = schedule.hour_to
                             result = '{0:02.0f}:{1:02.0f}'.format(*divmod(work_to * 60, 60))
                             user_tz = self.env.user.tz
                             dt = rec.check_out
@@ -104,8 +111,4 @@ class HrAttendance(models.Model):
                 })
                 
 
-class HrContract(models.Model):
-    _inherit='hr.contract'
-    
-    def calc_late_checkin_deduction(self,contract,payslip):
-        print ('ok')
+

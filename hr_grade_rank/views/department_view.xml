@@ -1,0 +1,26 @@
+<odoo>
+    <record model="ir.ui.view" id="view_department_tree">
+        <field name="name">hr.department.tree.count</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_tree"/>
+        <field name="arch" type="xml">
+            <field name="display_name" position="after">
+                <field name="total_capicity"/>
+                <field name="total_employee"/>
+                <field name="required_employee"/>
+            </field> 
+        </field>
+    </record> 
+    <record model="ir.ui.view" id="view_department_form">
+        <field name="name">hr.department.form.count</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="total_capicity"/>
+                <field name="total_employee"/>
+                <field name="required_employee"/>
+            </field> 
+        </field>
+    </record>
+</odoo>

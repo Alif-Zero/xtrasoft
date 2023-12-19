@@ -94,34 +94,10 @@
                                 <span t-field="o.no_of_days"/>
                             </td>
                             <td>
-                                <strong>Presents:</strong>
+                                <strong>Basic Salary:</strong>
                             </td>
                             <td>
-                                <t t-foreach="o.worked_days_line_ids" t-as="loop">
-                                    <t t-if="loop.work_entry_type_id.name == 'Attendance'">
-                                        <span t-field="loop.total_present"
-                                              t-options='{"widget": "float", "precision": 0}'/>
-                                    </t>
-                                </t>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <strong>On Leave:</strong>
-                            </td>
-                            <td>
-                                <span t-field="o.compute_date"/>
-                            </td>
-                            <td>
-                                <strong>Absents:</strong>
-                            </td>
-                            <td>
-                                <t t-foreach="o.worked_days_line_ids" t-as="loop">
-                                    <t t-if="loop.work_entry_type_id.name == 'Attendance'">
-                                        <span t-field="loop.total_absent"
-                                              t-options='{"widget": "float", "precision": 0}'/>
-                                    </t>
-                                </t>
+                                <span t-esc="'%.1f'% o.wage"/>
                             </td>
                         </tr>
                          <tr>
@@ -132,27 +108,12 @@
                              <span t-esc="'%.1f'% o.total_overtime"/>
                             </td>
                             <td>
-                                <strong>Late Check-in Days:</strong>
+                                
                             </td>
                             <td>
-                                                            <span t-field="o.late_checkin_days_2"/>
-                            
                             </td>
                             
-                            </tr>
-                         <tr>
-                            <td>
-                               <strong>Basic Salary:</strong>
-                            </td>
-                            <td>
-                             <span t-esc="'%.1f'% o.wage"/>
-                            </td>
-                            <td>
-                            </td>
-                            <td>                            
-                            </td>
-                            
-                            </tr>
+                        </tr>
 
                     </table>
 
@@ -218,7 +179,86 @@
                             </t>
                         </t>
                     </table>
+                    <p class="text-center" style="background-color:gray; color:white; font-size:18px;">
+                        Attendance Details
+                    </p>
+                    <table class="table table-borderless">
+                        <tr>
+                            <td>
+                                <strong>Total Attendance:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.total_attendance"/>
+                            </td>
+                            <td>
+                                <strong>Absent:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.total_absent"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Present:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.total_present"/>
+                            </td>
+                            <td>
+                                <strong>Un Paid Leaves:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.unpaid_leaves"/>
+                            </td>
+                           
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Public Holiday:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.total_public"/>
+                            </td>
+                            
+                            
+                            <td>
+                                <strong>Half Day:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.total_half_day"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Holiday Day:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.total_holiday"/>
+                            </td>
+                            
+                            <td>
+                                <strong>Late Checkin:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.total_late_checking"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>On Leaves:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.total_leave"/>
+                            </td>
+                            <td>
+                                <strong>Unapproved Half Hday:</strong>
+                            </td>
+                            <td>
+                                <span t-field="o.unapproved_half_day"/>
+                            </td>
+                        </tr>
 
+                    </table>
                     <p class="text-center" style="background-color:gray; color:white; font-size:18px;">
                         Loan Description
                     </p>
@@ -231,6 +271,16 @@
                                 <span>Rs</span>
 
                                 <span t-field="o.total_loan" t-options='{"widget": "float", "precision": 0}'/>
+                            </td>
+                        </tr> 
+                        <tr>
+                            <td style="width:25%">
+                                <strong>Total Advance:</strong>
+                            </td>
+                            <td style="=width:75%">
+                                <span>Rs</span>
+
+                                <span t-field="o.total_advance" t-options='{"widget": "float", "precision": 0}'/>
                             </td>
                         </tr>
                         <tr>

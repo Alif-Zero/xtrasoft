@@ -17,6 +17,7 @@ import openerp.sql_db
 import openerp.tools
 import threading
 from odoo.tools import float_compare, float_is_zero
+from psycopg2 import sql
 
 
 months = {'1':'Jan', '2':'Feb', '3':'Mar', '4':'Apr', '5':'May', '6':'Jun', '7':'Jul', '8':'Aug', '9':'Sep', '10':'Oct', '11':'Nov', '12':'Dec', }
@@ -291,7 +292,7 @@ class HRPayslipREportWizard(models.TransientModel):
     _name = 'hr.payslip.report.wizard'
     _description = 'Payslip Report Wizard'
     department_id=fields.Many2one('hr.department','Department')
-    struct_id = fields.Many2one('hr.payroll.structure', string="Salary Structure")
+    struct_id = fields.Many2many('hr.payroll.structure', string="Salary Structure")
     rule_ids = fields.Many2one(
         string='Salary Rules',
         comodel_name='hr.salary.rule',
@@ -328,20 +329,105 @@ class AccountMoveLine(models.Model):
 
     payslip_id = fields.Many2one('hr.payslip', string='Expense', copy=False, help="Expense where the move line come from")
 
-#     def reconcile(self):
-# #         res = super(AccountMoveLine, self).reconcile()
-# #         account_move_ids = [l.move_id.id for l in self if float_compare(l.move_id._get_cash_basis_matched_percentage(), 1, precision_digits=5) == 0]
-# #         if account_move_ids:
-# #             payslip = self.env['hr.payslip'].search([
-# #                 ('move_id', 'in', account_move_ids), ('state', '=', 'done')
-# #             ])
-# #             payslip.set_to_paid()
-#         
-#         not_paid_payslip = self.payslip_id.filtered(lambda payslip: payslip.state != 'done')
-#         not_paid_payslip_sheets = not_paid_payslip.sheet_id
-#         res = super().reconcile()
-#         paid_payslips = not_paid_payslip_sheets.filtered(lambda payslip: payslip.currency_id.is_zero(payslip.amount_residual))
-#         paid_payslips.write({'state': 'done'})
-#         not_paid_payslip_sheets.filtered(lambda sheet: all(payslip.state == 'done' for payslip in sheet.expense_line_ids)).set_to_paid()
-#         return res
-#         return res
+class HrPayrollReport(models.Model):
+    _name = "hr.payslip.report"
+    _description = "Payroll Analysis Report"
+    _auto = False
+    _rec_name = 'date_from'
+    _order = 'salary_rule desc'
+
+
+    date_from = fields.Date('Start Date', readonly=True)
+    date_to = fields.Date('End Date', readonly=True)
+    employee_id = fields.Many2one('hr.employee', 'Employee', readonly=True)
+    department_id = fields.Many2one('hr.department', 'Department', readonly=True)
+    job_id = fields.Many2one('hr.job', 'Job Position', readonly=True)
+    company_id = fields.Many2one('res.company', 'Company', readonly=True)
+    salary_rule=fields.Char('Salary Rule')
+    amount=fields.Float('Amount')
+
+    def init(self):
+        query = """
+            SELECT
+                row_number() OVER (PARTITION BY true) AS id,
+                p.date_from as date_from,
+                p.date_to as date_to,
+                e.id as employee_id,
+                e.department_id as department_id,
+                c.job_id as job_id,
+                e.company_id as company_id,
+                pl.name as salary_rule,
+                pl.total as amount
+            FROM
+                hr_payslip p inner join hr_payslip_line pl on
+                p.id=pl.slip_id inner join hr_employee e on e.id=p.employee_id
+                inner join hr_contract c on c.id=p.contract_id
+            order by
+                pl.name desc
+            """
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute(sql.SQL("CREATE or REPLACE VIEW {} as ({})").format(sql.Identifier(self._table), sql.SQL(query)))
+
+
+# class HrPayrollReport(models.Model):
+#     _inherit = "hr.payroll.report"
+#     _order = 'date_from desc, salary_rule desc'
+
+#     salary_rule=fields.Char('Salary Rule')
+    
+#     def init(self):
+#         query = """
+#             SELECT
+#                 p.id as id,
+#                 CASE WHEN wd.id = min_id.min_line THEN 1 ELSE 0 END as count,
+#                 CASE WHEN wet.is_leave THEN 0 ELSE wd.number_of_days END as count_work,
+#                 CASE WHEN wet.is_leave THEN 0 ELSE wd.number_of_hours END as count_work_hours,
+#                 CASE WHEN wet.is_leave and wd.amount <> 0 THEN wd.number_of_days ELSE 0 END as count_leave,
+#                 CASE WHEN wet.is_leave and wd.amount = 0 THEN wd.number_of_days ELSE 0 END as count_leave_unpaid,
+#                 CASE WHEN wet.is_unforeseen THEN wd.number_of_days ELSE 0 END as count_unforeseen_absence,
+#                 CASE WHEN wet.is_leave THEN wd.amount ELSE 0 END as leave_basic_wage,
+#                 p.name as name,
+#                 p.date_from as date_from,
+#                 p.date_to as date_to,
+#                 e.id as employee_id,
+#                 e.department_id as department_id,
+#                 c.job_id as job_id,
+#                 e.company_id as company_id,
+#                 wet.id as work_code,
+#                 CASE WHEN wet.is_leave IS NOT TRUE THEN '1' WHEN wd.amount = 0 THEN '3' ELSE '2' END as work_type,
+#                 wd.number_of_days as number_of_days,
+#                 wd.number_of_hours as number_of_hours,
+#                 CASE WHEN wd.id = min_id.min_line THEN pln.total ELSE 0 END as net_wage,
+#                 CASE WHEN wd.id = min_id.min_line THEN plb.total ELSE 0 END as basic_wage,
+#                 CASE WHEN wd.id = min_id.min_line THEN plg.total ELSE 0 END as gross_wage,
+#                 pln.name as salary_rule
+#             FROM
+#                 (SELECT * FROM hr_payslip WHERE state IN ('done', 'paid')) p
+#                     left join hr_employee e on (p.employee_id = e.id)
+#                     left join hr_payslip_worked_days wd on (wd.payslip_id = p.id)
+#                     left join hr_work_entry_type wet on (wet.id = wd.work_entry_type_id)
+#                     left join (select payslip_id, min(id) as min_line from hr_payslip_worked_days group by payslip_id) min_id on (min_id.payslip_id = p.id)
+#                     left join hr_payslip_line pln on (pln.slip_id = p.id and  pln.code = 'NET')
+#                     left join hr_payslip_line plb on (plb.slip_id = p.id and plb.code = 'BASIC')
+#                     left join hr_payslip_line plg on (plg.slip_id = p.id and plg.code = 'GROSS')
+#                     left join hr_contract c on (p.contract_id = c.id)
+#             GROUP BY
+#                 e.id,
+#                 e.department_id,
+#                 e.company_id,
+#                 wd.id,
+#                 wet.id,
+#                 p.id,
+#                 p.name,
+#                 p.date_from,
+#                 p.date_to,
+#                 pln.total,
+#                 plb.total,
+#                 plg.total,
+#                 min_id.min_line,
+#                 c.id,
+#                 pln.name
+#             Order by salary_rule desc
+#             """
+#         tools.drop_view_if_exists(self.env.cr, self._table)
+#         self.env.cr.execute(sql.SQL("CREATE or REPLACE VIEW {} as ({})").format(sql.Identifier(self._table), sql.SQL(query)))

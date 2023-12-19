@@ -99,3 +99,7 @@ class HrEmployee(models.Model):
             result['res_id'] = self.finger_templates_ids.id
         return result
 
+
+    def generate_random_barcode(self):
+        for employee in self:
+            employee.barcode = "{}".format(employee.id)

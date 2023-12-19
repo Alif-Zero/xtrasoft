@@ -41,6 +41,11 @@
                             </page>
                         </notebook>
                     </sheet>
+					<div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="activity_ids" widget="mail_activity"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+		            </div>
                 </form>
             </field>
         </record>
@@ -72,6 +77,97 @@
                   parent="overtime_submenu"
                   groups="hr_holidays.group_hr_holidays_user"
                   action="hr_overtime_type_action"/>
+		
+		<record id="hr_overtime_type_rule_form_view" model="ir.ui.view">
+            <field name="name">Overtime Type Rule</field>
+            <field name="model">overtime.type.rule</field>
+            <field name="arch" type="xml">
+                <form string="Overtime Type Rule">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="from_hrs"/>
+                            </group>
+                            <group>
+                                <field name="to_hrs"/>
+                                <field name="hrs_amount"/>
+                            </group>
+                        </group>
+                        
+                    </sheet>
+					<div class="oe_chatter">
+	                    <field name="message_follower_ids" widget="mail_followers"/>
+	                    <field name="activity_ids" widget="mail_activity"/>
+	                    <field name="message_ids" widget="mail_thread"/>
+		            </div>
+                </form>
+            </field>
+        </record>
 
+        <record id="hr_overtime_type_rule_tree_view" model="ir.ui.view">
+            <field name="name">Overtime Type Rule</field>
+            <field name="model">overtime.type.rule</field>
+            <field name="arch" type="xml">
+                <tree string="Overtime Type Rule">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_overtime_type_rule_action" model="ir.actions.act_window">
+            <field name="name">Overtime Types Rule</field>
+            <field name="res_model">overtime.type.rule</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create new Approval Type Rule.
+                </p>
+            </field>
+        </record>
+
+
+        <!-- MenuItems -->
+        <menuitem id="overtime_type_rule_submenu" name="Overtime Types Rules"
+                  parent="overtime_submenu"
+                  groups="base.group_erp_manager"
+                  action="hr_overtime_type_rule_action"/>
+	
+			<record id="hr_overtime_update_form_view" model="ir.ui.view">
+            <field name="name">Update Overtime</field>
+            <field name="model">overtime.update</field>
+            <field name="arch" type="xml">
+                <form string="Update Overtime">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="from_date"/>
+                                <field name="to_date"/>
+                            </group>
+                        </group>
+                    </sheet>
+					
+					<footer>
+						<button name="update_overtime" type="object"
+                                string="Update" class="oe_highlight" groups="base.group_erp_manager"/>
+                        or
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="action_update_overtime_wizard">
+	        <field name="name">Update Overtime</field>
+	        <field name="res_model">overtime.update</field>
+	        <field name="view_mode">form</field>
+	        <field name="target">new</field>
+    	</record>
+		
+		        <menuitem id="overtime_update_menu" name="Update Overtime"
+                  parent="overtime_type_rule_submenu"
+                  groups="base.group_erp_manager"
+                  action="action_update_overtime_wizard"/>
     </data>
 </odoo>

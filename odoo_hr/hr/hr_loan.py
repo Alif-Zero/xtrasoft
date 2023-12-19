@@ -125,7 +125,7 @@ class hr_loan(models.Model):
     net_amount = fields.Integer(string="Net Amount", compute=_cal_amount, store=True, readonly=True)
     installments = fields.Integer(string="No. of Installments", tracking=True)
     per_month_installment = fields.Integer(string="Per Month Installment",compute='_cal_installment', store=True)
-    balance_amount = fields.Integer(string="Balance Amount", compute=_calc_balance, store=True)
+    balance_amount = fields.Integer(string="Balance Amount", compute=_calc_balance)
     loan_line = fields.One2many('hr.loan.line', 'loan_id', string="Loan Line")
     description = fields.Text(string="Note")
     submitted_by = fields.Many2one('res.users', string='Submitted By', tracking=True)

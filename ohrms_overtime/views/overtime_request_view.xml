@@ -41,8 +41,9 @@
                             <field name="overtime_ids" nolabel="1" create="0" attrs="{'readonly': [('status', '!=', 'Draft')]}">
                                 <tree editable="bottom" create="0">
                                     <field name="overtime"/>
+                                    <field name="name"/>
                                     <field name="employee_id" readonly="1"/>
-                                    <field name="days_no_tmp"/>
+                                    <field name="days_no_tmp" widget="float_time"/>
                                 </tree>
                             </field>
                         </group>
@@ -124,9 +125,9 @@
                                 <!--<field name="date_to" required="1"
                                        class="oe_inline"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>-->
-                                <field name="days_no_tmp" string="Hours" attrs="{'invisible': [('duration_type', '=', 'days')]}"/>
-                                <field name="days_no_tmp" string="Days" attrs="{'invisible': [('duration_type', '=', 'hours')]}"/>
-                                <field name="days_no_tmp_1" string="Actual Overtime"/>
+                                <field name="days_no_tmp" widget="float_time" string="Hours" attrs="{'invisible': [('duration_type', '=', 'days')]}"/>
+                                <field name="days_no_tmp" widget="float_time" string="Days" attrs="{'invisible': [('duration_type', '=', 'hours')]}"/>
+                                <field name="days_no_tmp_1" widget="float_time" string="Actual Overtime"/>
                                 <field name="payslip_paid"  readonly="1" attrs="{'invisible': [('type','!=', 'cash')]}" widget="toggle_button" groups="hr.group_hr_manager"/>
                                 <field name="days_no" readonly="1"
                                        invisible="1"/>
@@ -176,6 +177,7 @@
             <field name="model">hr.overtime</field>
             <field name="arch" type="xml">
                 <tree string="Overtime Request">
+                    <field name="name"/>
                     <field name="employee_id"/>
                     <field name="date_from"/>
 <!--                    <field name="date_to"/>
@@ -184,6 +186,23 @@
                     <field name="type" invisible="1"/>
                     <field name="payslip_paid" groups="hr.group_hr_manager" readonly="1" attrs="{'invisible': [('type','!=', 'cash')]}" widget="toggle_button"/>
                 </tree>
+            </field>
+        </record>
+        <record id="hr_overtime_search_view" model="ir.ui.view">
+            <field name="name">Overtime Search</field>
+            <field name="model">hr.overtime</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="state"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Employee" name="employee" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Date" name="date_from_group" domain="[]" context="{'group_by':'date_from'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 

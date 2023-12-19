@@ -6,6 +6,7 @@ import pandas as pd
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.resource.models.resource import HOURS_PER_DAY
+from docutils.utils.math.latex2mathml import over
 
 class InheritHRAttendance1(models.Model):
     _inherit = 'hr.attendance'
@@ -13,7 +14,7 @@ class InheritHRAttendance1(models.Model):
     overtime_id = fields.Many2one('hr.overtime', 'Overtime', compute='GetOverTime')
     approved_hours = fields.Float(related='overtime_id.days_no_tmp', string='Approved Hours')
 
-    @api.onchange('overtime_id','worked_hours','check_in','check_out')
+    @api.onchange('overtime_id','worked_hours','check_in','check_out', 'status')
     def GetOverTime(self):
         import pytz
         for rec in self:
@@ -56,13 +57,24 @@ class OverTimeTemplate(models.Model):
         for rec in self:
             wd = rec.date.weekday()
             ov_type = self.env['overtime.type'].search([('overtime_day','=', wd)], limit=1)
-            if ov_type:
-                rec.overtime_type_id = ov_type.id
+            if not ov_type:
+                ov_type = self.env['overtime.type'].search([('overtime_day','=', False)], limit=1)
+            
+            rec.overtime_type_id = ov_type.id
 
     def GetEmployees(self):
         self.overtime_ids=False
         for line in self.env['hr.employee'].search([('department_id','=',self.department_id.id)]):
-            self.env['hr.overtime'].create({'employee_id':line.id,'type':self.type,'duration_type':self.duration_type,'date_from':self.date,'overtime_type_id':self.overtime_type_id.id,'template_id':self.id,'days_no_tmp':self.hours})
+            self.env['hr.overtime'].create({
+                'employee_id':line.id,
+                'type':self.type,
+                'duration_type':self.duration_type,
+                'date_from':self.date,
+                'overtime_type_id':self.overtime_type_id.id,
+                'template_id':self.id,
+                'days_no_tmp':self.hours,
+                'overtime':True,
+            })
 
     def SetConfirmed(self):
         self.status='Submitted'
@@ -82,7 +94,7 @@ class HrOverTime(models.Model):
     _name = 'hr.overtime'
     _description = "HR Overtime"
     _inherit = ['mail.thread']
-
+    _order = 'id desc'
 
     template_id=fields.Many2one('overtime.template')
 
@@ -143,7 +155,7 @@ class HrOverTime(models.Model):
                                string="Leave ID")
     attchd_copy = fields.Binary('Attach A File')
     attchd_copy_name = fields.Char('File Name')
-    type = fields.Selection([('cash', 'Cash'), ('leave', 'leave')], default="leave", required=True, string="Type")
+    type = fields.Selection([('cash', 'Cash'), ('leave', 'leave')], default="cash", required=True, string="Type")
     overtime_type_id = fields.Many2one('overtime.type', domain="[('type','=',type),('duration_type','=', "
                                                                "duration_type)]")
     public_holiday = fields.Char(string='Public Holiday', readonly=True)
@@ -215,7 +227,6 @@ class HrOverTime(models.Model):
 
         cash_hrs_rate = self.overtime_type_id.rule_line_ids
         for rec in cash_hrs_rate:
-            print(rec.from_hrs , self.days_no_tmp_1 , self.days_no_tmp_1 , rec.to_hrs)
             if self.days_no_tmp_1>0:
                 if rec.from_hrs <= self.days_no_tmp_1 or self.days_no_tmp_1 >= rec.to_hrs:
                     rate_val = rec.hrs_amount
@@ -244,8 +255,10 @@ class HrOverTime(models.Model):
                 return
             wd = rec.date_from.weekday()
             ov_type = self.env['overtime.type'].search([('overtime_day','=', wd)], limit=1)
-            if ov_type:
-                rec.overtime_type_id = ov_type.id
+            if not ov_type:
+                ov_type = self.env['overtime.type'].search([('overtime_day','=', False)], limit=1)
+            rec.overtime_type_id = ov_type.id
+
 
     def submit_to_f(self):
         # notification to employee
@@ -394,16 +407,16 @@ class HrOverTime(models.Model):
 class HrOverTimeType(models.Model):
     _name = 'overtime.type'
     _description = "HR Overtime Type"
-
+    _inherit = ['mail.thread','mail.activity.mixin', 'portal.mixin']
     name = fields.Char('Name')
     type = fields.Selection([('cash', 'Cash'),
-                             ('leave', 'Leave ')])
+                             ('leave', 'Leave ')],tracking=True)
 
     duration_type = fields.Selection([('hours', 'Hour'), ('days', 'Days')], string="Duration Type", default="hours",
-                                     required=True)
-    leave_type = fields.Many2one('hr.leave.type', string='Leave Type', domain="[('id', 'in', leave_compute)]")
-    leave_compute = fields.Many2many('hr.leave.type', compute="_get_leave_type")
-    rule_line_ids = fields.One2many('overtime.type.rule', 'type_line_id')
+                                     required=True,tracking=True)
+    leave_type = fields.Many2one('hr.leave.type', string='Leave Type', domain="[('id', 'in', leave_compute)]",tracking=True)
+    leave_compute = fields.Many2many('hr.leave.type', compute="_get_leave_type",tracking=True)
+    rule_line_ids = fields.One2many('overtime.type.rule', 'type_line_id',tracking=True)
     overtime_day = fields.Selection([
         ('0', 'Monday'),
         ('1', 'Tuesday'),
@@ -412,7 +425,8 @@ class HrOverTimeType(models.Model):
         ('4', 'Friday'),
         ('5', 'Saturday'),
         ('6', 'Sunday'),
-    ])
+    ],tracking=True)
+    
     @api.onchange('duration_type')
     def _get_leave_type(self):
         dur = ''
@@ -430,10 +444,23 @@ class HrOverTimeType(models.Model):
 
 class HrOverTimeTypeRule(models.Model):
     _name = 'overtime.type.rule'
+    _inherit = ['mail.thread','mail.activity.mixin', 'portal.mixin']
     _description = "HR Overtime Type Rule"
 
-    type_line_id = fields.Many2one('overtime.type', string='Over Time Type')
-    name = fields.Char('Name', required=True)
-    from_hrs = fields.Float('From', required=True)
-    to_hrs = fields.Float('To', required=True)
-    hrs_amount = fields.Float('Rate', required=True)
+    type_line_id = fields.Many2one('overtime.type', string='Over Time Type',tracking=True)
+    name = fields.Char('Name', required=True,tracking=True)
+    from_hrs = fields.Float('From', required=True,tracking=True)
+    to_hrs = fields.Float('To', required=True,tracking=True)
+    hrs_amount = fields.Float('Rate', required=True,tracking=True)
+
+class OvertimeUpdate(models.TransientModel):
+    _name='overtime.update'
+    from_date=fields.Date('From Date',required=True)
+    to_date=fields.Date('To Date',required=True)
+    
+    
+    def update_overtime(self):
+        if self.from_date and self.to_date:
+            overtime_obj=self.env['hr.overtime'].search([('date_from','>=',self.from_date),('date_from','<=',self.to_date)])
+            for rec in overtime_obj:
+                rec._get_hour_amount()

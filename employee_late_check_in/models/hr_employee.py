@@ -69,34 +69,6 @@ class HrEmployees(models.Model):
         self.late_check_in_count = self.env['late.check_in'].search_count([('employee_id', '=', self.id)])
 class HrContract(models.Model):
     _inherit='hr.contract'
-    def calc_unpaid_leaves_deduction(self, rule, contract, payslip):
-        deduction = 0.0
-        
-        try:
-            no_of_days = 30.5
-            diff = (payslip.date_to - payslip.date_from).days
-            diff += 1
-            
-            if diff == 30:
-                no_of_days = 30
-            elif diff == 31:
-                no_of_days = 31
-
-            total_hrs=0.0
-            leave_records = self.env['hr.leave'].search([('employee_id', '=', payslip.employee_id),
-                                                             ('request_date_to', '<=', payslip.date_to),
-                                                             ('request_date_from', '>=', payslip.date_from),
-                                                             ('state', '=', 'validate'),
-                                                             ('holiday_status_id.name','=','Unpaid')
-                                                             ])
-           
-            for rec in leave_records:
-                total_hrs+=rec.number_of_days
-            if total_hrs:
-                deduction=(self.wage/no_of_days)*total_hrs
-        except Exception as e:
-            _logger.exception("Salary Rule Information: Deduction of Unpaid Leaves Rule (calc_late_checkin_deduction), Rule Code %s Error Message: %s" % (rule, str(e)))
-        return round(deduction)
     
     def calc_late_checkin_deduction(self,category, rule, contract, payslip):
         deduction = 0.0
@@ -129,7 +101,10 @@ class HrContract(models.Model):
             #         if not self.env['hr.leave'].search([('date_from','>=',x.attendance_date),('date_to','<=',x.attendance_date),('state','not in',('cancel','draft'))]):
             #             early_checkout+=1
             total_records=int(late_checkin)+int(early_checkout)
-            deduct_leave=total_records//5
+            allow_late_checkin = contract.allow_late_checkin
+            if allow_late_checkin == 0:
+                allow_late_checkin = 1
+            deduct_leave=total_records// allow_late_checkin
             
             no_of_days = 30.5
             diff = (payslip.date_to - payslip.date_from).days
@@ -160,3 +135,174 @@ class HrContract(models.Model):
 #         except Exception as e:
 #             _logger.exception("Salary Rule Information: Deduction of Early Chaeckout Rule (calc_early_checkout_deduction), Rule Code %s Error Message: %s" % (rule, str(e)))
 #         return deduction
+
+    def LateCheckinAbsent(self,category, rule, contract, payslip):
+        deduction = 0.0
+        late_checkin_minutes = contract.checking_grace_period
+        try:
+            late_check_in_id = self.env['hr.attendance'].search([
+                                                                ('employee_id', '=', payslip.employee_id),
+                                                                ('attendance_date', '<=', payslip.date_to),
+                                                                ('attendance_date', '>=', payslip.date_from),
+                                                                ('status','=','Present'),])
+
+            late_checkin=0 
+            early_checkout=0 
+            for x in late_check_in_id:
+                if not self.env['hr.leave'].search([('employee_id','=',contract.employee_id.id),('date_from','>=',x.attendance_date),('date_to','<=',x.attendance_date),('state','not in',('cancel','draft'))]):
+                    if x.late_check_in>int(late_checkin_minutes):
+                        late_checkin+=1
+            
+            total_records=int(late_checkin)
+            allow_late_checkin = contract.allow_late_checkin
+            if allow_late_checkin == 0:
+                allow_late_checkin = 1
+            
+            deduct_leave=total_records// allow_late_checkin
+            
+            no_of_days = 30.5
+            diff = (payslip.date_to - payslip.date_from).days
+            diff += 1
+            
+            if diff == 30:
+                no_of_days = 30
+            elif diff == 31:
+                no_of_days = 31
+
+            if deduct_leave != 0:
+                deduction=(contract.wage/no_of_days)*deduct_leave
+        except Exception as e:
+            _logger.exception("Salary Rule Information: Deduction of Late Chaeckin and Early checkout Rule (calc_late_checkin_deduction), Rule Code %s Error Message: %s" % (rule, str(e)))
+        return deduction
+    
+    def LateCheckinDeduction(self,category, rule, contract, payslip):
+        deduction = 0.0
+        late_checkin_minutes=contract.checking_late_count
+        try:
+            late_check_in_id = self.env['hr.attendance'].search([
+                                                                ('employee_id', '=', payslip.employee_id),
+                                                                ('attendance_date', '<=', payslip.date_to),
+                                                                ('attendance_date', '>=', payslip.date_from),
+                                                                ('status','=','Present'),], order='late_check_in asc')
+
+            late_checkin=0 
+            late_count=0
+            limit = contract.allow_late_checkin - 1
+
+            for x in late_check_in_id:
+                if not self.env['hr.leave'].search([('employee_id','=',contract.employee_id.id),('date_from','>=',x.attendance_date),('date_to','<=',x.attendance_date),('state','not in',('cancel','draft'))]):
+                    if x.late_check_in>int(late_checkin_minutes):
+                        late_checkin += x.late_check_in - int(late_checkin_minutes)
+                    #     late_count += 1 
+                    # if late_count == limit and limit != 0:
+                    #     break
+            if late_checkin != 0:
+                deduction=(contract.over_hour/60)*late_checkin
+        except Exception as e:
+            _logger.exception("Salary Rule Information: Deduction of Late Chaeckin and Early checkout Rule (calc_late_checkin_deduction), Rule Code %s Error Message: %s" % (rule, str(e)))
+        return deduction
+
+    def EarlyCheckoutAbsent(self, category, rule, contract, payslip):
+        deduction = 0.0
+        early_checkout_minutes = contract.checkout_grace_period
+        try:
+            late_check_in_id = self.env['hr.attendance'].search([
+                ('employee_id', '=', payslip.employee_id),
+                ('attendance_date', '<=', payslip.date_to),
+                ('attendance_date', '>=', payslip.date_from),
+
+                ('status', '=', 'Present'), ])
+
+            late_checkin = 0
+            early_checkout = 0
+            for x in late_check_in_id:
+                ot_records = self.env['hr.overtime'].search([('employee_id', '=', contract.employee_id.id),
+                                                             ('date_to', '<=', x.attendance_date),
+                                                             ('date_from', '>=', x.attendance_date),
+                                                             ('state', '=', 'approved'),
+                                                             ('type', '=', 'cash')
+                                                             ])
+                if ot_records:
+                    print('-------')
+                    continue
+                if not self.env['hr.leave'].search(
+                        [('employee_id', '=', contract.employee_id.id), ('date_from', '>=', x.attendance_date),
+                         ('date_to', '<=', x.attendance_date), ('state', 'not in', ('cancel', 'draft'))]):
+                    if x.early_check_out > int(early_checkout_minutes):
+                        early_checkout += 1
+
+            total_records = int(early_checkout)
+            allow_early_checkout = contract.allow_early_checkout
+            if allow_early_checkout == 0:
+                allow_early_checkout = 1
+            deduct_leave = total_records // allow_early_checkout
+
+            no_of_days = 30.5
+            diff = (payslip.date_to - payslip.date_from).days
+            diff += 1
+
+            if diff == 30:
+                no_of_days = 30
+            elif diff == 31:
+                no_of_days = 31
+
+            if deduct_leave != 0:
+                deduction = (contract.wage / no_of_days) * deduct_leave
+        except Exception as e:
+            _logger.exception(
+                "Salary Rule Information: Deduction of Late Chaeckin and Early checkout Rule (calc_late_checkin_deduction), Rule Code %s Error Message: %s" % (
+                rule, str(e)))
+        return deduction
+
+    def EarlyCheckoutDeduction(self, category, rule, contract, payslip):
+        deduction = 0.0
+        early_checkout_minutes = contract.early_checkout_count
+
+        try:
+            late_check_in_id = self.env['hr.attendance'].search([
+                ('employee_id', '=', payslip.employee_id),
+                ('attendance_date', '<=', payslip.date_to),
+                ('attendance_date', '>=', payslip.date_from),
+                ('status', '=', 'Present'), ], order='early_check_out asc')
+
+            late_checkin = 0
+            early_checkout = 0
+            limit = contract.allow_early_checkout - 1
+            deduct_leave = 0
+            for x in late_check_in_id:
+                ot_records = self.env['hr.overtime'].search([('employee_id', '=', contract.employee_id.id),
+                                                             ('date_to', '<=', x.attendance_date),
+                                                             ('date_from', '>=', x.attendance_date),
+                                                             ('state', '=', 'approved'),
+                                                             ('type', '=', 'cash')
+                                                             ])
+                if ot_records:
+                    continue
+                if x.early_check_out > int(early_checkout_minutes):
+                    if self.env['hr.leave'].search(
+                            [('employee_id', '=', contract.employee_id.id), ('date_from', '>=', x.attendance_date),
+                             ('date_to', '<=', x.attendance_date), ('state', 'not in', ('cancel', 'draft'))]):
+                        early_checkout += x.early_check_out - int(early_checkout_minutes)
+                        # if early_checkout == limit and limit != 0:
+                        #     break
+                    else:
+                        deduct_leave += 1
+
+            if early_checkout != 0:
+                deduction = (contract.over_hour / 60) * early_checkout
+            no_of_days = 30.5
+            # diff = (payslip.date_to - payslip.date_from).days
+            # diff += 1
+            # if diff == 30:
+            #         no_of_days = 30
+            # elif diff == 31:
+            #     no_of_days = 31
+
+            # if deduct_leave != 0:
+            #     deduction +=(contract.wage/no_of_days)*deduct_leave
+
+        except Exception as e:
+            _logger.exception(
+                "Salary Rule Information: Deduction of Late Chaeckin and Early checkout Rule (calc_late_checkin_deduction), Rule Code %s Error Message: %s" % (
+                rule, str(e)))
+        return deduction

@@ -8,14 +8,41 @@
             <xpath expr="//label[@for='date_from']" position="before">
 					<field name="period_id"/>
             </xpath>
-			<xpath expr="//group" position="after">
-				<group>
-					<field name="total_loan"/>
-					<field name="recovered_amount"/>
-					<field name="balance_amount"/>
-					<field name="total_overtime"/>
-				</group>
-			</xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_overtime" class="oe_stat_button" type="object" string="Over Time" icon="fa-clock-o"/>
+                <button name="action_view_attendance" class="oe_stat_button" type="object" string="Attendance" icon="fa-check-square-o"/>
+            </xpath>
+            <xpath expr="//notebook" position="before">
+                <group>
+                    <group string="Advance &amp; Loan" name="loan">
+                        <field name="total_loan"/>
+                        <field name="total_advance"/>
+                        <field name="recovered_amount"/>
+                        <field name="balance_amount"/>
+                    </group>
+                    <group string="Overtime" name="overtime">
+                        <field name="total_overtime"/>
+                    </group>
+                </group>
+                <group name="attendance" string="Attendance">
+                    <group>
+                        <field name="total_attendance"/>
+                        <field name="total_present"/>
+                        <field name="total_leave"/>
+                        <field name="total_late_checking"/>
+                        <field name="unapproved_half_day"/>
+                    </group>
+                    <group>
+                        <field name="total_absent"/>
+                        <field name="total_half_day"/>
+                        <field name="unpaid_leaves"/>
+                        <field name="total_holiday"/>
+                        <field name="total_earlyout_absent"/>
+                        <field name="total_public"/>
+                        <field name="deducted_holiday"/>
+                    </group>
+                </group>
+            </xpath>
 	       	<xpath expr="//field[@name='worked_days_line_ids']/tree/field[@name='number_of_days']" position="after">
 				<field name="total_present"/>
 				<field name="total_absent"/>

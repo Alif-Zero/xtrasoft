@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 	<data>
+		<record id="view_date_attendance_calendar" model="ir.ui.view">   
+			<field name="name">date.holiday.calendar</field>
+			<field name="model">date.holiday</field>
+			<field name="arch" type="xml">
+				<calendar date_start="date" date_stop="date" event_open_popup="true" mode="month" quick_add="False">           
+					<field name="name"/>
+					<field name="type"/>
+					<field name="date"/>
+				</calendar>
+			</field>
+		</record>
 		<record id="view_date_attendance_tree" model="ir.ui.view">
 			<field name="name">date.holiday.tree</field>
 			<field name="model">date.holiday</field>
 			<field name="arch" type="xml">
 				<tree string="Holidays" editable="bottom">
+					<field name="name"/>
 					<field name="type" required="1"/>
 					<field name="date" required="1"/>
 				</tree>
@@ -285,7 +297,7 @@
 			id="action_date_attendance">
 			<field name="name">Holidays</field>
 			<field name="res_model">date.holiday</field>
-			<field name="view_mode">tree</field>
+			<field name="view_mode">tree,calendar</field>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">Create the first holiday
 				</p>

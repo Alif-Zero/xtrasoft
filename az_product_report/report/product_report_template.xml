@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="product_move_report_doc">
+        <t t-call="web.html_container">
+            <t t-call="az_product_report.internal_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    
+                </div>
+                <br />
+                 <table class="table table-sm table-bordered" style="border: 1px solid #000; max-width:100%">
+                    <thead>
+                        <tr>
+                            <th class="text-nowrap text-center">Date</th>
+                            <th class="text-nowrap text-center">Transfer</th>
+                            <th class="text-nowrap text-center">Contact</th>
+                            <th class="text-nowrap text-center">From</th>
+                            <th class="text-nowrap text-center">To</th>
+                            <th class="text-nowrap text-center">Qty</th>
+                            <th class="text-nowrap text-center">Qty In</th>
+                            <th class="text-nowrap text-center">Qty Out</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="data" t-as="value">
+                            <tr>
+                                <th colspan='3' class="text-left"><t t-esc="value['product']['name']"/></th>
+                                <th class="text-right">On Hand Qty</th>
+                                <th colspan='2' class="text-nowrap text-left"><t t-esc="value['product']['qty_hand']"/> <t t-esc="value['product']['uom_name']"/></th>
+                                <th class="text-nowrap text-center"><t t-esc="value['product']['qty_in']"/> <t t-esc="value['product']['uom_name']"/></th>
+                                <th class="text-nowrap text-center"><t t-esc="value['product']['qty_out']"/> <t t-esc="value['product']['uom_name']"/></th>
+                            </tr>
+                            <tr t-foreach="value['sml']" t-as="sml">
+                                <td  class="text-nowrap"><t t-esc="sml['date']"/></td>
+                                <td><t t-esc="sml['picking_id']"/></td>
+                                <td><t t-esc="sml['partner_id']"/></td>
+                                <td><t t-esc="sml['location_id']"/></td>
+                                <td><t t-esc="sml['location_dest_id']"/></td>
+                                <td  class="text-nowrap"><t t-esc="sml['qty_done']"/> <t t-esc="sml['product_uom_id']"/></td>
+                                <td  class="text-nowrap"><t t-esc="sml['qty_in']"/> <t t-esc="sml['product_uom_id']"/></td>
+                                <td  class="text-nowrap"><t t-esc="sml['qty_out']"/> <t t-esc="sml['product_uom_id']"/></td>
+                            </tr>
+                       </t>
+                    </tbody>
+                </table>
+            </t>
+        </t>
+    </template>
+    <template id="internal_layout">
+        <t t-if="not o and doc">
+            <t t-set="o" t-value="doc"/>
+        </t>
+
+        <t t-if="o and 'company_id' in o">
+            <t t-set="company" t-value="o.company_id.sudo()"/>
+        </t>
+        <t t-if="not o or not 'company_id' in o">
+            <t t-set="company" t-value="res_company"/>
+        </t>
+        <div class="header o_boxed_header">
+        <div class="row mb8">
+        <div class="col-xs-6">
+            <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % to_text(company.logo)"/>
+        </div>
+        <div class="col-xs-6 text-right mb4">
+         <h4 class="mt0" t-field="company.report_header"/>
+            <div name="company_address" class="mb4">
+                <span style="color: #000;font-color:#000000;" class="company_address" t-field="company.partner_id"
+                t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                </div>
+            </div>
+            </div>
+            <div style="border-bottom: 1px solid black;"/>
+            </div>
+            <div class="article o_report_layout_background">
+            <t t-raw="0" />
+            </div>
+            <div class="footer">
+                <div class="text-center" style="border-top: 1px solid black;">
+                <ul class="list-inline mb4">
+                <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
+                <li t-if="company.email">Email: <span t-field="company.email"/></li>
+                <li t-if="company.website">Web: <span t-field="company.website"/></li>
+                <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'TIN'"/>: <span t-field="company.vat"/></li>
+                </ul>
+                <div name="financial_infos">
+                <span t-field="company.report_footer"/>
+                </div>
+                <div class="text-muted">
+                Page: <span class="page"/> / <span class="topage"/>
+            </div>
+            </div>
+            </div>
+    </template>
+
+</odoo>
